@@ -15,9 +15,9 @@ python3 "/home/user/exposure_outcome.csv" "/home/user/ld.csv"
 After python3, the first argument should be the exposure_outcome.csv file containing the SNPs to exposure effects and SNPs to outcome effects. The first column is always the SNP id's (the ID is irrelevant if you are providing the LD-matrix but should still be filled with default values), the last column is always the SNPs to outcome effect. Everything column in between is treated as an exposure. The separator to be used is comma. As an example:
 
 SNPs,AS3MT,SFXN2,CAD
-rs11191416,-0.5,0.37,0.079
-rs7098825,-0.34,0.0,0.078
-rs17115100,-0.4,0.54,0.05
+rs11191416,-0.5,0.37,0.079 \\
+rs7098825,-0.34,0.0,0.078 \\
+rs17115100,-0.4,0.54,0.05 \\
 
 The second argument is ld.csv file for the LD matrix. Please make sure the ordering of the SNPs is same as the exposure_outcome file. This has the format:
 1 0.98852 0.96565 0.98
