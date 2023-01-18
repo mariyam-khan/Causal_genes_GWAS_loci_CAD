@@ -26,11 +26,11 @@ rs17115100,-0.4,0.54,0.05
 The second argument is ld.csv file for the LD matrix. Please make sure the ordering of the SNPs is same as in the exposure_outcome file. This has the format:
 
 
-1 0.98852 0.96565 0.98
+1.0 0.9 0.8
 
-0.98852 1 0.965852 0.994254 
+0.9 1.0 0.7
 
-0.96565 0.965852 1 
+0.8 0.7 1.0
 
 
 
