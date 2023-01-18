@@ -12,8 +12,7 @@ After python3, the first argument should be the exposure_outcome.csv file contai
 
 
 
-SNPs,AS3MT,SFXN2,CAD
-
+SNPs,AS3MT,SFXN2,CAD <br />
 rs11191416,-0.5,0.37,0.079 
 
 rs7098825,-0.34,0.0,0.078 
