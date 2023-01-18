@@ -47,11 +47,10 @@ The code automatically prunes for SNPs in perfect-LD and keeps only the first oc
 
 
 2. MVMR_withoutLD.py
-
 This file has the same purpose as run_MVMR.py except here you have to run the file  on the terminal as : 
 
 
-python3 "/home/user/exposure_outcome.csv" 
+          python3 "/home/user/exposure_outcome.csv" 
 
 
 i.e. without the file with the LD-matrix. The LD-matrix is generated using the TwoSapleMR function ld_matrix. Please make sure all SNPs belong to the LD panel.
