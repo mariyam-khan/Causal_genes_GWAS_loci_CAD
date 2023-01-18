@@ -13,10 +13,8 @@ After python3, the first argument should be the exposure_outcome.csv file contai
 
 
 SNPs,AS3MT,SFXN2,CAD <br />
-rs11191416,-0.5,0.37,0.079 
-
-rs7098825,-0.34,0.0,0.078 
-
+rs11191416,-0.5,0.37,0.079 <br />
+rs7098825,-0.34,0.0,0.078 <br />
 rs17115100,-0.4,0.54,0.05 
 
 
@@ -25,11 +23,9 @@ rs17115100,-0.4,0.54,0.05
 The second argument is ld.csv file for the LD matrix. Please make sure the ordering of the SNPs is same as in the exposure_outcome file. This has the format:
 
 
-1.0 0.9 0.8
-
-0.9 1.0 0.7
-
-0.8 0.7 1.0
+1.0 0.9 0.8 <br />
+0.9 1.0 0.7 <br />
+0.8 0.7 1.0 <br />
 
 
 
