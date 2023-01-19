@@ -52,7 +52,7 @@ To use this code, download the code files and ensure that you have the dependenc
 
 Here, python3 should refer to at least Python 3.5 and depends on your specific installation of Python.
 
-Before running the code files, check whether you have the following requirements and install them if necessary (the program also performs checks on startup):
+Before running the code files, check whether you have the following requirements and install them if necessary:
 
                 Python 3.5 or later
 
