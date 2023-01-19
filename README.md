@@ -45,7 +45,6 @@ i.e. without the file with the LD-matrix. The LD-matrix is generated using the T
 
 
 # Guide to software requirements
-Please note that so far we have only tested the program systematically on a Linux system, but further support for other operating systems is planned.
 
 To use this code, download the code files and ensure that you have the dependencies explained below. To run the code files, you have to type:
 
