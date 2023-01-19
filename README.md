@@ -58,12 +58,12 @@ Before running the code files, check whether you have the following requirements
 
                 Python 3.5 or later
 
-    You can check this by typing 'python' (or a more specific command as explained above) in the command line. For further support, in particular how to install python please visit https://www.python.org/.
+You can check this by typing 'python' (or a more specific command as explained above) in the command line. For further support, in particular how to install python please visit https://www.python.org/.
 
 
-    This Python version has the packages numpy (version 1.11.0 or later), scipy, pandas, sys and rpy2 (version 2.9.4 or later).
+This Python version has the packages numpy (version 1.11.0 or later), scipy, pandas, sys and rpy2 (version 2.9.4 or later).
 
-    You can check this by starting this python version (check it especially carefully if you have multiple Python versions on your system) and typing
+You can check this by starting this python version (check it especially carefully if you have multiple Python versions on your system) and typing
     
                   import numpy
                   import pandas 
