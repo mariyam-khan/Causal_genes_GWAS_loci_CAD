@@ -50,8 +50,7 @@ To use this code, download the code files and ensure that you have the dependenc
 
           python3 run_MVMR.py "/home/user/exposure_outcome.csv" "/home/user/ld.csv"
 
-Here, python3 should refer to at least Python 3.5. If there are multiple installations of Python on your system, your command might need to be more specific, e.g. python3.5 run_MVMR.py.
-Dependencies
+Here, python3 should refer to at least Python 3.5 and depends on your specific installation of Python.
 
 Before running the code files, check whether you have the following requirements and install them if necessary (the program also performs checks on startup):
 
