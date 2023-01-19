@@ -5,7 +5,7 @@
 1. run_MVMR.py
   This is the file for getting the causal genes for cases the user can supply the LD-matrix. This file can be downloaded and run on the terminal as :
   
-          python3 "/home/user/exposure_outcome.csv" "/home/user/ld.csv"
+          python3 run_MVMR.py "/home/user/exposure_outcome.csv" "/home/user/ld.csv"
   
   
 After python3, the first argument should be the exposure_outcome.csv file containing the SNPs to exposure effects and SNPs to outcome effects. The first column is always the SNP ID's (the ID is irrelevant if you are providing the LD-matrix but should still be filled with default values), the last column is always the SNPs to outcome effect. Every other column in between is treated as an exposure variable. The separator to be used is comma. As an example:
@@ -41,4 +41,36 @@ This file has the same purpose as run_MVMR.py except here you have to run the fi
           python3 "/home/user/exposure_outcome.csv" 
 
 
-i.e. without the file with the LD-matrix. The LD-matrix is generated using the TwoSapleMR function ld_matrix. Please make sure all SNPs belong to the LD panel.
+i.e. without the file with the LD-matrix. The LD-matrix is generated using the TwoSampleMR function ld_matrix. Please make sure all SNPs belong to the LD panel.
+
+
+# Guide to software requirements
+Please note that so far we have only tested the program systematically on a Linux system, but further support for other operating systems is planned.
+
+To use this code, download the code files and ensure that you have the dependencies explained below. To run the code files, you have to type:
+
+          python3 run_MVMR.py "/home/user/exposure_outcome.csv" "/home/user/ld.csv"
+
+Here, python3 should refer to at least Python 3.5. If there are multiple installations of Python on your system, your command might need to be more specific, e.g. python3.5 run_MVMR.py.
+Dependencies
+
+Before running the code files, check whether you have the following requirements and install them if necessary (the program also performs checks on startup):
+
+                Python 3.5 or later
+
+    You can check this by typing 'python' (or a more specific command as explained above) in the command line. For further support, in particular how to install python please visit https://www.python.org/.
+
+
+    This Python version has the packages numpy (version 1.11.0 or later), scipy, pandas, sys and rpy2 (version 2.9.4 or later).
+
+    You can check this by starting this python version (check it especially carefully if you have multiple Python versions on your system) and typing
+    
+                  import numpy
+                  import pandas 
+                  import rpy2
+ 
+
+Statistical programming language R 3.2.0 or later
+
+You can check this by typing 'R' in the command line. For further support, in particular how to install R, please visit https://www.r-project.org/.
+If you cannot provide the LD-matrix file, you need to have the package TwoSampleMR.
