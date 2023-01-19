@@ -54,7 +54,7 @@ Here, python3 should refer to at least Python 3.5 and depends on your specific i
 
 Before running the code files, check whether you have the following requirements and install them if necessary:
 
-                Python 3.5 or later
+          Python 3.5 or later
 
 You can check this by typing 'python' (or a more specific command as explained above) in the command line. For further support, in particular how to install python please visit https://www.python.org/.
 
@@ -63,12 +63,12 @@ This Python version has the packages numpy (version 1.11.0 or later), scipy, pan
 
 You can check this by starting this python version (check it especially carefully if you have multiple Python versions on your system) and typing
     
-                  import numpy
-                  import pandas 
-                  import rpy2
- 
+          import numpy
+          import pandas 
+          import rpy2
 
-Statistical programming language R 3.2.0 or later
 
-You can check this by typing 'R' in the command line. For further support, in particular how to install R, please visit https://www.r-project.org/.
-If you cannot provide the LD-matrix file, you need to have the package TwoSampleMR.
+You would also need statistical programming language R 3.2.0 or later
+
+You can check this by typing 'R' in the command line. To install R, please visit https://www.r-project.org/.
+If you cannot provide the LD-matrix file, you need to have the package TwoSampleMR installed.
