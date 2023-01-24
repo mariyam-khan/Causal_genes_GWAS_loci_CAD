@@ -7,6 +7,31 @@ from rpy2.robjects import r
 from rpy2.robjects import pandas2ri
 pandas2ri.activate()
 
+
+"""
+
+getting the causal genes for cases the user cannot supply the LD-matrix.
+
+
+To run the fil, type in the command line python3 run_MVMR.py "/home/user/exposure_outcome.csv"
+
+
+where: 
+
+"/home/user/exposure_outcome.csv"
+
+sys.argv[1] is the first argument when you run the file and should be the exposure_outcome.csv file 
+containing the SNPs to exposure effects and SNPs to outcome effects.
+
+The output after running this file would be a .csv with results from the methods (depending
+ on the dimensions, least-squares, generalized method of moments and ratio method)
+saved as .csv file in the same directory as the one given for the exposure_outcome.csv file. 
+
+i.e. for this example "/home/user/exposure_outcome_results.csv.csv"
+
+"""
+
+
 file_EXEY = sys.argv[1]
 Data = pd.read_csv(file_EXEY, sep=',')
 for (columnName, columnData) in Data.iteritems():
@@ -26,7 +51,7 @@ if len(snps) != 1:
     snps_new = Data.loc[:, 'SNPs'].values
     no_snps = len(snps_new)
     no_genes = len(Data.columns) - 2
-    df = Data.loc[:, ~Data.columns.isin(['SNPs', 'CAD'])]
+    df = Data.loc[:, ~Data.columns.isin(['SNPs', 'outcome'])]
     gene_names = column_names = list(df.columns.values)
     covEY = Data.loc[:, 'CAD'].values
     covEX = df.values
