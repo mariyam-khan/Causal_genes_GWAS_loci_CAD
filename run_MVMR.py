@@ -4,6 +4,36 @@ import numpy as np
 import pandas as pd
 import sys
 
+
+"""
+getting the causal genes for cases the user can supply the LD-matrix.
+
+
+To run the fil, type in the command line python3 run_MVMR.py "/home/user/exposure_outcome.csv" "/home/user/ld.csv"
+
+
+where: 
+
+"/home/user/exposure_outcome.csv"
+
+sys.argv[1] is the first argument when you run the file and should be the exposure_outcome.csv file 
+containing the SNPs to exposure effects and SNPs to outcome effects.
+
+
+"/home/user/ld.csv"
+
+sys.argv[2] is the second argument i.e. ld.csv file for the LD matrix.
+Please make sure the ordering of the SNPs is same as in the exposure_outcome file
+
+
+The output after running this file would be a .csv with results from the methods (depending
+ on the dimensions, least-squares, generalized method of moments and ratio method)
+saved as .csv file in the same directory as the one given for the exposure_outcome.csv file. 
+
+i.e. for this example "/home/user/exposure_outcome_results.csv.csv"
+
+"""
+
 file_EXEY = sys.argv[1]
 file_EE = sys.argv[2]
 Data = pd.read_csv(file_EXEY, sep=',')
@@ -58,3 +88,4 @@ else:
     df1 = pd.DataFrame(data=d1)
 
 df1.to_csv(file_EXEY + "_results.csv", sep=",", float_format='%g')
+
