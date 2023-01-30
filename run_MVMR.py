@@ -54,7 +54,7 @@ if len(snps) != 1:
     snps_new = Data.loc[:, 'SNPs'].values
     no_snps = len(snps_new)
     no_genes = len(Data.columns) - 2
-    df = Data.loc[:, ~Data.columns.isin(['SNPs', 'CAD'])]
+    df = Data.loc[:, ~Data.columns.isin(['SNPs', 'outcome'])]
     gene_names = column_names = list(df.columns.values)
     covEY = Data.loc[:, 'CAD'].values
     covEX = df.values
@@ -64,28 +64,37 @@ if len(snps) != 1:
             d1 = {'gene': gene_names,
                   'Causal Estimate Ratio method': b_est}
             df1 = pd.DataFrame(data=d1)
+            df1 = df1.set_index('gene')
         else:
             b_est = np.linalg.solve(covEX, covEY)
             d1 = {'gene': gene_names,
                   'Causal Estimate': b_est}
             df1 = pd.DataFrame(data=d1)
+            df1 = df1.set_index('gene')
     else:
-        b_est2, res, rnk, sy = lstsq(covEX, covEY)
-        b_est1 = np.linalg.inv(covEX.T @ np.linalg.inv(cov_EE) @ covEX) @ (covEX.T @ np.linalg.inv(cov_EE) @ covEY)
-        d1 = {'gene': gene_names,
-              'Causal Estimate Least Squares': b_est2, 'Causal Estimate GMM': b_est1}
-        df1 = pd.DataFrame(data=d1)
-    df1 = df1.set_index('gene')
+        if no_snps > no_genes:
+            b_est2, res, rnk, sy = lstsq(covEX, covEY)
+            b_est1 = np.linalg.inv(covEX.T @ np.linalg.inv(cov_EE) @ covEX) @ (covEX.T @ np.linalg.inv(cov_EE) @ covEY)
+            d1 = {'gene': gene_names,
+                  'Causal Estimate Least Squares': b_est2, 'Causal Estimate GMM': b_est1}
+            df1 = pd.DataFrame(data=d1)
+            df1 = df1.set_index('gene')
+        else:
+            sys.exit('Error Message : You require at least as many instruments as exposures to run this analysis.')
+
 else:
-    df = Data.loc[:, ~Data.columns.isin(['SNPs', 'CAD'])]
-
-    gene_names = column_names = list(df.columns.values)
-    covEY = Data.loc[:, 'CAD'].values
-    covEX = df.values
-    b_est = covEY / covEX
-    d1 = {'gene': gene_names,
-          'Causal Estimate Ratio method': b_est[0]}
-    df1 = pd.DataFrame(data=d1)
-
+    no_genes = len(Data.columns) - 2
+    if len(snps) >= no_genes:
+        df = Data.loc[:, ~Data.columns.isin(['SNPs', 'outcome'])]
+        gene_names = column_names = list(df.columns.values)
+        covEY = Data.loc[:, 'CAD'].values
+        covEX = df.values
+        b_est = covEY / covEX
+        d1 = {'gene': gene_names,
+              'Causal Estimate Ratio method': b_est[0]}
+        df1 = pd.DataFrame(data=d1)
+        df1 = df1.set_index('gene')
+    else:
+        sys.exit('Error Message : You require at least as many instruments as exposures to run this analysis.')
 df1.to_csv(file_EXEY + "_results.csv", sep=",", float_format='%g')
 
