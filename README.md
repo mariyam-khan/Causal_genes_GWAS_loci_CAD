@@ -66,13 +66,36 @@ You can check this by starting this python version (check it especially carefull
           import numpy
           import pandas 
           import rpy2
+          impot sys
 
 
-You would also need statistical programming language R 3.2.0 or later
 
-You can check this by typing 'R' in the command line. To install R, please visit https://www.r-project.org/.
-If you cannot provide the LD-matrix file, you need to have the package TwoSampleMR installed.
+You would also need statistical programming language R 3.2.0 or later.
+You can check this by typing 'R' in the command line. To install R, please visit \url{https://www.r-project.org/}. If you cannot provide the LD-matrix file, you need to have the package TwoSampleMR installed. You can install and call them in R using the following commands
 
 
+          install.packages("devtools")
+          remotes::install_github("MRCIEU/TwoSampleMR")
+          remotes::install_github("MRCIEU/MRInstruments")
+
+and 
+
+          library(devtools)
+          library(TwoSampleMR)
+          library(MRInstruments)
+
+To get the LD-matrix, run the following commands in R
+
+          snps <- list('rs7776079','rs36049381','rs9349379')
+          matrix <- ld_matrix(snps, with_alleles = FALSE, pop = "EUR")
+
+In snps, add the SNPs you wish to get the LD-matrix for. 
+
+
+
+The following code will save the LD-matrix in the format required for our analysis
+
+
+          write.table(matrix,file= "ld.csv",sep=" ",quote=F,col.names=F,row.names=F)
 
 For a detailed explainations, check out the [code vigenette](Code_Vigenette.pdf)
