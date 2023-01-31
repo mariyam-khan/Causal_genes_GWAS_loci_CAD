@@ -72,3 +72,7 @@ You would also need statistical programming language R 3.2.0 or later
 
 You can check this by typing 'R' in the command line. To install R, please visit https://www.r-project.org/.
 If you cannot provide the LD-matrix file, you need to have the package TwoSampleMR installed.
+
+
+
+For a detailed explainations, check out the [code vigenette](Code_Vigenette.pdf)
