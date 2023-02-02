@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import sys
 from collections import Counter
+import os
 
 """
 
@@ -14,6 +15,11 @@ directory with prefix _prepared.csv.
 
 file_EX = sys.argv[1]
 file_EY = sys.argv[2]
+path = os.path.dirname(file_EX)
+
+name_EX = os.path.splitext(os.path.basename(file_EX))[0]
+name_EY = os.path.splitext(os.path.basename(file_EY))[0]
+
 Data_out = pd.read_csv(file_EY, sep=',')
 Data_exp = pd.read_csv(file_EX, sep=',')
 
@@ -33,12 +39,16 @@ for m in range(len(Data_out['SNP'].values)):
     idx = Data_exp[Data_exp['SNP'] == value].index.values
     string_allele = new_df[idx[0]]
     string_allele = string_allele.replace("'", "")
+    a = Data_out.loc[m, 'effect_allele.outcome']
+    b = Data_out.loc[m, 'other_allele.outcome']
     if string_allele != Data_out.loc[m, 'effect_allele.outcome']:
         Data_out.loc[m, 'beta.outcome'] = - Data_out.loc[m, 'beta.outcome']
-        a = Data_out.loc[m, 'effect_allele.outcome']
-        b = Data_out.loc[m, 'other_allele.outcome']
         Data_out.loc[m, 'effect_allele.outcome'] = b
         Data_out.loc[m, 'other_allele.outcome'] = a
+
+        Data_out.loc[m, 'SNP'] = value + "_" + b + "_" + a
+    else:
+        Data_out.loc[m, 'SNP'] = value + "_" + a + "_" + b
 genes = []
 for j in range(no_genes):
     genes.append(most_common[j][0])
@@ -55,11 +65,11 @@ s_data = pd.DataFrame(np.zeros(len(row_names)), columns=['outcome'], index=row_n
 for n in range(no_genes):
     name = genes[n]
     exp = (most_common[n][0])
-    Data = Data_exp[Data_exp['gene'] == exp]
+    Data = Data_exp[Data_exp['exposure'] == exp]
     Data.reset_index(drop=True, inplace=True)
     o = Data['SNP'].values
     for j1 in range(int(most_common[n][1])):
-        value = o[j1]
+        value = o[j1] + "_" + Data.loc[j1, 'effect_allele.exposure'] + "_" + Data.loc[j1, 'other_allele.exposure']
         R_data.at[value, name] = Data.loc[j1, 'beta.exposure']
         idx = Data_out[Data_out['SNP'] == value].index.values
         s_data.loc[value, 'outcome'] = new_df2[idx[0]]
@@ -70,4 +80,4 @@ df_R = pd.DataFrame(data=R_data)
 df_s = pd.DataFrame(data=s_data)
 RandS = pd.concat([df_R, df_s], axis=1)
 RandS.index.name = 'SNPs'
-RandS.to_csv(file_EX + "_prepared.csv", sep=",")
+RandS.to_csv(path + "/" + name_EX + "_prepared.csv", sep=",")
