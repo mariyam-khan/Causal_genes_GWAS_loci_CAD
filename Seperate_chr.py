@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import sys
 from collections import Counter
+import os
 
 """
 
@@ -17,9 +18,14 @@ into batches of SNPs sharing only the first two values in their base pair positi
 file_EX = sys.argv[1]
 file_EY = sys.argv[2]
 position = sys.argv[3]
+path = os.path.dirname(file_EX)
+# file_name = os.path.basename(path)
+name_EX = os.path.splitext(os.path.basename(file_EX))[0]
+name_EY = os.path.splitext(os.path.basename(file_EY))[0]
 Data_out_all = pd.read_csv(file_EY, sep=',')
 Data_exp = pd.read_csv(file_EX, sep=',')
 
+Data_out_all = Data_out_all[["SNP", "effect_allele.outcome", "other_allele.outcome", "beta.outcome", "eaf.outcome", "pval.outcome", "chr", "pos"]]
 unique_chr = Counter(Data_out_all['chr']).keys()
 no_chr = len(unique_chr)
 get_chr = Counter(Data_out_all['chr']).most_common(no_chr)
@@ -33,7 +39,7 @@ for i in range(no_chr):
     pd.options.mode.chained_assignment = None
     Dataframe['pos'] = Dataframe['pos'].astype('string')
     pd.options.mode.chained_assignment = None
-    Dataframe['pos1'] = Dataframe['pos'].str[0:position]
+    Dataframe['pos1'] = Dataframe['pos'].str[0:int(position)]
     unique_pos = Counter(Dataframe['pos1']).keys()
     no_pos = len(unique_pos)
     get_pos = Counter(Dataframe['pos1']).most_common(no_pos)
@@ -50,7 +56,10 @@ for i in range(no_chr):
                 Data_out = Data_out.loc[Data_out['SNP'].isin(np.intersect1d(Data_out.SNP, Data_exp.SNP))]
                 Data_exp.reset_index(drop=True, inplace=True)
                 Data_out.reset_index(drop=True, inplace=True)
-                Data_exp.to_csv(file_EX + "_" + str(get_chr[i][0]) + "_" + str(get_pos[k][0]) + ".csv", sep=",",
+                Data_out = Data_out[
+                    ["SNP", "effect_allele.outcome", "other_allele.outcome", "beta.outcome", "eaf.outcome",
+                     "pval.outcome", "chr", "pos"]]
+                Data_exp.to_csv(path + "/" + name_EX + "_" + str(get_chr[i][0]) + "_" + str(get_pos[k][0]) + ".csv", sep=",",
                                 index=False)
-                Data_out.to_csv(file_EY + "_" + str(get_chr[i][0]) + "_" + str(get_pos[k][0]) + ".csv", sep=",",
+                Data_out.to_csv(path + "/" + name_EY + "_" + str(get_chr[i][0]) + "_" + str(get_pos[k][0]) + ".csv", sep=",",
                                 index=False)
