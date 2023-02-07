@@ -3,10 +3,12 @@ from numpy import *
 import numpy as np
 import pandas as pd
 import sys
+import rpy2.robjects as ro
 from rpy2.robjects import r
 from rpy2.robjects import pandas2ri
-pandas2ri.activate()
 
+#
+# pandas2ri.activate()
 
 """
 
@@ -31,25 +33,44 @@ i.e. for this example "/home/user/exposure_outcome_results.csv"
 
 """
 
-
 file_EXEY = sys.argv[1]
 Data = pd.read_csv(file_EXEY, sep=',')
 for (columnName, columnData) in Data.iteritems():
     if (Data[columnName] == 0).all():
         Data.drop(columnName, axis=1, inplace=True)
-snps = Data.loc[:, 'SNPs'].values
+snps_full = Data.loc[:, 'SNPs'].values
+snps = [i.split('_', 1)[0] for i in snps_full]
+effect_alleles = [i.split('_', 1)[1] for i in snps_full]
 if len(snps) != 1:
-    cov = r("TwoSampleMR::ld_matrix")(snps)
-    cov_data = pd.DataFrame(cov, columns=snps, index=snps, dtype='float')
+    cov_data = r("TwoSampleMR::ld_matrix")(snps)
+    pandas2ri.activate()
+    pd_from_r_df = ro.conversion.rpy2py(cov_data)
+    cov_data = pd.DataFrame(pd_from_r_df, columns=r('colnames')(cov_data), index=r('colnames')(cov_data), dtype='float')
+    eff_all_covmatrix = [i.split('_', 1)[1] for i in r('colnames')(cov_data)]
+    if (np.array(eff_all_covmatrix) != np.array(effect_alleles)).all() or (
+            np.array(eff_all_covmatrix) == np.array(effect_alleles)).all():
+        cov_data = cov_data
+    else:
+        res = (np.array(eff_all_covmatrix) != np.array(effect_alleles))
+        for t in range(len(res)):
+            if res[t]:
+                cov_data[cov_data.columns[t]] = - cov_data[cov_data.columns[t]]
+                cov_data.iloc[[t]] = -cov_data.iloc[[t]]
+
     upper_tri = cov_data.where(np.triu(np.ones(cov_data.shape), k=1).astype(bool))
     to_drop = [column for column in upper_tri.columns if any(upper_tri[column] == 1.0)]
     cov_data = cov_data.drop(labels=to_drop, axis=1)
     cov_data = cov_data.drop(labels=to_drop, axis=0)
-    Data = Data[Data.SNPs.isin(cov_data.index.values)]
-    Data.reset_index(drop=True, inplace=True)
     cov_EE = cov_data.values
-    snps_new = Data.loc[:, 'SNPs'].values
-    no_snps = len(snps_new)
+    snps_new = [i.split('_', 1)[0] for i in r('colnames')(cov_data)]
+    cov_data_pruned = pd.DataFrame(cov_EE, columns=snps_new, index=snps_new, dtype='float')
+    snps_Data = [i.split('_', 1)[0] for i in Data.SNPs]
+    Data.SNPs = snps_Data
+    Data = Data[Data['SNPs'].isin(cov_data_pruned.index.values)]
+    Data.reset_index(drop=True, inplace=True)
+
+    snps_final = Data.loc[:, 'SNPs'].values
+    no_snps = len(snps_final)
     no_genes = len(Data.columns) - 2
     df = Data.loc[:, ~Data.columns.isin(['SNPs', 'outcome'])]
     gene_names = column_names = list(df.columns.values)
@@ -94,5 +115,6 @@ else:
         df1 = df1.set_index('gene')
     else:
         sys.exit('Error Message : You require at least as many instruments as exposures to run this analysis.')
+
 
 df1.to_csv(file_EXEY + "_results.csv", sep=",", float_format='%g')
