@@ -7,9 +7,14 @@ import os
 
 """
 
-The input would be exposure and outcome files and the output would be file 
-with the format required for the causal analysis saved in the same input 
-directory with prefix _prepared.csv.
+You can give as input 
+ 
+1. 1st argument, exposure data which you used to extract the GWAS summary data from 
+the MR-Base package 
+2. 2nd argument GWAS summary data 
+These two files should be the output of either Seperate_chr.py or Choose_SNPs.py, 
+with comma as a separator and the output would be a file with the format required for the
+causal analysis saved in the same input directory with suffix prepared.csv
 
 """
 
