@@ -7,11 +7,38 @@ import os
 
 """
 
+
+You can give as input 
+ 
+1. 1st argument, exposure data which you used to extract the GWAS summary data from 
+the MR-Base package 
+2. 2nd argument GWAS summary data 
+3. 3rd argument integer value (usually 2)
+
+
+This function will take the exposure and output files, 
+segregate both files per chromosome and additionally per position.
+
+
+You will have multiple files saved in your initial directory, 
+for each chromosome and for different positions of the variants on the chromosome. 
+
+As an example, with argument 2, you will have all SNPs on a particular chromosome  
+on positions 13________, in one file and on the same chromosome, position 91________ in 
+a different file (into batches of SNPs sharing only the first two digits in their base pair position). 
+The input and outcome would both have comma as a separator for the .csv files. Using this function 
+you can approximately segregate data and then manually check for exceptions. 
+
+
+To use this function, make sure your output and exposure data are in the format you need for the MRBase package.
+
+
 you can give the exposure data as the 1st argument, the outcome data as the 2nd argument and 
 the position (integer value) as the 3rd argument. This function will take the exposure and output file, 
 then separate the file per chromosome and additionally per position. As an example
 if you give the position argument to be 2, the code will segregate each chromosome 
 into batches of SNPs sharing only the first two values in their base pair position.
+
 
 """
 
@@ -56,9 +83,14 @@ for i in range(no_chr):
                 Data_exp.reset_index(drop=True, inplace=True)
                 Data_out.reset_index(drop=True, inplace=True)
                 Data_out = Data_out[
-                    ["SNP", "effect_allele.outcome", "other_allele.outcome", "beta.outcome", "eaf.outcome",
+                    ["SNP", "effect_allele.outcome", "other_allele.outcome", "beta.outcome",
                      "pval.outcome", "chr", "pos"]]
                 Data_exp.to_csv(path + "/" + name_EX + "_" + str(get_chr[i][0]) + "_" + str(get_pos[k][0]) + ".csv", sep=",",
                                 index=False)
                 Data_out.to_csv(path + "/" + name_EY + "_" + str(get_chr[i][0]) + "_" + str(get_pos[k][0]) + ".csv", sep=",",
                                 index=False)
+            else:
+                sys.exit('Error Message : Dataset empty.')
+        else:
+            sys.exit('Error Message : Dataset empty.')
+
