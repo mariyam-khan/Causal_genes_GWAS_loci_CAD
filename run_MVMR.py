@@ -56,7 +56,7 @@ if len(snps) != 1:
     no_genes = len(Data.columns) - 2
     df = Data.loc[:, ~Data.columns.isin(['SNPs', 'outcome'])]
     gene_names = column_names = list(df.columns.values)
-    covEY = Data.loc[:, 'CAD'].values
+    covEY = Data.loc[:, 'outcome'].values
     covEX = df.values
     if no_snps == no_genes:
         if no_snps == 1:
@@ -87,7 +87,7 @@ else:
     if len(snps) >= no_genes:
         df = Data.loc[:, ~Data.columns.isin(['SNPs', 'outcome'])]
         gene_names = column_names = list(df.columns.values)
-        covEY = Data.loc[:, 'CAD'].values
+        covEY = Data.loc[:, 'outcome'].values
         covEX = df.values
         b_est = covEY / covEX
         d1 = {'gene': gene_names,
