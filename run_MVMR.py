@@ -37,7 +37,7 @@ i.e. for this example "/home/user/exposure_outcome_results.csv.csv"
 file_EXEY = sys.argv[1]
 file_EE = sys.argv[2]
 Data = pd.read_csv(file_EXEY, sep=',')
-cov_EE = np.genfromtxt(file_EE, delimiter=' ')
+cov_EE = np.genfromtxt(file_EE, delimiter=',')
 for (columnName, columnData) in Data.iteritems():
     if (Data[columnName] == 0).all():
         Data.drop(columnName, axis=1, inplace=True)
