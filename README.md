@@ -1,7 +1,7 @@
 # Causal_genes_GWAS_loci_CAD
   Identification of causal genes at GWAS loci with pleiotropic gene regulatory effects using instrumental variable sets
   
-# 1 Guide to software requirements
+# 1. Guide to software requirements
 
 
 To use this code, download the code files and ensure that you have the dependencies explained below. To run the code files, you have to type:
@@ -41,7 +41,7 @@ and
         library(MRInstruments)
 
 
-# 2 Data and Preparation
+# 2. Data and Preparation
 
 
 We have used this method to estimate the causal effect of genes which are shared on a locus on outcome Coronary Artery Disease using summary statistics from genome wide association studies (GWAS). We used two different studies for GWAS summary data, firstly, ebi-a-GCST003116 with trait as coronary artery
@@ -67,8 +67,8 @@ summary data, https://mrcieu.github.io/TwoSampleMR/). Note that if you are using
 When you download data from Gtex, you would have data in the format
 such as:
 
-variant_id            gene_id         maf   slope slope_se pval_beta
-chr1_64764_C_T_b38 ENSG00000227232.5 0.06    0.5    0.1     1.3e-05
+        variant_id            gene_id         maf   slope slope_se pval_beta
+        chr1_64764_C_T_b38 ENSG00000227232.5 0.06    0.5    0.1     1.3e-05
 
 
 To get the GWAS summary data for this exposure data, you would firstly need to replace the variant id’s to rs ID’s from the gtex annotation file. The
@@ -77,8 +77,8 @@ slope in the file is beta.exposure for the MR-Base package, slope se is se.expos
 
 The corresponding GTex file for extraction of GWAS summary data from the MRBase package, should look like 
 
-SNP          exposure          maf   beta.exposure se.exposure pval.exposure effect_allele.exposure other_allele.exposure
-rs769952832 ENSG00000227232.5  0.06  0.5            0.1          1.3e-05          C                     T
+        SNP          exposure          maf   beta.exposure se.exposure pval.exposure effect_allele.exposure other_allele.exposure
+        rs769952832 ENSG00000227232.5  0.06  0.5            0.1          1.3e-05          C                     T
 
 To save the effort of going from GTEx exposure data to data usable in the MRBase package, we have GTEx exposure data aligned with correspond-
 ing rs ID’s and structured in the MRBase format, available at https://drive.google.com/drive/folders/14u2dN8k3OwnZZkSkAQFN0ndboTFJFH-J?usp=share_
@@ -149,7 +149,7 @@ exposure and outcome files you get after you run Seperate chr.py, with comma as 
 causal analysis saved in the same input directory with suffix prepared.csv.
 
 
-# 3 Scripts for causal analysis
+# 3. Scripts for causal analysis
 
 
 There are two major files for running the causal analysis. Firstly, run MVMR.py, is the file for getting the causal genes for cases the user can supply the LD-matrix. This file can be downloaded and run on the terminal as
@@ -230,7 +230,7 @@ In this case you should remove the mentioned SNPs (rs28789513) from the dataset.
 an LD-matrix and it is generated using the R-package TwoSampleMR.
 
 
-# 4 Comparison to other methods
+# 4. Comparison to other methods
 
 
 You can compare your results to other methods in the MVMR community like TWMR https://www.nature.com/articles/s41467-019-10936-0, MVMR
