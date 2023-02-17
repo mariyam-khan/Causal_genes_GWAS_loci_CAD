@@ -1,4 +1,4 @@
-# Causal_genes_GWAS_loci_CAD
+# Causal genes at GWAS loci for Coronary Artery Disease
   Identification of causal genes at GWAS loci with pleiotropic gene regulatory effects using instrumental variable sets
   
 # 1. Guide to software requirements
