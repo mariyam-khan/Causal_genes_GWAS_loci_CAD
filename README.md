@@ -48,7 +48,7 @@ To estimate the causal effect, the minimum information required is as follows:
 
 - A. *Snps* to exposure effect (exposure can be *expression of a gene*).
 
-- B. *Snps* to outcome effect (outcome can be a diseae like *Coronary Artery Disease*).
+- B. *Snps* to outcome effect (outcome can be a disease like *Coronary Artery Disease*).
 
 
 For the causal analysis, A. and B.  need to be in one file as described in **Section 5.1**
@@ -82,16 +82,16 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
 
   - **Step 1 (Section 4.1) :** Download exposure data from GTEx https://gtexportal.org/home/datasets
 
-  - **Step 2 (Section 4.2) :** Make sure the GTEx data is in the format required by the MR-Base package
+  - **Step 2 (Section 4.2) :** Make sure the GTEx data is in the format required by the MR-Base package.
 
-  - **Step 3 (Section 4.3) :** Extract outcome data using MR-Base package 
+  - **Step 3 (Section 4.3) :** Extract outcome data using MR-Base package. 
 
   - **Step 4 (Section 4.4) :** From the exposure and outcome, get data on a specific chromosome and within 1Mb distance. You can either 
 
-    - **(Section 4.4.1) :**   Choose your SNP and get exposure and outocme data within 1Mb distance.
-    - **(Section 4.4.2) :**  For entire exposure/outcome data, get datasets of each chromosome and SNPs within 1Mb distance.
+    - **(Section 4.4.1) :**   Choose your SNP and get exposure and outocme data within 1Mb distance using ’Choose\_SNPs.py’.
+    - **(Section 4.4.2) :**  For entire exposure/outcome data, get datasets of each chromosome and SNPs within 1Mb distance using ’Seperate\_chr.py’.
 
-  - **Step 5 (Section 4.5) :** Harmonize the data and save it in the format required for causal analysis. 
+  - **Step 5 (Section 4.5) :** Harmonize the data and save it in the format required for causal analysis ’Data\_preperation.py’. 
 
   - **Step 6 (Section 5) :** Run the causal analysis, as in Case 1.   
 
@@ -231,6 +231,9 @@ For the following code
 You will have multiple files saved in your initial directory, for each chromosome and for different positions of the varuants on the chromosome. As an
 example, with argument 2, you will have all SNPs on a particular chromosome on positions 13 , in one file and on the same chromosome, position 91 in a
 different file (into batches of SNPs sharing only the first two digits in their base pair position). The input and outcome would both have comma as a separator for the .csv files. Using this function you can approximately segregate data and then manually check for exceptions. To use this function, make sure your output and exposure data are in the format you need for the MRBase package.
+
+         python3 Data_preperation.py "/home/user/Exposure.csv" "/home/user/Outcome.csv"
+
 
 
 ## 4.5 Harmonize the data and save it in the format required for causal analysis. 
