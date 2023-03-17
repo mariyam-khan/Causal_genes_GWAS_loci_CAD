@@ -102,7 +102,7 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
 
 
 We have used this method to estimate the causal effect of *genes* which are shared on a locus on outcome *Coronary Artery Disease* using summary statistics from *genome wide association studies (GWAS)*. We used two different studies for GWAS summary data, firstly, *ebi-a-GCST003116* with trait as coronary artery
-disease, from the year 2015 and secondly, *finn-b-I9 CHD* with trait as Major coronary heart disease event, from the year 2021.
+disease, from the year 2015 and secondly, *finn-b-I9\_CHD* with trait as Major coronary heart disease event, from the year 2021.
 
 ## 4.1 Download exposure data from GTEx
 
@@ -148,7 +148,7 @@ To get the GWAS summary data for this exposure data, you would firstly need to r
 
 Apart from this:
 
-- Create a seperate column for effect allele.exposure using the allele in the GTEx dataset (the effect allele.exposure for the variant chr1_64764_C_T_b38 is C). You have to remember to match the rs ID’s of the build b37 as MRBase package uses this build.
+- Create a seperate column for effect allele.exposure using the allele in the GTEx dataset (the effect allele.exposure for the variant chr1\_64764\_C\_T\_b38 is C). You have to remember to match the rs ID’s of the build b37 as MRBase package uses this build.
 
 
 The corresponding GTex file for extraction of GWAS summary data from the MRBase package, should look like 
@@ -193,7 +193,7 @@ Now that you have the outcome and exposure data, you can choose a chromosome and
 analysis. Please note that this outcome data is not harmonized with the effect allele of the exposure data.
 
 
-We will come to data harmonization shortly but before make sure that for the causal analysis,
+We will come to data harmonization shortly in **Section 4.5** but before make sure that for the causal analysis,
 
 
 ### 4.4.1  Choose your *Snp* and get exposure and outocme data within 1Mb distance.
@@ -210,7 +210,7 @@ As an example, if you run
         
         
 Here the lead SNP has position 137997742 on Chromosome 3 and you wish to have *Snps* around this lead SNP within 1Mb of distance. You will then get
-the same Exposure 3 137997742.csv and Outcome 3 137997742.csv files with SNPs which are significant (p − value ≤ e − 08) and 1 Mb around 137997742 on
+the same Exposure 3 137997742.csv and Outcome 3 137997742.csv files with SNPs which are significant (p − value ≤ 5e-08) and 1 Mb around 137997742 on
 chromosome3.
 
 
