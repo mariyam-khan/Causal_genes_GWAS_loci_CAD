@@ -42,11 +42,15 @@ and
         library(MRInstruments)
         
         
-# 3. Steps to running the code 
+# 2. Steps to running the code 
 
 To estimate the causal effect, the minimum information required is as follows:
+
+
 SNPs to exposure effect (exposure can be gene-expression)
+
 SNPs to outcome effect (outcome can be a diseae like Coronary Artery disease)
+
 Lastly, optional is LD-matrix of the SNPs (in the SNPs-exposure/outcome data). This is optional because, run MVMR.py has in-built functionality to 
 run the analysis without the user providing this LD-matrix. 
 This is not optional, in the case you want to use MVMR withoutLD.py as this function allows the user to specify their own LD-matrix for their own toy data.
