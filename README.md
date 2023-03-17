@@ -47,32 +47,23 @@ and
 To estimate the causal effect, the minimum information required is as follows:
 
 
-SNPs to exposure effect (exposure can be gene-expression)
+a. SNPs to exposure effect (exposure can be gene-expression)
 
-SNPs to outcome effect (outcome can be a diseae like Coronary Artery disease)
+b. SNPs to outcome effect (outcome can be a diseae like Coronary Artery disease)
 
-Lastly, optional is LD-matrix of the SNPs (in the SNPs-exposure/outcome data). This is optional because, run MVMR.py has in-built functionality to 
+c. Lastly, optional is LD-matrix of the SNPs (in the SNPs-exposure/outcome data). This is optional because, run MVMR.py has in-built functionality to 
 run the analysis without the user providing this LD-matrix. 
 This is not optional, in the case you want to use MVMR withoutLD.py as this function allows the user to specify their own LD-matrix for their own toy data.
 
+Case 1: If you already have the data in the format containing the SNPs to exposure effects and SNPs to outcome effects. 
 
-There are the main steps that need to be performed to run the causa analysis, depending on your input data:
-      
-      If you already have the data in the format containing the SNPs to exposure effects and SNPs to outcome effects. 
-
-      
-                      SNPs,gene1,gene2,outcome
-                      rs11191416,0.5,0.37,0.079
-                      rs7098825,0.34,0.0,0.078
-                      rs17115100,0.4,0.54,0.05
-                      
-     In this case you can directly use run MVMR.py (if you do not provide an LD-matrix) or if you provide an LD-matix in the format
-
-                      1.0,0.9,0.8
-                      0.9,1.0,0.7
-                      0.8,0.7,1.0
-
+   Case 1.1 : In this case you can directly use run MVMR.py (If you do not provide an LD-matrix).
+   Case 1.2 : You can use MVMR_withoutLD.py (If you wish to provide your LD-matrix).
      
+Case 2: If you have the dataset from GTEx and wish to prepare the datasets to run the analysis. 
+
+In this scenario:
+
 
 
 # 3. Data and Preparation
@@ -81,12 +72,24 @@ There are the main steps that need to be performed to run the causa analysis, de
 We have used this method to estimate the causal effect of genes which are shared on a locus on outcome Coronary Artery Disease using summary statistics from genome wide association studies (GWAS). We used two different studies for GWAS summary data, firstly, ebi-a-GCST003116 with trait as coronary artery
 disease, from the year 2015 and secondly, finn-b-I9 CHD with trait as Major coronary heart disease event, from the year 2021.
 
+# 3.1 Download exposure data from GTEx
 
 For the summary data on eQTL analysis, we have used STARNET for association analysis from instruments (SNPs) to exposures (genes). But since this
 data is not publicly available, exposure data fom Gtex can be download from https://gtexportal.org/home/datasets. Here in the Single-Tissue cis-QTL
 data, you can download the full summary statistics of the cis-eQTLs mapped in European-American subjects. You can check the alignment of the effect allele
 from https://www.gtexportal.org/home/faq#interpretEffectSize.
 
+
+
+When you download data from Gtex, you would have data in the format
+such as:
+
+        variant_id            gene_id         maf   slope slope_se pval_beta
+        chr1_64764_C_T_b38 ENSG00000227232.5 0.06    0.5    0.1     1.3e-05
+        
+        
+
+# 3.2 Make sure the GTEx data is in the format required by the MR-Base package
 
 To extract outcome data for the study of interest, we used the TwoSampleMR Package (package for performing Mendelian randomization using GWAS
 summary data, https://mrcieu.github.io/TwoSampleMR/). Note that if you are using GTEx for exposure datasets, you have to make sure that this minimum information is provided for the extraction of the GWAS summary data from the MRBase package:
@@ -98,15 +101,8 @@ summary data, https://mrcieu.github.io/TwoSampleMR/). Note that if you are using
         effect_allele - allele of SNP which has the effect marked in beta.
 
 
-When you download data from Gtex, you would have data in the format
-such as:
-
-        variant_id            gene_id         maf   slope slope_se pval_beta
-        chr1_64764_C_T_b38 ENSG00000227232.5 0.06    0.5    0.1     1.3e-05
-
-
 To get the GWAS summary data for this exposure data, you would firstly need to replace the variant id’s to rs ID’s from the gtex annotation file. The
-slope in the file is beta.exposure for the MR-Base package, slope se is se.exposure,pval beta is pval.exposure, gene id is exposure, the effect allele.exposure is the allele C in this example. You have to remember to match the rs ID’s of the build b37 as MRBase package uses this build.
+slope in the file is beta.exposure for the MR-Base package, slope se is se.exposure, pval beta is pval.exposure, gene id is exposure, the effect allele.exposure is the allele C in this example. You have to remember to match the rs ID’s of the build b37 as MRBase package uses this build.
 
 
 The corresponding GTex file for extraction of GWAS summary data from the MRBase package, should look like 
@@ -118,6 +114,9 @@ To save the effort of going from GTEx exposure data to data usable in the MRBase
 ing rs ID’s and structured in the MRBase format, available at https://drive.google.com/drive/folders/14u2dN8k3OwnZZkSkAQFN0ndboTFJFH-J?usp=share_
 link.
 
+
+
+# 3.3 Extract outcome data using MR-Base package 
 
 Now if you have the exposure data in the correct format, you can get the
 GWAS summary data as follows:
@@ -137,7 +136,13 @@ After this you can extract the outcome data for any study using this code that s
         write.csv(cad_out_dat, "Outcome.csv" ,row.names = FALSE)
         write.csv(exposure_data, "Exposure.csv" ,row.names = FALSE)
         
-        
+
+
+
+# 3.3 From the GTEx data, get the data on a specific chromosome and within 1Mb distance .
+
+
+
 Now that you have the outcome and exposure data, you can choose a chromosome and genetic variants within 1Mb distance of each other to run the causal
 analysis. Please note that this outcome data is not harmonized with the effect allele of the exposure data.
 
