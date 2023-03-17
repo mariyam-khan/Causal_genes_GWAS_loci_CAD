@@ -84,20 +84,20 @@ Case 2: If you have the dataset from GTEx and wish to prepare the datasets to ru
 In this scenario:
 
 
-    Step 1 (Section 4.1) : Download exposure data from GTEx https://gtexportal.org/home/datasets
+  - Step 1 (Section 4.1) : Download exposure data from GTEx https://gtexportal.org/home/datasets
 
-    Step 2 (Section 4.2) : Make sure the GTEx data is in the format required by the MR-Base package
-    
-    Step 3 (Section 4.3) : Extract outcome data using MR-Base package 
-    
-    Step 4 (Section 4.4) : From the exposure and outcome, get data on a specific chromosome and within 1Mb distance. You can either 
-   
-     (Section 4.4.1) :   Choose your SNP and get exposure and outocme data within 1Mb distance.
-     (Section 4.4.2) :  For entire exposure/outcome data, get datasets of each chromosome and SNPs within 1Mb distance.
-    
-    Step 5 (Section 4.5) : Harmonize the data and save it in the format required for causal analysis. 
-    
-    Step 5 (Section 5) : Run the causal analysis, as in Case 1. 
+  - Step 2 (Section 4.2) : Make sure the GTEx data is in the format required by the MR-Base package
+
+  - Step 3 (Section 4.3) : Extract outcome data using MR-Base package 
+
+  - Step 4 (Section 4.4) : From the exposure and outcome, get data on a specific chromosome and within 1Mb distance. You can either 
+
+    - (Section 4.4.1) :   Choose your SNP and get exposure and outocme data within 1Mb distance.
+    - (Section 4.4.2) :  For entire exposure/outcome data, get datasets of each chromosome and SNPs within 1Mb distance.
+
+  - Step 5 (Section 4.5) : Harmonize the data and save it in the format required for causal analysis. 
+
+  - Step 6 (Section 5) : Run the causal analysis, as in Case 1. 
     
     
 
