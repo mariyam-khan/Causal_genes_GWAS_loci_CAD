@@ -75,7 +75,7 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
    In Case 1.2, you can generate LD-matrix in R as described in **Section 5.2.1**
    
  
-**In Case 1, the analysis is finished after these steps.**
+*In Case 1, the analysis is finished after these steps.*
 
 
 
@@ -97,7 +97,7 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
 
   - **Step 6 (Section 5) :** Run the causal analysis, as in Case 1.   
 
-**In Case 2, the analysis is finished after these steps.**
+*In Case 2, the analysis is finished after these steps.*
 
 
 # 4. Data and Preparation
@@ -138,19 +138,19 @@ summary data, https://mrcieu.github.io/TwoSampleMR/). Note that if you are using
 To get the GWAS summary data for this exposure data, you would firstly need to replace the following from the GTEx dataset to the format required by MRBase:
 
 
-a.  variant id’s to rs ID’s from the gtex annotation file.
+-  variant id’s to rs ID’s from the gtex annotation file.
 
-b. slope to beta.exposure
+- slope to beta.exposure
 
-c. slope se to se.exposure
+- slope se to se.exposure
 
-d. pval beta to pval.exposure
+- pval beta to pval.exposure
 
-e. gene id to exposure
+- gene id to exposure
 
 Apart from this:
 
-f. Create a seperate column for effect allele.exposure using the allele in the GTEx dataset (the effect allele.exposure for the variant chr1_64764_C_T_b38 is C). You have to remember to match the rs ID’s of the build b37 as MRBase package uses this build.
+- Create a seperate column for effect allele.exposure using the allele in the GTEx dataset (the effect allele.exposure for the variant chr1_64764_C_T_b38 is C). You have to remember to match the rs ID’s of the build b37 as MRBase package uses this build.
 
 
 The corresponding GTex file for extraction of GWAS summary data from the MRBase package, should look like 
