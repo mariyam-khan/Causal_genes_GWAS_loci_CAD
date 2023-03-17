@@ -136,7 +136,7 @@ summary data, https://mrcieu.github.io/TwoSampleMR/). Note that if you are using
 To get the GWAS summary data for this exposure data, you would firstly need to replace the following from the GTEx dataset to the format required by MRBase:
 
 
--  variant id’s to rs ID’s from the gtex annotation file.
+- variant id’s to rs ID’s from the gtex annotation file.
 
 - slope to beta.exposure
 
@@ -168,7 +168,7 @@ Now if you have the exposure data in the correct format, you can get the
 GWAS summary data as follows:
 
 
-The available outcomes function returns a table of all the available studies in the database. Each study has a unique ID.
+The `available_outcomes` function returns a table of all the available studies in the database. Each study has a unique ID.
 
         library(TwoSampleMR)
         available_outcomes <- available_outcomes()
@@ -198,7 +198,7 @@ We will come to data harmonization shortly in **Section 4.5** but before make su
 
 ### 4.4.1  Choose your *Snp* and get exposure and outocme data within 1Mb distance.
 
-To make sure that you have data from the same locus and of *Snps* within 1 Mb of each other, you can choose a lead SNP and run the function Choose\_SNPs.py. This function takes as input exposure data which you used to extract the GWAS summary data from the MR-Base package and GWAS summary data as first two arguments and chromosome and position as
+To make sure that you have data from the same locus and of *Snps* within 1 Mb of each other, you can choose a lead SNP and run the function `Choose_SNPs.py`. This function takes as input exposure data which you used to extract the GWAS summary data from the MR-Base package and GWAS summary data as first two arguments and chromosome and position as
 the next two arguments. Once you run this, you will get SNPs on the chromosome (integer given as argument for chromosome number) 1Mb around the
 position of the lead SNP you gave as argument for position, saved in exposure and outcome data .csv files. These files will be saved in the same directory as the original files with the suffix of the chromosome and position appended to them.
 
@@ -216,7 +216,7 @@ chromosome3.
 
 ### 4.4.2  For entire exposure/outcome data, get datasets of each chromosome and SNPs within 1Mb distance.
 
-If there is no specific locus where you wish to perform the analysis but rather the entire exposure and outcome data, we have a code Seperate chr.py which
+If there is no specific locus where you wish to perform the analysis but rather the entire exposure and outcome data, we have a code `Seperate_chr.py` which
 can output the exposure and outcome data segregated per chromosome and position. You can give as input the exposure data file which you used to extract the
 GWAS summary data from the MR-Base package and GWAS summary data file itself as the first two arguments. To this you will give a third argument which is
 an integer value (usually 2) and this function will take the exposure and output files, segregate both files per chromosome and additionally per position.
@@ -228,20 +228,21 @@ For the following code
         python3 Seperate_chr.py "/home/user/Exposure.csv" "/home/user/Outcome.csv" 2
 
 
-You will have multiple files saved in your initial directory, for each chromosome and for different positions of the varuants on the chromosome. As an
+You will have multiple files saved in your initial directory, for each chromosome and for different positions of the variants on the chromosome. As an
 example, with argument 2, you will have all SNPs on a particular chromosome on positions 13 , in one file and on the same chromosome, position 91 in a
 different file (into batches of SNPs sharing only the first two digits in their base pair position). The input and outcome would both have comma as a separator for the .csv files. Using this function you can approximately segregate data and then manually check for exceptions. To use this function, make sure your output and exposure data are in the format you need for the MRBase package.
 
-         python3 Data_preperation.py "/home/user/Exposure.csv" "/home/user/Outcome.csv"
 
 
 
 ## 4.5 Harmonize the data and save it in the format required for causal analysis. 
 
 Lastly to harmonize the exposure and outocme data files as well as having them in format ready for causal analysis. you can give the outputs of either of
-the last two functions and use the file Data preparation.py to get the datasets in the format needed for running the causal analysis. The input would be
+the last two functions and use the file `Data preparation.py` to get the datasets in the format needed for running the causal analysis. The input would be
 exposure and outcome files you get after you run Seperate chr.py, with comma as a separator and the output would be a file with the format required for the
 causal analysis saved in the same input directory with suffix prepared.csv.
+
+          python3 Data_preperation.py "/home/user/Exposure.csv" "/home/user/Outcome.csv"
 
 
 # 5. Scripts for causal analysis
@@ -293,7 +294,7 @@ please order the SNPs in decreasing order of significance in both .csv files.
 
 ### 5.2.1  If you provide an LD-matrix. 
 
-The LD-matrix can be generated using the TwoSampleMR function ld matrix. Please make sure all SNPs belong
+The LD-matrix can be generated using the **TwoSampleMR function** `ld_matrix`. Please make sure all *Snps* belong
 to the LD panel. To get the LD-matrix, run the following commands in R
 
 
@@ -302,7 +303,7 @@ to the LD panel. To get the LD-matrix, run the following commands in R
       matrix <- ld_matrix(snps, with_alleles = FALSE, pop = "EUR")
 
 
-In snps, add the SNPs you wish to get the LD-matrix for.
+In snps, add the *SNps* you wish to get the LD-matrix for.
 
 
 The following code will save the LD-matrix in the format required for our analysis
@@ -322,7 +323,7 @@ You can get the following errors while using the code:
         Error Message : You require at least as many instruments as exposures to run this analysis.
 
 
-In this case you cannot run the analysis. The code prunes for SNPs in perfect LD so it may happen that you have more SNPs in the dataset
+In this case you cannot run the analysis. The code prunes for SNPs in perfect LD so it may happen that you have more *Snps* in the dataset
 you provided but they end up getting removed in the pruning and you get this error.
 
 
