@@ -41,8 +41,7 @@ and
         library(TwoSampleMR)
         library(MRInstruments)
         
-        
-# 2. Steps to running the code 
+# 2. Guide to data requirements
 
 To estimate the causal effect, the minimum information required is as follows:
 
@@ -52,13 +51,28 @@ a. SNPs to exposure effect (exposure can be gene-expression)
 b. SNPs to outcome effect (outcome can be a diseae like Coronary Artery disease)
 
 c. Lastly, optional is LD-matrix of the SNPs (in the SNPs-exposure/outcome data). This is optional because, run MVMR.py has in-built functionality to 
-run the analysis without the user providing this LD-matrix. 
-This is not optional, in the case you want to use MVMR withoutLD.py as this function allows the user to specify their own LD-matrix for their own toy data.
+run the analysis without the user providing this LD-matrix. This is not optional, in the case you want to use MVMR withoutLD.py as this function allows the user to specify their own LD-matrix for their own toy data.
+
+
+# 3. Steps to running the code 
+
+
 
 Case 1: If you already have the data in the format containing the SNPs to exposure effects and SNPs to outcome effects. 
 
-   Case 1.1 : In this case you can directly use run MVMR.py (If you do not provide an LD-matrix).
-   Case 1.2 : You can use MVMR_withoutLD.py (If you wish to provide your LD-matrix).
+   Case 1.1 : If you do not provide an LD-matrix.
+   
+          Step 1 (Section 5.1) : MVMR withoutLD.py 
+   
+   
+   Case 1.2 : If you wish to provide your LD-matrix.
+   
+          Step 2 (Section 5.2) : run MVMR.py 
+   
+   In Case 1.2, you can generate LD-matrix in R as described in section 5.2 
+ 
+In Case 1, the analysis is finished after these steps.
+
      
 Case 2: If you have the dataset from GTEx and wish to prepare the datasets to run the analysis. 
 
@@ -84,13 +98,13 @@ In this scenario:
     
 
 
-# 3. Data and Preparation
+# 4. Data and Preparation
 
 
 We have used this method to estimate the causal effect of genes which are shared on a locus on outcome Coronary Artery Disease using summary statistics from genome wide association studies (GWAS). We used two different studies for GWAS summary data, firstly, ebi-a-GCST003116 with trait as coronary artery
 disease, from the year 2015 and secondly, finn-b-I9 CHD with trait as Major coronary heart disease event, from the year 2021.
 
-# 3.1 Download exposure data from GTEx
+# 4.1 Download exposure data from GTEx
 
 For the summary data on eQTL analysis, we have used STARNET for association analysis from instruments (SNPs) to exposures (genes). But since this
 data is not publicly available, exposure data fom Gtex can be download from https://gtexportal.org/home/datasets. Here in the Single-Tissue cis-QTL
@@ -107,7 +121,7 @@ such as:
         
         
 
-# 3.2 Make sure the GTEx data is in the format required by the MR-Base package
+# 4.2 Make sure the GTEx data is in the format required by the MR-Base package
 
 To extract outcome data for the study of interest, we used the TwoSampleMR Package (package for performing Mendelian randomization using GWAS
 summary data, https://mrcieu.github.io/TwoSampleMR/). Note that if you are using GTEx for exposure datasets, you have to make sure that this minimum information is provided for the extraction of the GWAS summary data from the MRBase package:
@@ -134,7 +148,7 @@ link.
 
 
 
-# 3.3 Extract outcome data using MR-Base package 
+# 4.3 Extract outcome data using MR-Base package 
 
 Now if you have the exposure data in the correct format, you can get the
 GWAS summary data as follows:
@@ -157,7 +171,7 @@ After this you can extract the outcome data for any study using this code that s
 
 
 
-# 3.4 From the GTEx data, get the data on a specific chromosome and within 1Mb distance.
+# 4.4 From the GTEx data, get the data on a specific chromosome and within 1Mb distance.
 
 
 
@@ -168,7 +182,7 @@ analysis. Please note that this outcome data is not harmonized with the effect a
 We will come to data harmonization shortly but before make sure that for the causal analysis,
 
 
-# 3.4.1  Choose your SNP and get exposure and outocme data within 1Mb distance.
+# 4.4.1  Choose your SNP and get exposure and outocme data within 1Mb distance.
 
 To make sure that you have data from the same locus and of SNPs within 1 Mb of each other, you can choose a lead SNP and run the function Choose SNPs.py. This function takes as input exposure data which you used to extract the GWAS summary data from the MR-Base package and GWAS summary data as first two arguments and chromosome and position as
 the next two arguments. Once you run this, you will get SNPs on the chromosome (integer given as argument for chromosome number) 1Mb around the
@@ -186,7 +200,7 @@ the same Exposure 3 137997742.csv and Outcome 3 137997742.csv files with SNPs wh
 chromosome3.
 
 
-# 3.4.2  For entire exposure/outcome data, get datasets of each chromosome and SNPs within 1Mb distance.
+# 4.4.2  For entire exposure/outcome data, get datasets of each chromosome and SNPs within 1Mb distance.
 
 If there is no specific locus where you wish to perform the analysis but rather the entire exposure and outcome data, we have a code Seperate chr.py which
 can output the exposure and outcome data segregated per chromosome and position. You can give as input the exposure data file which you used to extract the
@@ -205,7 +219,7 @@ example, with argument 2, you will have all SNPs on a particular chromosome on p
 different file (into batches of SNPs sharing only the first two digits in their base pair position). The input and outcome would both have comma as a separator for the .csv files. Using this function you can approximately segregate data and then manually check for exceptions. To use this function, make sure your output and exposure data are in the format you need for the MRBase package.
 
 
-# 3.5 Harmonize the data and save it in the format required for causal analysis. 
+# 4.5 Harmonize the data and save it in the format required for causal analysis. 
 
 Lastly to harmonize the exposure and outocme data files as well as having them in format ready for causal analysis. you can give the outputs of either of
 the last two functions and use the file Data preparation.py to get the datasets in the format needed for running the causal analysis. The input would be
@@ -213,10 +227,25 @@ exposure and outcome files you get after you run Seperate chr.py, with comma as 
 causal analysis saved in the same input directory with suffix prepared.csv.
 
 
-# 4. Scripts for causal analysis
+# 5. Scripts for causal analysis
 
 
-There are two major files for running the causal analysis. Firstly, run MVMR.py, is the file for getting the causal genes for cases the user can supply the LD-matrix. This file can be downloaded and run on the terminal as
+There are two major files for running the causal analysis.
+
+# 5.1  If you do not provide an LD-matrix.
+
+          python3 MVMR_withoutLD.py "/home/user/file.csv"
+          
+After python3, the argument should be the file.csv file containing the SNPs to exposure effects and SNPs to outcome effects. The first column is
+always the SNP ID’s, the last column is always the SNPs to outcome effect. Every other column in between is treated as an exposure variable. The separator to be used is comma. As an example:
+
+
+        SNPs,gene1,gene2,outcome
+        rs11191416,0.5,0.37,0.079
+        rs7098825,0.34,0.0,0.078
+        rs17115100,0.4,0.54,0.05
+
+# 5.2  If you provide an LD-matrix.
 
         python3 run_MVMR.py "/home/user/file.csv" "/home/user/ld.csv"
 
@@ -246,15 +275,7 @@ please order the SNPs in decreasing order of significance in both .csv files.
 
 
 
-Secondly, MVMR withoutLD.py is the file which has the same purpose as run MVMR.py except here you have to run the file on the terminal as
-
-
-
-        python3 MVMR_withoutLD.py "/home/user/file.csv"
-
-
-
-i.e. without the file with the LD-matrix. The LD-matrix can be generated using the TwoSampleMR function ld matrix. Please make sure all SNPs belong
+The LD-matrix can be generated using the TwoSampleMR function ld matrix. Please make sure all SNPs belong
 to the LD panel. To get the LD-matrix, run the following commands in R
 
 
@@ -273,7 +294,7 @@ The following code will save the LD-matrix in the format required for our analys
 
 
 
-# 4.1 Error messages
+# 6. Error messages
 
 
 You can get the following errors while using the code:
@@ -294,7 +315,7 @@ In this case you should remove the mentioned SNPs (rs28789513) from the dataset.
 an LD-matrix and it is generated using the R-package TwoSampleMR.
 
 
-# 5. Comparison to other methods
+# 7. Comparison to other methods
 
 
 You can compare your results to other methods in the MVMR community like TWMR https://www.nature.com/articles/s41467-019-10936-0, MVMR
