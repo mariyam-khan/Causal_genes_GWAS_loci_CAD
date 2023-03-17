@@ -54,18 +54,18 @@ b. *Snps* to outcome effect (outcome can be a diseae like Coronary Artery diseas
 For the causal analysis, a. and b.  need to be in one file as described in section 5.1
 
 
-c. Lastly, optional is LD-matrix of the *Snps* (*Snps* in the *Snps*-exposure/outcome data). This is optional because, *MVMR\_withoutLD.py* has in-built functionality to run the analysis without the user providing this LD-matrix (section 5.1). This is not optional, in the case you want to use run MVMR.py as this function allows the user to specify their own LD-matrix for their data (section 5.2).
+c. Lastly, optional is LD-matrix of the *Snps* (*Snps* in the *Snps*-exposure/outcome data). This is optional because, *MVMR\_withoutLD.py* has in-built functionality to run the analysis without the user providing this LD-matrix **(section 5.1)**. This is not optional, in the case you want to use *run\_MVMR.py* as this function allows the user to specify their own LD-matrix for their data **(section 5.2)**.
 
 
 # 3. Steps to running the code 
 
 
 
-Case 1: If you already have the data in the format containing the SNPs to exposure effects and SNPs to outcome effects **(Section 5)**. 
+Case 1: If you already have the data in the format containing the *Snps* to exposure effects and *Snps* to outcome effects **(Section 5)**. 
 
    Case 1.1 : If you do not provide an LD-matrix.
    
-          **Step 1 (Section 5.1)** : MVMR withoutLD.py 
+          Step 1 (Section 5.1) : MVMR withoutLD.py 
    
    
    Case 1.2 : If you wish to provide your LD-matrix.
@@ -74,7 +74,7 @@ Case 1: If you already have the data in the format containing the SNPs to exposu
    
    In Case 1.2, you can generate LD-matrix in R as described in **section 5.2.1**
  
-In Case 1, the analysis is finished after these steps.
+**In Case 1, the analysis is finished after these steps.**
 
      
 Case 2: If you have the dataset from GTEx and wish to prepare the datasets to run the analysis. 
@@ -101,16 +101,17 @@ In this scenario:
     
     
 
+**In Case 2, the analysis is finished after these steps.**
 
 # 4. Data and Preparation
 
 
-We have used this method to estimate the causal effect of genes which are shared on a locus on outcome Coronary Artery Disease using summary statistics from genome wide association studies (GWAS). We used two different studies for GWAS summary data, firstly, ebi-a-GCST003116 with trait as coronary artery
-disease, from the year 2015 and secondly, finn-b-I9 CHD with trait as Major coronary heart disease event, from the year 2021.
+We have used this method to estimate the causal effect of *genes* which are shared on a locus on outcome *Coronary Artery Disease* using summary statistics from *genome wide association studies (GWAS)*. We used two different studies for GWAS summary data, firstly, *ebi-a-GCST003116* with trait as coronary artery
+disease, from the year 2015 and secondly, *finn-b-I9 CHD* with trait as Major coronary heart disease event, from the year 2021.
 
 ## 4.1 Download exposure data from GTEx
 
-For the summary data on eQTL analysis, we have used STARNET for association analysis from instruments (SNPs) to exposures (genes). But since this
+For the summary data on eQTL analysis, we have used STARNET for association analysis from instruments (*Snps*) to exposures (*genes*). But since this
 data is not publicly available, exposure data fom GTEx can be download from https://gtexportal.org/home/datasets. Here in the Single-Tissue cis-QTL
 data, you can download the full summary statistics of the cis-eQTLs mapped in European-American subjects. You can check the alignment of the effect allele
 from https://www.gtexportal.org/home/faq#interpretEffectSize.
@@ -127,7 +128,7 @@ such as:
 
 ## 4.2 Make sure the GTEx data is in the format required by the MR-Base package
 
-To extract outcome data for the study of interest, we used the TwoSampleMR Package (package for performing Mendelian randomization using GWAS
+To extract outcome data for the study of interest, we used the **TwoSampleMR Package** (package for performing Mendelian randomization using GWAS
 summary data, https://mrcieu.github.io/TwoSampleMR/). Note that if you are using GTEx for exposure datasets, you have to make sure that this minimum information is provided for the extraction of the GWAS summary data from the MRBase package:
 
 
@@ -200,9 +201,9 @@ analysis. Please note that this outcome data is not harmonized with the effect a
 We will come to data harmonization shortly but before make sure that for the causal analysis,
 
 
-### 4.4.1  Choose your SNP and get exposure and outocme data within 1Mb distance.
+### 4.4.1  Choose your *Snp* and get exposure and outocme data within 1Mb distance.
 
-To make sure that you have data from the same locus and of SNPs within 1 Mb of each other, you can choose a lead SNP and run the function Choose SNPs.py. This function takes as input exposure data which you used to extract the GWAS summary data from the MR-Base package and GWAS summary data as first two arguments and chromosome and position as
+To make sure that you have data from the same locus and of *Snps* within 1 Mb of each other, you can choose a lead SNP and run the function Choose\_SNPs.py. This function takes as input exposure data which you used to extract the GWAS summary data from the MR-Base package and GWAS summary data as first two arguments and chromosome and position as
 the next two arguments. Once you run this, you will get SNPs on the chromosome (integer given as argument for chromosome number) 1Mb around the
 position of the lead SNP you gave as argument for position, saved in exposure and outcome data .csv files. These files will be saved in the same directory as the original files with the suffix of the chromosome and position appended to them.
 
@@ -213,7 +214,7 @@ As an example, if you run
         python3 Choose_SNPs.py "/home/user/Exposure.csv" "/home/user/Outcome.csv" 3 137997742
         
         
-Here the lead SNP has position 137997742 on Chromosome 3 and you wish to have SNPs around this lead SNP within 1Mb of distance. You will then get
+Here the lead SNP has position 137997742 on Chromosome 3 and you wish to have *Snps* around this lead SNP within 1Mb of distance. You will then get
 the same Exposure 3 137997742.csv and Outcome 3 137997742.csv files with SNPs which are significant (p − value ≤ e − 08) and 1 Mb around 137997742 on
 chromosome3.
 
