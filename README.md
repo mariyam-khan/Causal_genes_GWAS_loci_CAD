@@ -46,15 +46,15 @@ and
 To estimate the causal effect, the minimum information required is as follows:
 
 
-- a. *Snps* to exposure effect (exposure can be *expression of a gene*).
+- A. *Snps* to exposure effect (exposure can be *expression of a gene*).
 
-- b. *Snps* to outcome effect (outcome can be a diseae like *Coronary Artery Disease*).
-
-
-For the causal analysis, a. and b.  need to be in one file as described in **Section 5.1**
+- B. *Snps* to outcome effect (outcome can be a diseae like *Coronary Artery Disease*).
 
 
-- c. Lastly, optional is LD-matrix of the *Snps* (*Snps* in the *Snps*-exposure/outcome data). This is optional because, *MVMR\_withoutLD.py* has in-built functionality to run the analysis *without the user providing this LD-matrix* **(Section 5.1)**. This is not optional, in the case you want to use *run\_MVMR.py* as this function allows the user to *specify their own LD-matrix* for their data **(Section 5.2)**.
+For the causal analysis, A. and B.  need to be in one file as described in **Section 5.1**
+
+
+- C. Lastly, optional is LD-matrix of the *Snps* (*Snps* in the *Snps*-exposure/outcome data). This is optional because, *MVMR\_withoutLD.py* has in-built functionality to run the analysis *without the user providing this LD-matrix* **(Section 5.1)**. This is not optional, in the case you want to use *run\_MVMR.py* as this function allows the user to *specify their own LD-matrix* for their data **(Section 5.2)**.
 
 
 # 3. Steps to running the code 
