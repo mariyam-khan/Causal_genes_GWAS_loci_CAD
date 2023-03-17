@@ -108,7 +108,7 @@ In this scenario:
 We have used this method to estimate the causal effect of genes which are shared on a locus on outcome Coronary Artery Disease using summary statistics from genome wide association studies (GWAS). We used two different studies for GWAS summary data, firstly, ebi-a-GCST003116 with trait as coronary artery
 disease, from the year 2015 and secondly, finn-b-I9 CHD with trait as Major coronary heart disease event, from the year 2021.
 
-# 4.1 Download exposure data from GTEx
+## 4.1 Download exposure data from GTEx
 
 For the summary data on eQTL analysis, we have used STARNET for association analysis from instruments (SNPs) to exposures (genes). But since this
 data is not publicly available, exposure data fom GTEx can be download from https://gtexportal.org/home/datasets. Here in the Single-Tissue cis-QTL
@@ -125,7 +125,7 @@ such as:
         
         
 
-# 4.2 Make sure the GTEx data is in the format required by the MR-Base package
+## 4.2 Make sure the GTEx data is in the format required by the MR-Base package
 
 To extract outcome data for the study of interest, we used the TwoSampleMR Package (package for performing Mendelian randomization using GWAS
 summary data, https://mrcieu.github.io/TwoSampleMR/). Note that if you are using GTEx for exposure datasets, you have to make sure that this minimum information is provided for the extraction of the GWAS summary data from the MRBase package:
@@ -166,7 +166,7 @@ link.
 
 
 
-# 4.3 Extract outcome data using MR-Base package 
+## 4.3 Extract outcome data using MR-Base package 
 
 Now if you have the exposure data in the correct format, you can get the
 GWAS summary data as follows:
@@ -189,7 +189,7 @@ After this you can extract the outcome data for any study using this code that s
 
 
 
-# 4.4 From the GTEx data, get the data on a specific chromosome and within 1Mb distance.
+## 4.4 From the GTEx data, get the data on a specific chromosome and within 1Mb distance.
 
 
 
@@ -200,7 +200,7 @@ analysis. Please note that this outcome data is not harmonized with the effect a
 We will come to data harmonization shortly but before make sure that for the causal analysis,
 
 
-# 4.4.1  Choose your SNP and get exposure and outocme data within 1Mb distance.
+### 4.4.1  Choose your SNP and get exposure and outocme data within 1Mb distance.
 
 To make sure that you have data from the same locus and of SNPs within 1 Mb of each other, you can choose a lead SNP and run the function Choose SNPs.py. This function takes as input exposure data which you used to extract the GWAS summary data from the MR-Base package and GWAS summary data as first two arguments and chromosome and position as
 the next two arguments. Once you run this, you will get SNPs on the chromosome (integer given as argument for chromosome number) 1Mb around the
@@ -218,7 +218,7 @@ the same Exposure 3 137997742.csv and Outcome 3 137997742.csv files with SNPs wh
 chromosome3.
 
 
-# 4.4.2  For entire exposure/outcome data, get datasets of each chromosome and SNPs within 1Mb distance.
+### 4.4.2  For entire exposure/outcome data, get datasets of each chromosome and SNPs within 1Mb distance.
 
 If there is no specific locus where you wish to perform the analysis but rather the entire exposure and outcome data, we have a code Seperate chr.py which
 can output the exposure and outcome data segregated per chromosome and position. You can give as input the exposure data file which you used to extract the
@@ -237,7 +237,7 @@ example, with argument 2, you will have all SNPs on a particular chromosome on p
 different file (into batches of SNPs sharing only the first two digits in their base pair position). The input and outcome would both have comma as a separator for the .csv files. Using this function you can approximately segregate data and then manually check for exceptions. To use this function, make sure your output and exposure data are in the format you need for the MRBase package.
 
 
-# 4.5 Harmonize the data and save it in the format required for causal analysis. 
+## 4.5 Harmonize the data and save it in the format required for causal analysis. 
 
 Lastly to harmonize the exposure and outocme data files as well as having them in format ready for causal analysis. you can give the outputs of either of
 the last two functions and use the file Data preparation.py to get the datasets in the format needed for running the causal analysis. The input would be
@@ -250,7 +250,7 @@ causal analysis saved in the same input directory with suffix prepared.csv.
 
 There are two major files for running the causal analysis.
 
-# 5.1  If you do not provide an LD-matrix.
+## 5.1  If you do not provide an LD-matrix.
 
           python3 MVMR_withoutLD.py "/home/user/file.csv"
           
@@ -263,7 +263,7 @@ always the SNP ID’s, the last column is always the SNPs to outcome effect. Eve
         rs7098825,0.34,0.0,0.078
         rs17115100,0.4,0.54,0.05
 
-# 5.2  If you provide an LD-matrix.
+## 5.2  If you provide an LD-matrix.
 
         python3 run_MVMR.py "/home/user/file.csv" "/home/user/ld.csv"
 
@@ -292,7 +292,7 @@ prunes for SNPs in perfect-LD and keeps only the first occurring SNPs. If you wo
 please order the SNPs in decreasing order of significance in both .csv files.
 
 
-# 5.2.1  If you provide an LD-matrix. 
+### 5.2.1  If you provide an LD-matrix. 
 
 The LD-matrix can be generated using the TwoSampleMR function ld matrix. Please make sure all SNPs belong
 to the LD panel. To get the LD-matrix, run the following commands in R
