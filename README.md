@@ -65,12 +65,12 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
 
    - **Case 1.1 :** If you do not provide an LD-matrix.
    
-     - **Step 1 (Section 5.1) :** ’MVMR\_withoutLD.py’ 
+     - **Step 1 (Section 5.1) :** `MVMR\_withoutLD.py` 
    
    
    - **Case 1.2 :** If you wish to provide your LD-matrix.
    
-     - **Step 1 (Section 5.2)** : ’run_MVMR.py’, LD-matrix can be generated in R as described in **Section 5.2.1**
+     - **Step 1 (Section 5.2)** : `run_MVMR.py`, LD-matrix can be generated in R as described in **Section 5.2.1**
    
  
 *In Case 1, the analysis is finished after these steps.*
@@ -88,10 +88,10 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
 
   - **Step 4 (Section 4.4) :** From the exposure and outcome, get data on a specific chromosome and within 1Mb distance. You can either 
 
-    - **(Section 4.4.1) :**   Choose your SNP and get exposure and outocme data within 1Mb distance using ’Choose\_SNPs.py’.
-    - **(Section 4.4.2) :**  For entire exposure/outcome data, get datasets of each chromosome and SNPs within 1Mb distance using ’Seperate\_chr.py’.
+    - **(Section 4.4.1) :**   Choose your SNP and get exposure and outocme data within 1Mb distance using `Choose\_SNPs.py`.
+    - **(Section 4.4.2) :**  For entire exposure/outcome data, get datasets of each chromosome and SNPs within 1Mb distance using `Seperate\_chr.py`.
 
-  - **Step 5 (Section 4.5) :** Harmonize the data and save it in the format required for causal analysis ’Data\_preperation.py’. 
+  - **Step 5 (Section 4.5) :** Harmonize the data and save it in the format required for causal analysis `Data\_preperation.py`. 
 
   - **Step 6 (Section 5) :** Run the causal analysis, as in Case 1.   
 
