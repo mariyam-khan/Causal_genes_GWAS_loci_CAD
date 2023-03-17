@@ -46,19 +46,22 @@ and
 To estimate the causal effect, the minimum information required is as follows:
 
 
-a. SNPs to exposure effect (exposure can be gene-expression)
+a. SNPs to exposure effect (exposure can be expression of a gene)
 
 b. SNPs to outcome effect (outcome can be a diseae like Coronary Artery disease)
 
-c. Lastly, optional is LD-matrix of the SNPs (in the SNPs-exposure/outcome data). This is optional because, MVMR withoutLD.py has in-built functionality to 
-run the analysis without the user providing this LD-matrix. This is not optional, in the case you want to use run MVMR.py as this function allows the user to specify their own LD-matrix for their own toy data.
+
+For the causal analysis, a. and b.  need to be in one file as described in section 5.1
+
+
+c. Lastly, optional is LD-matrix of the SNPs (SNPs in the SNPs-exposure/outcome data). This is optional because, MVMR withoutLD.py has in-built functionality to run the analysis without the user providing this LD-matrix (section 5.1). This is not optional, in the case you want to use run MVMR.py as this function allows the user to specify their own LD-matrix for their data (section 5.2).
 
 
 # 3. Steps to running the code 
 
 
 
-Case 1: If you already have the data in the format containing the SNPs to exposure effects and SNPs to outcome effects. 
+Case 1: If you already have the data in the format containing the SNPs to exposure effects and SNPs to outcome effects (Section 5). 
 
    Case 1.1 : If you do not provide an LD-matrix.
    
@@ -69,7 +72,7 @@ Case 1: If you already have the data in the format containing the SNPs to exposu
    
           Step 2 (Section 5.2) : run MVMR.py 
    
-   In Case 1.2, you can generate LD-matrix in R as described in section 5.2 
+   In Case 1.2, you can generate LD-matrix in R as described in section 5.2.1 
  
 In Case 1, the analysis is finished after these steps.
 
@@ -81,19 +84,20 @@ Case 2: If you have the dataset from GTEx and wish to prepare the datasets to ru
 In this scenario:
 
 
-    Step 1 (Section 3.1) : Download exposure data from GTEx
+    Step 1 (Section 4.1) : Download exposure data from GTEx
 
-    Step 2 (Section 3.2) : Make sure the GTEx data is in the format required by the MR-Base package
+    Step 2 (Section 4.2) : Make sure the GTEx data is in the format required by the MR-Base package
     
-    Step 3 (Section 3.3) : Extract outcome data using MR-Base package 
+    Step 3 (Section 4.3) : Extract outcome data using MR-Base package 
     
-    Step 4 (Section 3.4) : From the exposure and outcome, get data on a specific chromosome and within 1Mb distance. You can either 
+    Step 4 (Section 4.4) : From the exposure and outcome, get data on a specific chromosome and within 1Mb distance. You can either 
    
-     (Section 3.4.1) :   Choose your SNP and get exposure and outocme data within 1Mb distance.
-     (Section 3.4.2) :  For entire exposure/outcome data, get datasets of each chromosome and SNPs within 1Mb distance.
+     (Section 4.4.1) :   Choose your SNP and get exposure and outocme data within 1Mb distance.
+     (Section 4.4.2) :  For entire exposure/outcome data, get datasets of each chromosome and SNPs within 1Mb distance.
     
-    Step 5 (Section 3.5) : Harmonize the data and save it in the format required for causal analysis. 
+    Step 5 (Section 4.5) : Harmonize the data and save it in the format required for causal analysis. 
     
+    Step 5 (Section 5) : Run the causal analysis, as in Case 1. 
     
     
 
@@ -274,6 +278,7 @@ prunes for SNPs in perfect-LD and keeps only the first occurring SNPs. If you wo
 please order the SNPs in decreasing order of significance in both .csv files.
 
 
+# 5.2.1  If you provide an LD-matrix. 
 
 The LD-matrix can be generated using the TwoSampleMR function ld matrix. Please make sure all SNPs belong
 to the LD panel. To get the LD-matrix, run the following commands in R
