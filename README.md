@@ -61,43 +61,43 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
 
 
 
-Case 1: If you already have the data in the format containing the *Snps* to exposure effects and *Snps* to outcome effects **(Section 5)**. 
+**Case 1:** If you already have the data in the format containing the *Snps* to exposure effects and *Snps* to outcome effects **(Section 5)**. 
 
-   - Case 1.1 : If you do not provide an LD-matrix.
+   - **Case 1.1 :** If you do not provide an LD-matrix.
    
-     - Step 1 (Section 5.1) : MVMR withoutLD.py 
+     - **Step 1 (Section 5.1) :** MVMR withoutLD.py 
    
    
-   - Case 1.2 : If you wish to provide your LD-matrix.
+   - **Case 1.2 :** If you wish to provide your LD-matrix.
    
-     - Step 2 (Section 5.2) : run MVMR.py 
+     - **Step 2 (Section 5.2)** : run MVMR.py 
    
    In Case 1.2, you can generate LD-matrix in R as described in **Section 5.2.1**
  
 **In Case 1, the analysis is finished after these steps.**
 
      
-Case 2: If you have the dataset from GTEx and wish to prepare the datasets to run the analysis. 
+**Case 2:** If you have the dataset from GTEx and wish to prepare the datasets to run the analysis. 
 
 
 
 In this scenario:
 
 
-  - Step 1 (Section 4.1) : Download exposure data from GTEx https://gtexportal.org/home/datasets
+  - **Step 1 (Section 4.1) :** Download exposure data from GTEx https://gtexportal.org/home/datasets
 
-  - Step 2 (Section 4.2) : Make sure the GTEx data is in the format required by the MR-Base package
+  - **Step 2 (Section 4.2) :** Make sure the GTEx data is in the format required by the MR-Base package
 
-  - Step 3 (Section 4.3) : Extract outcome data using MR-Base package 
+  - **Step 3 (Section 4.3) :** Extract outcome data using MR-Base package 
 
-  - Step 4 (Section 4.4) : From the exposure and outcome, get data on a specific chromosome and within 1Mb distance. You can either 
+  - **Step 4 (Section 4.4) :** From the exposure and outcome, get data on a specific chromosome and within 1Mb distance. You can either 
 
-    - (Section 4.4.1) :   Choose your SNP and get exposure and outocme data within 1Mb distance.
-    - (Section 4.4.2) :  For entire exposure/outcome data, get datasets of each chromosome and SNPs within 1Mb distance.
+    - **(Section 4.4.1) :**   Choose your SNP and get exposure and outocme data within 1Mb distance.
+    - **(Section 4.4.2) :**  For entire exposure/outcome data, get datasets of each chromosome and SNPs within 1Mb distance.
 
-  - Step 5 (Section 4.5) : Harmonize the data and save it in the format required for causal analysis. 
+  - **Step 5 (Section 4.5) :** Harmonize the data and save it in the format required for causal analysis. 
 
-  - Step 6 (Section 5) : Run the causal analysis, as in Case 1. 
+  - **Step 6 (Section 5) :** Run the causal analysis, as in Case 1. 
     
     
 
