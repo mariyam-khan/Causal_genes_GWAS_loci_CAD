@@ -65,7 +65,7 @@ Case 1: If you already have the data in the format containing the SNPs to exposu
 
    Case 1.1 : If you do not provide an LD-matrix.
    
-          Step 1 (Section 5.1) : MVMR withoutLD.py 
+          **Step 1 (Section 5.1)** : MVMR withoutLD.py 
    
    
    Case 1.2 : If you wish to provide your LD-matrix.
