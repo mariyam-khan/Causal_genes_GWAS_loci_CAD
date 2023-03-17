@@ -70,9 +70,7 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
    
    - **Case 1.2 :** If you wish to provide your LD-matrix.
    
-     - **Step 2 (Section 5.2)** : run MVMR.py 
-   
-   In Case 1.2, you can generate LD-matrix in R as described in **Section 5.2.1**
+     - **Step 1 (Section 5.2)** : run MVMR.py, LD-matrix can be generated in R as described in **Section 5.2.1**
    
  
 *In Case 1, the analysis is finished after these steps.*
