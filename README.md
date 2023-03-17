@@ -50,8 +50,8 @@ a. SNPs to exposure effect (exposure can be gene-expression)
 
 b. SNPs to outcome effect (outcome can be a diseae like Coronary Artery disease)
 
-c. Lastly, optional is LD-matrix of the SNPs (in the SNPs-exposure/outcome data). This is optional because, run MVMR.py has in-built functionality to 
-run the analysis without the user providing this LD-matrix. This is not optional, in the case you want to use MVMR withoutLD.py as this function allows the user to specify their own LD-matrix for their own toy data.
+c. Lastly, optional is LD-matrix of the SNPs (in the SNPs-exposure/outcome data). This is optional because, MVMR withoutLD.py has in-built functionality to 
+run the analysis without the user providing this LD-matrix. This is not optional, in the case you want to use run MVMR.py as this function allows the user to specify their own LD-matrix for their own toy data.
 
 
 # 3. Steps to running the code 
