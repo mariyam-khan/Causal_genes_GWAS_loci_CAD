@@ -25,6 +25,7 @@ This Python version has the packages numpy (version 1.11.0 or later), scipy, pan
         import pandas
         import rpy2
         import sys
+        import scipy
 
 
 You would also need statistical programming language R 3.2.0 or later. You can check this by typing ’R’ in the command line. To install R, please visit
@@ -39,9 +40,38 @@ and
         library(devtools)
         library(TwoSampleMR)
         library(MRInstruments)
+        
+        
+# 3. Steps to running the code 
+
+To estimate the causal effect, the minimum information required is as follows:
+SNPs to exposure effect (exposure can be gene-expression)
+SNPs to outcome effect (outcome can be a diseae like Coronary Artery disease)
+Lastly, optional is LD-matrix of the SNPs (in the SNPs-exposure/outcome data). This is optional because, run MVMR.py has in-built functionality to 
+run the analysis without the user providing this LD-matrix. 
+This is not optional, in the case you want to use MVMR withoutLD.py as this function allows the user to specify their own LD-matrix for their own toy data.
 
 
-# 2. Data and Preparation
+There are the main steps that need to be performed to run the causa analysis, depending on your input data:
+      
+      If you already have the data in the format containing the SNPs to exposure effects and SNPs to outcome effects. 
+
+      
+                      SNPs,gene1,gene2,outcome
+                      rs11191416,0.5,0.37,0.079
+                      rs7098825,0.34,0.0,0.078
+                      rs17115100,0.4,0.54,0.05
+                      
+     In this case you can directly use run MVMR.py (if you do not provide an LD-matrix) or if you provide an LD-matix in the format
+
+                      1.0,0.9,0.8
+                      0.9,1.0,0.7
+                      0.8,0.7,1.0
+
+     
+
+
+# 3. Data and Preparation
 
 
 We have used this method to estimate the causal effect of genes which are shared on a locus on outcome Coronary Artery Disease using summary statistics from genome wide association studies (GWAS). We used two different studies for GWAS summary data, firstly, ebi-a-GCST003116 with trait as coronary artery
@@ -149,7 +179,7 @@ exposure and outcome files you get after you run Seperate chr.py, with comma as 
 causal analysis saved in the same input directory with suffix prepared.csv.
 
 
-# 3. Scripts for causal analysis
+# 4. Scripts for causal analysis
 
 
 There are two major files for running the causal analysis. Firstly, run MVMR.py, is the file for getting the causal genes for cases the user can supply the LD-matrix. This file can be downloaded and run on the terminal as
@@ -209,7 +239,7 @@ The following code will save the LD-matrix in the format required for our analys
 
 
 
-# 3.1 Error messages
+# 4.1 Error messages
 
 
 You can get the following errors while using the code:
@@ -230,7 +260,7 @@ In this case you should remove the mentioned SNPs (rs28789513) from the dataset.
 an LD-matrix and it is generated using the R-package TwoSampleMR.
 
 
-# 4. Comparison to other methods
+# 5. Comparison to other methods
 
 
 You can compare your results to other methods in the MVMR community like TWMR https://www.nature.com/articles/s41467-019-10936-0, MVMR
