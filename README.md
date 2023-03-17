@@ -84,7 +84,7 @@ Case 2: If you have the dataset from GTEx and wish to prepare the datasets to ru
 In this scenario:
 
 
-    Step 1 (Section 4.1) : Download exposure data from GTEx
+    Step 1 (Section 4.1) : Download exposure data from GTEx https://gtexportal.org/home/datasets
 
     Step 2 (Section 4.2) : Make sure the GTEx data is in the format required by the MR-Base package
     
@@ -111,7 +111,7 @@ disease, from the year 2015 and secondly, finn-b-I9 CHD with trait as Major coro
 # 4.1 Download exposure data from GTEx
 
 For the summary data on eQTL analysis, we have used STARNET for association analysis from instruments (SNPs) to exposures (genes). But since this
-data is not publicly available, exposure data fom Gtex can be download from https://gtexportal.org/home/datasets. Here in the Single-Tissue cis-QTL
+data is not publicly available, exposure data fom GTEx can be download from https://gtexportal.org/home/datasets. Here in the Single-Tissue cis-QTL
 data, you can download the full summary statistics of the cis-eQTLs mapped in European-American subjects. You can check the alignment of the effect allele
 from https://www.gtexportal.org/home/faq#interpretEffectSize.
 
@@ -137,8 +137,22 @@ summary data, https://mrcieu.github.io/TwoSampleMR/). Note that if you are using
         effect_allele - allele of SNP which has the effect marked in beta.
 
 
-To get the GWAS summary data for this exposure data, you would firstly need to replace the variant id’s to rs ID’s from the gtex annotation file. The
-slope in the file is beta.exposure for the MR-Base package, slope se is se.exposure, pval beta is pval.exposure, gene id is exposure, the effect allele.exposure is the allele C in this example. You have to remember to match the rs ID’s of the build b37 as MRBase package uses this build.
+To get the GWAS summary data for this exposure data, you would firstly need to replace the following from the GTEx dataset to the format required by MRBase:
+
+
+a.  variant id’s to rs ID’s from the gtex annotation file.
+
+b. slope to beta.exposure
+
+c. slope se to se.exposure
+
+d. pval beta to pval.exposure
+
+e. gene id to exposure
+
+Apart from this:
+
+f. Create a seperate column for effect allele.exposure using the allele in the GTEx dataset (the effect allele.exposure for the variant chr1_64764_C_T_b38 is C). You have to remember to match the rs ID’s of the build b37 as MRBase package uses this build.
 
 
 The corresponding GTex file for extraction of GWAS summary data from the MRBase package, should look like 
