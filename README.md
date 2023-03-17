@@ -1,5 +1,5 @@
 # Causal genes at GWAS loci for Coronary Artery Disease
-  Identification of causal genes at GWAS loci with pleiotropic gene regulatory effects using instrumental variable sets
+  Identification of causal genes at GWAS loci with pleiotropic gene regulatory effects using instrumental variable sets.
   
 # 1. Guide to software requirements
 
@@ -8,7 +8,7 @@ To use this code, download the code files and ensure that you have the dependenc
 
         python3 run_MVMR.py "/home/user/file.csv" "/home/user/ld.csv"
 
-Here, python3 should refer to at least Python 3.5 and depends on your specific installation of Python.
+Here, python3 should refer to at least **Python 3.5** and depends on your specific installation of Python.
 
 Before running the code files, check whether you have the following requirements and install them if necessary:
 
@@ -28,8 +28,8 @@ This Python version has the packages numpy (version 1.11.0 or later), scipy, pan
         import scipy
 
 
-You would also need statistical programming language R 3.2.0 or later. You can check this by typing ’R’ in the command line. To install R, please visit
-https://www.r-project.org/. If you need to use GWAS summary data for your exposure data (gene expression data) or if you need to get the LD-matix of SNPs in your data, you can use the package TwoSampleMR (https://mrcieu.github.io/TwoSampleMR/). It uses the IEU GWAS database to obtain data automatically, and you can install and call them in R using the following commands
+You would also need statistical programming language **R 3.2.0** or later. You can check this by typing ’R’ in the command line. To install R, please visit
+https://www.r-project.org/. If you need to use GWAS summary data for your exposure data (gene expression data) or if you need to get the LD-matix of *Snps* in your data, you can use the package TwoSampleMR (https://mrcieu.github.io/TwoSampleMR/). It uses the IEU GWAS database to obtain data automatically, and you can install and call them in R using the following commands
 
 
         install.packages("devtools")
@@ -46,15 +46,15 @@ and
 To estimate the causal effect, the minimum information required is as follows:
 
 
-a. *Snps* to exposure effect (exposure can be expression of a gene)
+- a. *Snps* to exposure effect (exposure can be *expression of a gene*).
 
-b. *Snps* to outcome effect (outcome can be a diseae like Coronary Artery disease)
-
-
-For the causal analysis, a. and b.  need to be in one file as described in section 5.1
+- b. *Snps* to outcome effect (outcome can be a diseae like *Coronary Artery Disease*).
 
 
-c. Lastly, optional is LD-matrix of the *Snps* (*Snps* in the *Snps*-exposure/outcome data). This is optional because, *MVMR\_withoutLD.py* has in-built functionality to run the analysis without the user providing this LD-matrix **(section 5.1)**. This is not optional, in the case you want to use *run\_MVMR.py* as this function allows the user to specify their own LD-matrix for their data **(section 5.2)**.
+For the causal analysis, a. and b.  need to be in one file as described in **Section 5.1**
+
+
+- c. Lastly, optional is LD-matrix of the *Snps* (*Snps* in the *Snps*-exposure/outcome data). This is optional because, *MVMR\_withoutLD.py* has in-built functionality to run the analysis *without the user providing this LD-matrix* **(Section 5.1)**. This is not optional, in the case you want to use *run\_MVMR.py* as this function allows the user to *specify their own LD-matrix* for their data **(Section 5.2)**.
 
 
 # 3. Steps to running the code 
@@ -63,16 +63,16 @@ c. Lastly, optional is LD-matrix of the *Snps* (*Snps* in the *Snps*-exposure/ou
 
 Case 1: If you already have the data in the format containing the *Snps* to exposure effects and *Snps* to outcome effects **(Section 5)**. 
 
-   Case 1.1 : If you do not provide an LD-matrix.
+   - Case 1.1 : If you do not provide an LD-matrix.
    
-          Step 1 (Section 5.1) : MVMR withoutLD.py 
+     - Step 1 (Section 5.1) : MVMR withoutLD.py 
    
    
-   Case 1.2 : If you wish to provide your LD-matrix.
+   - Case 1.2 : If you wish to provide your LD-matrix.
    
-          Step 2 (Section 5.2) : run MVMR.py 
+     - Step 2 (Section 5.2) : run MVMR.py 
    
-   In Case 1.2, you can generate LD-matrix in R as described in **section 5.2.1**
+   In Case 1.2, you can generate LD-matrix in R as described in **Section 5.2.1**
  
 **In Case 1, the analysis is finished after these steps.**
 
