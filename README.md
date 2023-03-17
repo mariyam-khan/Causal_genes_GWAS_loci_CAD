@@ -62,8 +62,26 @@ Case 1: If you already have the data in the format containing the SNPs to exposu
      
 Case 2: If you have the dataset from GTEx and wish to prepare the datasets to run the analysis. 
 
+
+
 In this scenario:
 
+
+    Step 1 (Section 3.1) : Download exposure data from GTEx
+
+    Step 2 (Section 3.2) : Make sure the GTEx data is in the format required by the MR-Base package
+    
+    Step 3 (Section 3.3) : Extract outcome data using MR-Base package 
+    
+    Step 4 (Section 3.4) : From the exposure and outcome, get data on a specific chromosome and within 1Mb distance. You can either 
+   
+     (Section 3.4.1) :   Choose your SNP and get exposure and outocme data within 1Mb distance.
+     (Section 3.4.2) :  For entire exposure/outcome data, get datasets of each chromosome and SNPs within 1Mb distance.
+    
+    Step 5 (Section 3.5) : Harmonize the data and save it in the format required for causal analysis. 
+    
+    
+    
 
 
 # 3. Data and Preparation
@@ -139,7 +157,7 @@ After this you can extract the outcome data for any study using this code that s
 
 
 
-# 3.3 From the GTEx data, get the data on a specific chromosome and within 1Mb distance .
+# 3.4 From the GTEx data, get the data on a specific chromosome and within 1Mb distance.
 
 
 
@@ -147,10 +165,12 @@ Now that you have the outcome and exposure data, you can choose a chromosome and
 analysis. Please note that this outcome data is not harmonized with the effect allele of the exposure data.
 
 
-We will come to data harmonization shortly but before make sure that for the causal analysis,you either give data in the format mentioned in 3 and run the
-analysis as explained there or, you can use some of our functions to arrive there. Firstly, to make sure that you have data from the same locus and of SNPs
-within 1 Mb of each other, you can either choose a lead SNP and run the function Choose SNPs.py. This function takes as input exposure data which
-you used to extract the GWAS summary data from the MR-Base package and GWAS summary data as first two arguments and chromosome and position as
+We will come to data harmonization shortly but before make sure that for the causal analysis,
+
+
+# 3.4.1  Choose your SNP and get exposure and outocme data within 1Mb distance.
+
+To make sure that you have data from the same locus and of SNPs within 1 Mb of each other, you can choose a lead SNP and run the function Choose SNPs.py. This function takes as input exposure data which you used to extract the GWAS summary data from the MR-Base package and GWAS summary data as first two arguments and chromosome and position as
 the next two arguments. Once you run this, you will get SNPs on the chromosome (integer given as argument for chromosome number) 1Mb around the
 position of the lead SNP you gave as argument for position, saved in exposure and outcome data .csv files. These files will be saved in the same directory as the original files with the suffix of the chromosome and position appended to them.
 
@@ -164,6 +184,9 @@ As an example, if you run
 Here the lead SNP has position 137997742 on Chromosome 3 and you wish to have SNPs around this lead SNP within 1Mb of distance. You will then get
 the same Exposure 3 137997742.csv and Outcome 3 137997742.csv files with SNPs which are significant (p − value ≤ e − 08) and 1 Mb around 137997742 on
 chromosome3.
+
+
+# 3.4.2  For entire exposure/outcome data, get datasets of each chromosome and SNPs within 1Mb distance.
 
 If there is no specific locus where you wish to perform the analysis but rather the entire exposure and outcome data, we have a code Seperate chr.py which
 can output the exposure and outcome data segregated per chromosome and position. You can give as input the exposure data file which you used to extract the
@@ -181,6 +204,8 @@ You will have multiple files saved in your initial directory, for each chromosom
 example, with argument 2, you will have all SNPs on a particular chromosome on positions 13 , in one file and on the same chromosome, position 91 in a
 different file (into batches of SNPs sharing only the first two digits in their base pair position). The input and outcome would both have comma as a separator for the .csv files. Using this function you can approximately segregate data and then manually check for exceptions. To use this function, make sure your output and exposure data are in the format you need for the MRBase package.
 
+
+# 3.5 Harmonize the data and save it in the format required for causal analysis. 
 
 Lastly to harmonize the exposure and outocme data files as well as having them in format ready for causal analysis. you can give the outputs of either of
 the last two functions and use the file Data preparation.py to get the datasets in the format needed for running the causal analysis. The input would be
