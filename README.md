@@ -73,16 +73,14 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
      - **Step 2 (Section 5.2)** : run MVMR.py 
    
    In Case 1.2, you can generate LD-matrix in R as described in **Section 5.2.1**
+   
  
 **In Case 1, the analysis is finished after these steps.**
 
+
+
      
 **Case 2:** If you have the dataset from GTEx and wish to prepare the datasets to run the analysis. 
-
-
-
-In this scenario:
-
 
   - **Step 1 (Section 4.1) :** Download exposure data from GTEx https://gtexportal.org/home/datasets
 
@@ -97,11 +95,10 @@ In this scenario:
 
   - **Step 5 (Section 4.5) :** Harmonize the data and save it in the format required for causal analysis. 
 
-  - **Step 6 (Section 5) :** Run the causal analysis, as in Case 1. 
-    
-    
+  - **Step 6 (Section 5) :** Run the causal analysis, as in Case 1.   
 
 **In Case 2, the analysis is finished after these steps.**
+
 
 # 4. Data and Preparation
 
