@@ -46,22 +46,22 @@ and
 To estimate the causal effect, the minimum information required is as follows:
 
 
-a. SNPs to exposure effect (exposure can be expression of a gene)
+a. *Snps* to exposure effect (exposure can be expression of a gene)
 
-b. SNPs to outcome effect (outcome can be a diseae like Coronary Artery disease)
+b. *Snps* to outcome effect (outcome can be a diseae like Coronary Artery disease)
 
 
 For the causal analysis, a. and b.  need to be in one file as described in section 5.1
 
 
-c. Lastly, optional is LD-matrix of the SNPs (SNPs in the SNPs-exposure/outcome data). This is optional because, MVMR withoutLD.py has in-built functionality to run the analysis without the user providing this LD-matrix (section 5.1). This is not optional, in the case you want to use run MVMR.py as this function allows the user to specify their own LD-matrix for their data (section 5.2).
+c. Lastly, optional is LD-matrix of the *Snps* (*Snps* in the *Snps*-exposure/outcome data). This is optional because, *MVMR\_withoutLD.py* has in-built functionality to run the analysis without the user providing this LD-matrix (section 5.1). This is not optional, in the case you want to use run MVMR.py as this function allows the user to specify their own LD-matrix for their data (section 5.2).
 
 
 # 3. Steps to running the code 
 
 
 
-Case 1: If you already have the data in the format containing the SNPs to exposure effects and SNPs to outcome effects (Section 5). 
+Case 1: If you already have the data in the format containing the SNPs to exposure effects and SNPs to outcome effects **(Section 5)**. 
 
    Case 1.1 : If you do not provide an LD-matrix.
    
@@ -72,7 +72,7 @@ Case 1: If you already have the data in the format containing the SNPs to exposu
    
           Step 2 (Section 5.2) : run MVMR.py 
    
-   In Case 1.2, you can generate LD-matrix in R as described in section 5.2.1 
+   In Case 1.2, you can generate LD-matrix in R as described in **section 5.2.1**
  
 In Case 1, the analysis is finished after these steps.
 
