@@ -215,23 +215,34 @@ the same Exposure 3 137997742.csv and Outcome 3 137997742.csv files with SNPs wh
 chromosome3.
 
 
-### 4.4.2  For entire exposure/outcome data, get datasets of each chromosome and SNPs within 1Mb distance.
+### 4.4.2  For entire exposure/outcome data, get datasets of each chromosome and SNPs within *chosen* distance.
 
-If there is no specific locus where you wish to perform the analysis but rather the entire exposure and outcome data, we have a code `Seperate_chr.py` which
-can output the exposure and outcome data segregated per chromosome and position. You can give as input the exposure data file which you used to extract the
-GWAS summary data from the MR-Base package and GWAS summary data file itself as the first two arguments. To this you will give a third argument which is
-an integer value (usually 2) and this function will take the exposure and output files, segregate both files per chromosome and additionally per position.
+If there is no specific locus where you wish to perform the analysis but rather the entire exposure and outcome data, we have a code `Segregate_datsets.py` which can output the exposure and outcome data segregated per chromosome and "hotspots" per chromosome.
+
+A *hotspot* is characterized by the lead SNP (the SNP which is the most GWAS significant) and SNPs around it which are either a. certain *distance* around the lead SNP (example 0.5 Mb) or b. are in a minimum amount of LD with the lead SNP *(lower LD threshold)* and  are in a maxmum amount of LD with the lead SNP *(upper LD threshold)*
+
+
+Please give as input:
+
+- Exposure Dataset/Path to exposure dataset.
+
+- Outcome Dataset/Path to outcome dataset
+
+- Distance (int, example 500000 for 0.5 Mb radius), SNPs within this distance around the lead SNP will be chosen for a given dataset. 
+
+- Lower LD threshold (float, example 0.01), SNPs with LD less than or equal to 0.01 with lead SNP will not be included. 
+
+- Upper LD threshold (float, example 1.0), SNPs with LD greater than or equal 1.0 with lead SNP will not be included.
+
 
 
 For the following code
 
 
-        python3 Seperate_chr.py "/home/user/Exposure.csv" "/home/user/Outcome.csv" 2
+        python3 Segregate_datsets.py "/home/user/Exposure.csv" "/home/user/Outcome.csv" 500000 0.01 1.0
 
 
-You will have multiple files saved in your initial directory, for each chromosome and for different positions of the variants on the chromosome. As an
-example, with argument 2, you will have all SNPs on a particular chromosome on positions 13 , in one file and on the same chromosome, position 91 in a
-different file (into batches of SNPs sharing only the first two digits in their base pair position). The input and outcome would both have comma as a separator for the .csv files. Using this function you can approximately segregate data and then manually check for exceptions. To use this function, make sure your output and exposure data are in the format you need for the MRBase package.
+You will have multiple files saved in your initial directory, for each chromosome and for different *hotspots*. To use this function, make sure your output and exposure data are in the format you need for the MRBase package.
 
 
 
