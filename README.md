@@ -1,6 +1,6 @@
 # Causal genes at GWAS loci for Coronary Artery Disease
   Identification of causal genes at GWAS loci with pleiotropic gene regulatory effects using instrumental variable sets.
-  ![Pipeline to run the Causal Analysis.](Pipeline.jpg)
+  ![Pipeline to run the Causal Analysis.](Pipeline.png)
   
 # 1. Guide to software requirements
 
