@@ -242,7 +242,7 @@ For the following code
         python3 Segregate_datsets.py "/home/user/Exposure.csv" "/home/user/Outcome.csv" 500000 0.01 1.0
 
 
-You will have multiple files saved in your initial directory, for each chromosome and for different *hotspots*. To use this function, make sure your output and exposure data are in the format you need for the MRBase package.
+You will have multiple files saved in your initial directory, for each chromosome and for different *hotspots*. To use this function, make sure your output and exposure data are in the format you need for the MRBase package. If you do not provide any distance, the default distance is taken to be 500000, while the default lower LD threshold is 0.0 and upper LD threshold is 1.0.
 
 
 
