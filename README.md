@@ -2,7 +2,7 @@
   Identification of causal genes at GWAS loci with pleiotropic gene regulatory effects using instrumental variable sets.
 
   
-# 1. Guide to software requirements
+# 1. Guide to software requirements.
 
 
 To use this code, download the code files and ensure that you have the dependencies explained below. To run the code files, you have to type:
@@ -42,7 +42,7 @@ and
         library(TwoSampleMR)
         library(MRInstruments)
         
-# 2. Guide to data requirements
+# 2. Guide to data requirements.
 
 To estimate the causal effect, the minimum information required is as follows:
 
@@ -58,7 +58,7 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
 - C. Lastly, optional is LD-matrix of the *Snps* (*Snps* in the *Snps*-exposure/outcome data). This is optional because, *MVMR\_withoutLD.py* has in-built functionality to run the analysis *without the user providing this LD-matrix* **(Section 5.1)**. This is not optional, in the case you want to use *run\_MVMR.py* as this function allows the user to *specify their own LD-matrix* for their data **(Section 5.2)**.
 
 
-# 3. Steps to running the code 
+# 3. Steps to running the code.
 
   ![Pipeline to run the Causal Analysis.](Pipeline.png)
 
@@ -69,13 +69,13 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
      - **Step 1 (Section 5.1) :** `MVMR_withoutLD.py` 
    
    
-   - **Case 1.2 :** If you wish to provide your LD-matrix.
+   - **Case 1.2 :** If you wish to provide your own LD-matrix.
    
      - **Step 1 (Section 5.2)** : `run_MVMR.py`, LD-matrix can be generated in R as described in **Section 5.2.1**
      
    
  
-*In Case 1, the analysis is finished after these steps and you will be returned the estimates of the causal parameters by different methods and their standard errors.*
+*In Case 1, the analysis is finished after these steps and you will be returned the *.csv* files of estimates of the causal parameters by different methods and their standard errors.*
 
 
 
@@ -84,33 +84,31 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
 
   - **Step 1 (Section 4.1) :** Download exposure data from GTEx https://gtexportal.org/home/datasets
   
-  - **Step 2 (Section 4.2) :** Align the SNP id's in the GTEx data with corresponding rs id's `Match_rs_id.py`.
+  - **Step 2 (Section 4.2) :** Align the *Snp* id's in the GTEx data with corresponding rs id's `Match_rs_id.py`.
 
-  - **Step 2 (Section 4.3) :** Make sure the GTEx data is in the format required by the MR-Base package.
+  - **Step 2 (Section 4.3) :** Make sure the GTEx data is in the format required by the TwoSampleMR package.
 
-  - **Step 3 (Section 4.4) :** Extract outcome data using MR-Base package. 
+  - **Step 3 (Section 4.4) :** Extract outcome data using TwoSampleMR package. 
 
-  - **Step 4 (Section 4.5) :** From the exposure and outcome, get data on a specific chromosome and within *chosen* distance and LD-threshold. You can                                    either 
+  - **Step 4 (Section 4.5) :** From the exposure and outcome, get data on a specific chromosome and within *chosen* distance and LD-range. You can                                        either 
 
-    - **Step 4.1 (Section 4.5.1) :**   Choose your SNP and get exposure and outcome data within *chosen* distance using `Choose_SNPs.py`.
-    - **Step 4.2 (Section 4.5.2) :**   Choose your SNP and get exposure and outcome data within *chosen* LD-range using `Prune_Snps_LD.py`.
+    - **Step 4.1 (Section 4.5.1) :**   Choose your *Snp* and get exposure and outcome data within *chosen* distance using `Choose_SNPs.py`.
+    - **Step 4.2 (Section 4.5.2) :**   Choose your *Snp* and get exposure and outcome data within *chosen* LD-range using `Prune_Snps_LD.py`.
     
-    You can run both Step 4.1 and Step 4.2 in any order to get SNPs within *chosen* distance and *chosen* LD-range.
+    You can run both Step 4.1 and Step 4.2 in any order to get *Snps* within *chosen* distance and *chosen* LD-range.
     
-    - **Step 4.3 (Section 4.5.3) :**   For entire exposure/outcome data, get datasets of each chromosome and SNPs within *chosen* distance and SNPs within                                        *chosen* LD-range using `Segregate_datasets.py`.
+    - **Step 4.3 (Section 4.5.3) :**   For entire exposure/outcome data, get datasets of each chromosome and *Snps* within *chosen* distance and SNPs                                              within *chosen* LD-range using `Segregate_datasets.py`.
     
-    Each of Step 4.1, Step 4.2 and Step 4.3 allow you to specify the p-value threshold for GWAS significant SNPs, to remove SNPs above this threshold.
+    Each of Step 4.1, Step 4.2 and Step 4.3 allow you to specify the p-value threshold for GWAS significant *Snps*, to remove *Snps* above this threshold.
 
   - **Step 5 (Section 4.6) :** Harmonize the data and save it in the format required for causal analysis `Data_Prep.py`.
     
-    In case of Step 4.3, this is done within the code and hence Step 5 is required only if you have your custom dataset or want to get the data through 
-    steps 4.1 and 4.2. 
+    In case of Step 4.3, this is done within the code and hence Step 5 is required only if you have either your custom dataset or want to get the data         through Steps 4.1 and 4.2. 
 
   - **Step 6 (Section 5) :** Run the causal analysis, as in Case 1. 
-    - **Step 6.1 (Section 5.2) :** In case you want to run the causal analysis for all datasets in a directory (as generated by Step 4.3) simultaneously, you can use 
-                                    `MVMR_directory.py` . You do not specify LD-matix for any dataset.
+    - **Step 6.1 (Section 5.2) :** In case you want to run the causal analysis for all datasets in a directory (as generated by Step 4.3) simultaneously,                                      you can use `MVMR_directory.py` . You do not specify LD-matix for any dataset.
 
-*In Case 2, the analysis is finished after these steps and you will be returned the estimates of the causal parameters by different methods and their standard errors.*
+*In Case 2, the analysis is finished after these steps and you will be returned the *.csv* files of estimates of the causal parameters by different methods and their standard errors.*
 
 
 # 4. Data and Preparation
