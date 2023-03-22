@@ -134,9 +134,16 @@ such as:
         variant_id            gene_id         maf   slope slope_se pval_beta
         chr1_64764_C_T_b38 ENSG00000227232.5 0.06    0.5    0.1     1.3e-05
         
-        
+## 4.2 Align the SNP id's in the GTEx data with corresponding rs id's 
 
-## 4.2 Make sure the GTEx data is in the format required by the MR-Base package
+Since the data you downloaded is not in format to extract GWAS summary data using MRBase package, you need to get it in their format (**Section 4.3**) and you need to align the variant_id with rs id using the GRCh37 build. You can a. Do this using the function below
+
+
+        python3 Match_rs_id.py "/home/user/Exposure.csv" "/home/user/annotation.csv" 
+
+Here, *Exposure.csv* is the exposure/gene expression data for a specific tissue and *annotation.csv* is the Rs id annotation file on GTEx.
+
+## 4.3 Make sure the GTEx data is in the format required by the MR-Base package
 
 To extract outcome data for the study of interest, we used the **TwoSampleMR Package** (package for performing Mendelian randomization using GWAS
 summary data, https://mrcieu.github.io/TwoSampleMR/). Note that if you are using GTEx for exposure datasets, you have to make sure that this minimum information is provided for the extraction of the GWAS summary data from the MRBase package:
@@ -163,7 +170,7 @@ To get the GWAS summary data for this exposure data, you would firstly need to r
 
 Apart from this:
 
-- Create a seperate column for effect allele.exposure using the allele in the GTEx dataset (the effect allele.exposure for the variant chr1\_64764\_C\_T\_b38 is C). You have to remember to match the rs ID’s of the build b37 as MRBase package uses this build.
+- Create a seperate column for effect allele.exposure using the allele in the GTEx dataset (the effect allele.exposure for the variant chr1\_64764\_C\_T\_b38 is C). You have to remember to match the rs ID’s of the build GRCh37 as MRBase package uses this build.
 
 
 The corresponding GTex file for extraction of GWAS summary data from the MRBase package, should look like 
@@ -177,7 +184,7 @@ link.
 
 
 
-## 4.3 Extract outcome data using MR-Base package 
+## 4.4 Extract outcome data using MR-Base package 
 
 Now if you have the exposure data in the correct format, you can get the
 GWAS summary data as follows:
@@ -200,15 +207,14 @@ After this you can extract the outcome data for any study using this code that s
 
 
 
-## 4.4 From the GTEx data, get the data on a specific chromosome and within 1Mb distance.
+## 4.5 From the GTEx data, get the data on a specific chromosome and within *chosen* distance and *chosen* LD-range.
 
 
 
-Now that you have the outcome and exposure data, you can choose a chromosome and genetic variants within 1Mb distance of each other to run the causal
-analysis. Please note that this outcome data is not harmonized with the effect allele of the exposure data.
+Now that you have the outcome and exposure data, you can choose a chromosome and genetic variants within *chosen* distance of each other and within *chosen* Ld-range, to run the causal analysis. Please note that this outcome data is not harmonized with the effect allele of the exposure data.
 
 
-We will come to data harmonization shortly in **Section 4.5** but before make sure that for the causal analysis,
+We will come to data harmonization shortly in **Section 4.6** but before make sure that for the causal analysis,
 
 
 ### 4.4.1  Choose your *Snp* and get exposure and outocme data within 1Mb distance.
