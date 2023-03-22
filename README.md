@@ -84,7 +84,7 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
 
   - **Step 1 (Section 4.1) :** Download exposure data from GTEx https://gtexportal.org/home/datasets
   
-  - **Step 2 (Section 4.2) :** Align the SNP id's in the GTEx data with corresponding rs id's.
+  - **Step 2 (Section 4.2) :** Align the SNP id's in the GTEx data with corresponding rs id's `Match_rs_id.py`.
 
   - **Step 2 (Section 4.3) :** Make sure the GTEx data is in the format required by the MR-Base package.
 
