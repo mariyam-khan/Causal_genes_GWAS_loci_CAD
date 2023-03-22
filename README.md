@@ -132,16 +132,21 @@ such as:
         variant_id            gene_id         maf   slope slope_se pval_beta
         chr1_64764_C_T_b38 ENSG00000227232.5 0.06    0.5    0.1     1.3e-05
         
-## 4.2 Align the SNP id's in the GTEx data with corresponding rs id's 
+## 4.2 Align the *Snp*-ID in the GTEx data with corresponding rs-ID.
 
-Since the data you downloaded is not in format to extract GWAS summary data using MRBase package, you need to get it in their format (**Section 4.3**) and you need to align the variant_id with rs id using the GRCh37 build. You can a. Do this using the function below
+Since the data you downloaded is not in format to extract GWAS summary data using TwoSampleMR package, you need to get it in their format (**Section 4.3**) and you need to align the variant_id with rs-ID using the GRCh37 build. You can either do this using the function below
 
 
         python3 Match_rs_id.py "/home/user/Exposure.csv" "/home/user/annotation.csv" 
 
-Here, *Exposure.csv* is the exposure/gene expression data for a specific tissue and *annotation.csv* is the Rs id annotation file on GTEx.
+Here, *Exposure.csv* is the exposure/gene expression data for a specific tissue from GTEx and *annotation.csv* is the rs-ID annotation file on GTEx. You will be returned *.csv* file with the annotated rs-ID’s in the same directory as your *Exposure.csv* file.
+
+You can now structure this data in format of TwSampleMR as given in **Section 4.3**. To save the effort of going from GTEx exposure data to data usable in the MRBase package, we have GTEx exposure data aligned with corresponding rs-ID’s and structured in the MRBase format, available at https://drive.google.com/drive/folders/14u2dN8k3OwnZZkSkAQFN0ndboTFJFH-J?usp=share_link.
 
 ## 4.3 Make sure the GTEx data is in the format required by the MR-Base package
+
+If you have downloaded the processed GTEx dataset from the linked drive, you need not follow the instructions in this section. If not,
+
 
 To extract outcome data for the study of interest, we used the **TwoSampleMR Package** (package for performing Mendelian randomization using GWAS
 summary data, https://mrcieu.github.io/TwoSampleMR/). Note that if you are using GTEx for exposure datasets, you have to make sure that this minimum information is provided for the extraction of the GWAS summary data from the MRBase package:
@@ -168,24 +173,17 @@ To get the GWAS summary data for this exposure data, you would firstly need to r
 
 Apart from this:
 
-- Create a seperate column for effect allele.exposure using the allele in the GTEx dataset (the effect allele.exposure for the variant chr1\_64764\_C\_T\_b38 is C). You have to remember to match the rs ID’s of the build GRCh37 as MRBase package uses this build.
+- Create a seperate column for effect allele.exposure using the allele in the GTEx dataset (the effect allele.exposure for the variant chr1\_64764\_C\_T\_b38 is C). 
 
 
-The corresponding GTex file for extraction of GWAS summary data from the MRBase package, should look like 
+The corresponding GTEx file for extraction of GWAS summary data from the MRBase package, should look like 
 
         SNP          exposure          maf   beta.exposure se.exposure pval.exposure effect_allele.exposure other_allele.exposure
         rs769952832 ENSG00000227232.5  0.06  0.5            0.1          1.3e-05          C                     T
 
-To save the effort of going from GTEx exposure data to data usable in the MRBase package, we have GTEx exposure data aligned with correspond-
-ing rs ID’s and structured in the MRBase format, available at https://drive.google.com/drive/folders/14u2dN8k3OwnZZkSkAQFN0ndboTFJFH-J?usp=share_
-link.
-
-
-
 ## 4.4 Extract outcome data using MR-Base package 
 
-Now if you have the exposure data in the correct format, you can get the
-GWAS summary data as follows:
+Now if you have the exposure data in the correct format, you can get the GWAS summary data as follows:
 
 
 The `available_outcomes` function returns a table of all the available studies in the database. Each study has a unique ID.
@@ -212,14 +210,12 @@ After this you can extract the outcome data for any study using this code that s
 Now that you have the outcome and exposure data, you can choose a chromosome and genetic variants within *chosen* distance of each other and within *chosen* Ld-range, to run the causal analysis. Please note that this outcome data is not harmonized with the effect allele of the exposure data.
 
 
-We will come to data harmonization shortly in **Section 4.6** but before make sure that for the causal analysis,
+We will come to data harmonization shortly in **Section 4.6** but before make sure that for the causal analysis you follow one or more of the following sub-sections.
 
 
 ### 4.5.1  Choose your *Snp* and get exposure and outcome data within *chosen* distance.
 
-To make sure that you have data from the same locus and of *Snps* within *chosen* distance (ex. 1Mb) of each other, you can choose a lead SNP and run the function `Choose_SNPs.py`. This function takes as input exposure data which you used to extract the GWAS summary data from the MR-Base package and GWAS summary data as first two arguments and chromosome and position as
-the next two arguments. Once you run this, you will get SNPs (that pass a certain p-value thresholod, gaven as the last argument to this function, ex. 5E-8) on the chromosome (integer given as argument for chromosome number) 1Mb around the
-position of the lead SNP (given as argument for position of this lead SNP), saved in exposure and outcome data .csv files.  These files will be saved in the same directory as the original files with the suffix of the chromosome and position appended to them.
+To make sure that you have data from the same locus and of *Snps* within *chosen* distance (ex. 1Mb) of each other, you can choose a lead *Snp* and run the function `Choose_SNPs.py`. This function takes as input exposure data which you used to extract the GWAS summary data from the MR-Base package and GWAS summary data as first two arguments and chromosome and position as the next two arguments. Once you run this, you will get SNPs (that pass a certain p-value thresholod, gaven as the last argument to this function, ex. 5E-8) on the chromosome (integer given as argument for chromosome number) 1Mb around the position of the lead SNP (given as argument for position of this lead SNP), saved in exposure and outcome data *.csv* files.  These files will be saved in the same directory as the original files with the suffix of the chromosome and position appended to them.
 
 
 As an example, if you run
@@ -228,7 +224,7 @@ As an example, if you run
         python3 Choose_SNPs.py "/home/user/Exposure.csv" "/home/user/Outcome.csv" 3 137997742 5E-8
         
         
-Here the lead SNP has position 137997742 on Chromosome 3 and you wish to have *Snps* around this lead SNP within 1Mb of distance. You will then get
+Here the lead *Snp* has position 137997742 on Chromosome 3 and you wish to have *Snps* around this lead SNP within 1Mb of distance. You will then get
 the same Exposure 3 137997742.csv and Outcome 3 137997742.csv files with SNPs which are significant (p − value ≤ 5E-08) and 1 Mb around 137997742 on
 chromosome3.
 
