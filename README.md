@@ -95,7 +95,7 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
     - **Step 4.1 (Section 4.4.1) :**   Choose your SNP and get exposure and outcome data within *chosen* distance using `Choose_SNPs.py`.
     - **Step 4.2 (Section 4.4.2) :**   Choose your SNP and get exposure and outcome data within *chosen* LD-range using `Prune_Snps_LD.py`.
     
-    You can run both in any order to get SNPs within *chosen* distance and *chosen* LD-range.
+    You can run both Step 4.1 and Step 4.2 in any order to get SNPs within *chosen* distance and *chosen* LD-range.
     
     - **Step 4.3 (Section 4.4.3) :**   For entire exposure/outcome data, get datasets of each chromosome and SNPs within *chosen* distance and SNPs within                                        *chosen* LD-range using `Segregate_datasets.py`.
     
