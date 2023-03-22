@@ -272,8 +272,11 @@ For the following code
 
 You will have multiple files saved in your initial directory, for each chromosome and for different *hotspots*. To use this function, make sure your output and exposure data are in the format you need for the MRBase package. If you do not provide any distance, the default distance is taken to be 500000, while the default lower LD threshold is 0.0 and upper LD threshold is 1.0.
 
+
+In the following images, you see the data saved in directories Datasets and Data\_prepared, for the exposure data from GTEx, tissue Aor short for Aorta, GWAS summary study 3116, sort for *ebi-a-GCST003116*, on Chromosome 1 and and *hotspot* around the lead GWAS *Snp* at position 109821511.
+
 ![Seperate Exposure and outcome datasets saved for each chromosome and hotpot, in the directory Datasets.](gitpic1.png)
-![Data prepared in format required for causal analysis, saved for each chromosome and hotpot, in the directory Data\_prepared.](gitpic2.png)
+![Data prepared in format required for causal analysis, saved for each chromosome and hotpot, in the directory Data prepared.](gitpic2.png)
 
 
 ## 4.5 Harmonize the data and save it in the format required for causal analysis. 
