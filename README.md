@@ -236,12 +236,10 @@ To make sure that you have data from the same locus and have *snps* abouve *chos
 As an example, if you run
 
 
-        python3 Choose_SNPs.py "/home/user/Exposure.csv" "/home/user/Outcome.csv" 3 137997742 500000 5E-8
+        python3 Choose_SNPs.py "/home/user/Exposure.csv" "/home/user/Outcome.csv" 3 137997742 0.01 5E-8
         
         
-Here the  *snp* has position 137997742 on Chromosome 3 and you wish to have *snps* around this *snp* within 0.5Mb of distance. You will then get
-the same Exposure\_3\_137997742.csv and Outcome\_3\_137997742.csv files with SNPs which are significant (p − value ≤ 5E-08) and 0.5Mb around 137997742 on
-chromosome 3. Please make sure you give the p-value in the format ()E-(), distance as int (500000, not 500000.0) abd position as int (137997742, not 137997742.0).
+Here the  *snp* has position 137997742 on Chromosome 3 and you wish to have *snps* around this *snp* within LD greather than or equal 0.01. You will then getthe same Exposure\_3\_137997742.csv and Outcome\_3\_137997742.csv files with SNPs which are significant (p − value ≤ 5E-08) and within LD >= 0.01 around 137997742 on chromosome 3. Please make sure you give the p-value in the format ()E-(), LD as sloat (1.0, not 1) abd position as int (137997742, not 137997742.0).
 
 ### 4.5.3  For entire exposure/outcome data, get datasets of each chromosome and SNPs within *chosen* distance and *chosen* LD-range.
 
