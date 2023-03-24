@@ -4,6 +4,7 @@ import pandas as pd
 import sys
 from collections import Counter
 import os
+from pathlib import Path
 
 """
 
@@ -12,19 +13,37 @@ You can give as input
 1. 1st argument, exposure data which you used to extract the GWAS summary data from 
 the MR-Base package 
 2. 2nd argument GWAS summary data 
-These two files should be the output of either Seperate_chr.py or Choose_SNPs.py, 
+
+These two files should be the output of either Prune_Snps_LD.py or Prune_Snps_pos.py, 
 with comma as a separator and the output would be a file with the format required for the
 causal analysis saved in the same input directory with suffix prepared.csv
 
 """
-if len(sys.argv) < 3:
+
+
+def check_valid(user_input, check):
+    out = None
+    allowed_extensions = [".csv"]
+    if check == "path":
+        if not (Path(user_input).exists() and Path(user_input).is_file and Path(
+                user_input).suffix in allowed_extensions):
+            print(
+                "Provide a valid path with .csv extension")
+            sys.exit(1)
+        else:
+            out = user_input
+    return out
+
+
+try:
+    file_EX = sys.argv[1]
+    file_EY = sys.argv[2]
+    file_EX = check_valid(file_EX, "path")
+    file_EY = check_valid(file_EY, "path")
+except IndexError:
     print("You failed to either provide the minimum or maximum number of parameters required to run this code. Please "
           " read the documentation for more details")
     sys.exit(1)
-else:
-    file_EX = sys.argv[1]
-    file_EY = sys.argv[2]
-
 
 path = os.path.dirname(file_EX)
 
