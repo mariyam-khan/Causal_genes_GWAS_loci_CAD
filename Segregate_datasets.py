@@ -8,87 +8,130 @@ import rpy2.robjects as ro
 from rpy2.robjects import r
 from rpy2.robjects import pandas2ri
 from rpy2.robjects.packages import importr
+from pathlib import Path
 
 ro.r['options'](warn=-1)
-
 base = importr('base')
 base.warnings()
-"""This function takes as input 
+
+"""This function takes as input the 1.exposure data file and 2.outcome data file. 
+
+where exposure/outcome data are given as: 
+
+"/home/user/exposure_file_name.csv"
+"/home/user/output_file_name.csv"
+
+Additionally you can give as input:
+
+3. 3rd argument position, where we will remove SNPs which are at distance(radius) greater than position from the 
+   lead SNP.
+4. 4th argument LD_threshold_lower, where we will remove SNPs which are in LD lower than LD_threshold_lower with the 
+   lead SNP
+ 
+5. 5th argument pvalue threshold, where we will remove SNPs whose pvalue is higher in the GWAS outcome data
+   than the mentioned pvalue threshold.
+   
+If you do not give the 3rd, 4th and 5th arguments then default values are:
+
+position =  5000000
+LD_threshold_lower = 0.0
+pvalue = 5E-8
+
 
 
 """
 
 
-if len(sys.argv) < 3 or len(sys.argv) > 6:
-    print("You failed to either provide the minimum or maximum number of parameters required to run this code. Please "
-          " read the documentation for more details")
-    sys.exit(1)
-else:
-    file_EX1 = sys.argv[1]
-    file_EY1 = sys.argv[2]
-    path_original = os.path.dirname(file_EX1)
-    name_EX = os.path.splitext(os.path.basename(file_EX1))[0]
-    name_EY = os.path.splitext(os.path.basename(file_EY1))[0]
-    if len(sys.argv) == 4:
-        distance1 = int(sys.argv[3])
-        if not isinstance(distance1, int):
+def check_valid(user_input, check):
+    out = None
+    allowed_extensions = [".csv"]
+    if check == "path":
+        if not (Path(user_input).exists() and Path(user_input).is_file and Path(
+                user_input).suffix in allowed_extensions):
             print(
-                "Provide a non-zero integer value for distance. Please "
-                " read the documentation for more details.")
+                "Provide a valid path with .csv extension")
             sys.exit(1)
-        if not distance1 < 1000000 and distance1 > 25000:
+        else:
+            out = user_input
+
+    elif check == "distance":
+        if not (1000000 > user_input > 25000):
             print(
                 "Provide distance in the range, 25000 > distance < 1000000. Please "
                 " read the documentation for more details.")
             sys.exit(1)
+        else:
+            out = user_input
 
-    else:
-        distance1 = 500000
-
-    if len(sys.argv) == 5:
-        LD_threshold_lower1 = float(sys.argv[4])
-        LD_threshold_upper1 = 1.0
-        if not isinstance(LD_threshold_lower1, float):
-            print(
-                "Provide a valid value for the lower LD threshold. Please "
-                " read the documentation for more details.")
-            sys.exit(1)
-
-        if not LD_threshold_lower1 <= 0.5 and LD_threshold_lower1 >= 0.0:
+    elif check == "LD":
+        if not (0.5 >= user_input >= 0.0):
             print(
                 "Provide threshold in the range, 0.0 >= LD_threshold_lower <= 0.5. Please "
                 " read the documentation for more details.")
             sys.exit(1)
-    elif len(sys.argv) == 6:
-        LD_threshold_lower1 = float(sys.argv[4])
-        LD_threshold_upper1 = float(sys.argv[5])
-        if not (isinstance(LD_threshold_lower1, float) and isinstance(LD_threshold_lower1, float)):
-            print(
-                "Provide a valid value for the lower/upper LD threshold. Please "
-                "read the documentation for more details.")
-            sys.exit(1)
-
-        if not (0.5 >= LD_threshold_lower1 >= 0.0) and (LD_threshold_upper1 <= 1.0 and
-                                                        LD_threshold_lower1 >= 0.0):
-            print(
-                "Provide threshold in the range, 0.0 >= LD_threshold_lower <= 0.5 and 0.0 >= LD_threshold_lower <= 1.0."
-                "Please"
-                " read the documentation for more details.")
-            sys.exit(1)
-
+        else:
+            out = user_input
+    elif check == "pvalue":
+        out = user_input
     else:
-        LD_threshold_lower1 = None
-        LD_threshold_upper1 = None
+        print("Np parameter given")
+    return out
 
 
-def get_datasets(file_EX, file_EY, distance, LD_threshold_lower, LD_threshold_upper):
+try:
+    file_EX1 = sys.argv[1]
+    file_EY1 = sys.argv[2]
+    file_EX1 = check_valid(file_EX1, "path")
+    file_EY1 = check_valid(file_EY1, "path")
+    try:
+        distance1 = int(sys.argv[3])
+        distance1 = check_valid(distance1, "distance")
+    except ValueError:
+        print(
+            "Provide a non-zero integer value for distance. Please "
+            " read the documentation for more details.")
+        sys.exit(1)
+    except IndexError:
+        distance1 = 500000
+    try:
+        LD_threshold_lower1 = float(sys.argv[4])
+        LD_threshold_lower1 = check_valid(LD_threshold_lower1, "LD")
+    except ValueError:
+        print(
+            "Provide a valid value for the lower LD threshold. Please "
+            " read the documentation for more details.")
+        sys.exit(1)
+    except IndexError:
+        LD_threshold_lower1 = 0.0
+    try:
+        pvalue1 = float(sys.argv[5])
+        pvalue1 = check_valid(pvalue1, "pvalue")
+    except ValueError:
+        print(
+            "Provide a valid value for pvalue threshold. Please "
+            " read the documentation for more details.")
+        sys.exit(1)
+    except IndexError:
+        pvalue1 = 5E-8
+except IndexError:
+    print("You failed to either provide the minimum or maximum number of parameters required to run this code. Please "
+          " read the documentation for more details")
+    sys.exit(1)
+
+path_original = os.path.dirname(file_EX1)
+name_EX = os.path.splitext(os.path.basename(file_EX1))[0]
+name_EY = os.path.splitext(os.path.basename(file_EY1))[0]
+LD_threshold_upper = 1.0
+
+
+def get_datasets(file_EX, file_EY, distance, LD_threshold_lower, pvalue):
     prepare = True
     Data_outcome = pd.read_csv(file_EY, sep=',')
     Data_exposure = pd.read_csv(file_EX, sep=',')
 
     Data_outcome = Data_outcome[
         ["SNP", "effect_allele.outcome", "other_allele.outcome", "beta.outcome", "pval.outcome", "chr", "pos"]]
-    Data_outcome = Data_outcome[Data_outcome['pval.outcome'] <= 5E-8]
+    Data_outcome = Data_outcome[Data_outcome['pval.outcome'] <= pvalue]
     Data_outcome.reset_index(drop=True, inplace=True)
 
     if not Data_outcome.empty:
@@ -133,9 +176,8 @@ def get_datasets(file_EX, file_EY, distance, LD_threshold_lower, LD_threshold_up
                         ##########################################################################
 
                         # prune SNPs according to LD ############################################
-                        if LD_threshold_upper:
-                            Data_exp_ld, Data_out_ld = SNPs_LDrange(Data_exp_pos, Data_out_pos, LD_threshold_lower,
-                                                                    LD_threshold_upper)
+                        if LD_threshold_lower:
+                            Data_exp_ld, Data_out_ld = SNPs_LDrange(Data_exp_pos, Data_out_pos, LD_threshold_lower)
                         else:
                             Data_exp_ld = Data_exp_pos.loc[
                                 Data_exp_pos['SNP'].isin(np.intersect1d(Data_exp_pos.SNP, Data_out_pos.SNP))]
@@ -181,7 +223,7 @@ def get_datasets(file_EX, file_EY, distance, LD_threshold_lower, LD_threshold_up
         sys.exit('Error Message : Dataset is empty. There were no SNPs that passed the p-value threshold.')
 
 
-def SNPs_LDrange(Data_exp, Data_out_pos, LD_threshold_lower, LD_threshold_upper):
+def SNPs_LDrange(Data_exp, Data_out_pos, LD_threshold_lower):
     snps = list(Data_out_pos.loc[:, 'SNP'].values)
     if len(snps) != 1:
         cov_data = r("TwoSampleMR::ld_matrix")(snps, with_alleles=False, pop="EUR")
@@ -193,10 +235,19 @@ def SNPs_LDrange(Data_exp, Data_out_pos, LD_threshold_lower, LD_threshold_upper)
 
         cov_data = pd.DataFrame.abs(cov_data)
         upper_tri = cov_data.where(np.triu(np.ones(cov_data.shape), k=1).astype(bool))
+        # to_drop = [column for column in upper_tri.columns if
+        #            any(upper_tri[column] >= int(LD_threshold_upper)) or any(upper_tri[column]
+        #                                                                     <= int(
+        #                LD_threshold_lower))]
+
         to_drop = [column for column in upper_tri.columns if
-                   any(upper_tri[column] >= int(LD_threshold_upper)) or any(upper_tri[column]
-                                                                            <= int(
-                       LD_threshold_lower))]
+                   any(upper_tri[column] >= float(LD_threshold_upper))]
+        cov_data = cov_data.drop(labels=to_drop, axis=1)
+        cov_data = cov_data.drop(labels=to_drop, axis=0)
+
+        upper_tri = cov_data.where(np.triu(np.ones(cov_data.shape), k=1).astype(bool))
+        to_drop = [column for column in upper_tri.columns if
+                   upper_tri[column][0] <= float(LD_threshold_lower)]
         cov_data = cov_data.drop(labels=to_drop, axis=1)
         cov_data = cov_data.drop(labels=to_drop, axis=0)
 
@@ -283,4 +334,4 @@ def Data_preparation(Data_exp, Data_out, pathRS, chromosome, position):
     print("Prepared Datasets have been saved in the directory " + pathRS_new)
 
 
-get_datasets(file_EX1, file_EY1, distance1, LD_threshold_lower1, LD_threshold_upper1)
+get_datasets(file_EX1, file_EY1, distance1, LD_threshold_lower1, pvalue1)
