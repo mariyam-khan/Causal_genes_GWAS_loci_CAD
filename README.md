@@ -92,7 +92,7 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
 
   - **Step 4 (Section 4.5) :** From the exposure and outcome, get data on a specific chromosome and within *chosen* distance and LD-range. You can                                        either 
 
-    - **Step 4.1 (Section 4.5.1) :**   Choose your *Snp* and get exposure and outcome data within *chosen* distance using `Choose_SNPs.py`.
+    - **Step 4.1 (Section 4.5.1) :**   Choose your *Snp* and get exposure and outcome data within *chosen* distance using `Prune_Snps_pos.py`.
     - **Step 4.2 (Section 4.5.2) :**   Choose your *Snp* and get exposure and outcome data within *chosen* LD-range using `Prune_Snps_LD.py`.
     
     You can run both Step 4.1 and Step 4.2 in any order to get *Snps* within *chosen* distance and *chosen* LD-range.
@@ -215,33 +215,33 @@ We will come to data harmonization shortly in **Section 4.6** but before make su
 
 ### 4.5.1  Choose your *Snp* and get exposure and outcome data within *chosen* distance.
 
-To make sure that you have data from the same locus and of *Snps* within *chosen* distance (ex. 1Mb) of each other, you can choose a lead *Snp* and run the function `Choose_SNPs.py`. This function takes as input exposure data which you used to extract the GWAS summary data from the MR-Base package and GWAS summary data as first two arguments and chromosome and position as the next two arguments. Once you run this, you will get SNPs (that pass a certain p-value thresholod, gaven as the last argument to this function, ex. 5E-8) on the chromosome (integer given as argument for chromosome number) 1Mb around the position of the lead SNP (given as argument for position of this lead SNP), saved in exposure and outcome data *.csv* files.  These files will be saved in the same directory as the original files with the suffix of the chromosome and position appended to them.
+To make sure that you have data from the same locus and of *snps* within *chosen* distance (ex. 1Mb) of each other, you can choose a *snp* and run the function `Prune_Snps_pos.py`. This function takes as input exposure data which you used to extract the GWAS summary data from the MR-Base package, GWAS summary data and chromosome on which your chosen *snp* lies, as first three compulsory arguments. Additionally, you can give, position of the chosen *snp* (if you do not give this, by default, the position of the lead *snp* is chosen. Hence this function can also be used if you do not have a specific *snp* in mind and just need to prune your data on a chromosome and *hotspot* by distance), distance (radius) and pvalue threshold as the last three arguments. Once you run this, you will get SNPs (that pass a certain p-value threshold, ex. 5E-8) on the chromosome (integer given as argument for chromosome number) within *chosen* distance around the position of the *snp* (specified by the argument for position of this *snp*), saved in exposure and outcome data *.csv* files.  These files will be saved in the same directory as the original files with the suffix of the chromosome and position appended to them.
 
 
 As an example, if you run
 
 
-        python3 Choose_SNPs.py "/home/user/Exposure.csv" "/home/user/Outcome.csv" 3 137997742 5E-8
+        python3 Choose_SNPs.py "/home/user/Exposure.csv" "/home/user/Outcome.csv" 3 137997742 500000 5E-8
         
         
-Here the lead *Snp* has position 137997742 on Chromosome 3 and you wish to have *Snps* around this lead SNP within 1Mb of distance. You will then get
-the same Exposure 3 137997742.csv and Outcome 3 137997742.csv files with SNPs which are significant (p − value ≤ 5E-08) and 1 Mb around 137997742 on
-chromosome3.
+Here the  *snp* has position 137997742 on Chromosome 3 and you wish to have *snps* around this *snp* within 0.5Mb of distance. You will then get
+the same Exposure\_3\_137997742.csv and Outcome\_3\_137997742.csv files with SNPs which are significant (p − value ≤ 5E-08) and 0.5Mb around 137997742 on
+chromosome 3. Please make sure you give the p-value in the format ()E-(), distance as int (500000, not 500000.0) abd position as int (137997742, not 137997742.0).
 
 ### 4.5.2  Choose your *Snp* and get exposure and outcome data within *chosen* LD-range.
 
-To make sure that you have data from the same locus and of *Snps* within *chosen* LD-range,SNPs that are in a minimum amount of LD with the lead SNP *(lower LD threshold)* and  are in a maximum amount of LD with the lead SNP *(upper LD threshold)* of each other, you can choose a lead SNP and run the function `Prune_Snps_LD.py`. This function takes as input exposure data which you used to extract the GWAS summary data from the MR-Base package and GWAS summary data as first two arguments and (lower and upper LD threshold)* as the next two arguments. Once you run this, you will get SNPs (that pass a certain p-value threshold, gaven as the last argument to this function, ex. 5E-8) within the *(lower LD threshold)* and *(upper LD threshold)* with the lead SNP, saved in exposure and outcome data .csv files.  These files will be saved in the same directory as the original files with the suffix of the chromosome and position appended to them.
+To make sure that you have data from the same locus and have *snps* abouve *chosen* LD-threshold (ex. 0.01) excluded, you can choose a *snp* and run the function `Prune_Snps_LD.py`. This function takes as input exposure data which you used to extract the GWAS summary data from the MR-Base package, GWAS summary data and chromosome on which your chosen *snp* lies, as first three compulsory arguments. Additionally, you can give, position of the chosen *snp* (if you do not give this, by default, the position of the lead *snp* is chosen. Hence this function can also be used if you do not have a specific *snp* in mind and just need to prune your data on a chromosome and *hotspot* by LD), LD threshold and pvalue threshold as the last three arguments. Once you run this, you will get *snps* (that pass a certain p-value threshold, ex. 5E-8) on the chromosome (integer given as argument for chromosome number) within *chosen* distance around the position of the *snp* (specified by the argument for position of this *snp*), saved in exposure and outcome data *.csv* files.  These files will be saved in the same directory as the original files with the suffix of the chromosome and position appended to them.
 
 
 As an example, if you run
 
 
-        python3 Prune_Snps_LD.py "/home/user/Exposure.csv" "/home/user/Outcome.csv" 0.01 1.0 5E-8
+        python3 Choose_SNPs.py "/home/user/Exposure.csv" "/home/user/Outcome.csv" 3 137997742 500000 5E-8
         
         
-Here the lead SNP has position 137997742 on Chromosome 3 and you wish to have *Snps* around this lead SNP within 1Mb of distance. You will then get
-the same Exposure 3 137997742.csv and Outcome 3 137997742.csv files with SNPs which are significant (p − value ≤ 5E-08) and 1 Mb around 137997742 on
-chromosome3.
+Here the  *snp* has position 137997742 on Chromosome 3 and you wish to have *snps* around this *snp* within 0.5Mb of distance. You will then get
+the same Exposure\_3\_137997742.csv and Outcome\_3\_137997742.csv files with SNPs which are significant (p − value ≤ 5E-08) and 0.5Mb around 137997742 on
+chromosome 3. Please make sure you give the p-value in the format ()E-(), distance as int (500000, not 500000.0) abd position as int (137997742, not 137997742.0).
 
 ### 4.5.3  For entire exposure/outcome data, get datasets of each chromosome and SNPs within *chosen* distance and *chosen* LD-range.
 
