@@ -441,3 +441,13 @@ https://onlinelibrary.wiley.com/doi/10.1002/gepi.21758, and functions in the MR-
 For our simulations, we used TWMR as from their github page (code found under https://github.com/eleporcu/TWMR), MRBase with the exposure/
 outcome data and analysis after harmonization as metioned in https://mrcieu.github.io/TwoSampleMR/articles/perform_mr.html#multivariable-mr.
 As for MVMR, we supplied data as mentioned in their vignette and then ran the analysis https://cran.r-project.org/web/packages/MendelianRandomization/vignettes/Vignette_MR.pdf.
+
+
+
+# 8. FAQ's
+
+1. Why are the estimates for the causal parameter different using Least-squares and GMM?
+ - This can be the case if the determinant of the covaraince matrix of the instruments is very small. In these cases,, from our simulations, Least-squares 
+   tend to be more relaible. If you want, you can also prune for *Snps*  which are in very high LD. You can set a threshold for the maximum LD *Snps* are 
+   allowed to be in. In this case, out of the *Snps* in LD higher than a certain value (example 0.95), only the *Snp* with the lowest GWAS significance        will be kept and others will be removed from the analysis. By doing this, the determinant of LD-matrix will not be as small (ideally not smaller than 
+   0.01) and the GMM estimator will inch closer to the Least-squares estimate.
