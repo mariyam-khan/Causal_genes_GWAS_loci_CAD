@@ -7,10 +7,12 @@ import rpy2.robjects as ro
 from rpy2.robjects import r
 from rpy2.robjects import pandas2ri
 from pathlib import Path
+from rpy2.robjects.packages import importr
+import os
 
-#
-# pandas2ri.activate()
-
+ro.r['options'](warn=-1)
+base = importr('base')
+base.warnings()
 """
 
 getting the causal genes for cases the user cannot supply the LD-matrix.
@@ -33,14 +35,13 @@ saved as .csv file in the same directory as the one given for the exposure_outco
 i.e. for this example "/home/user/exposure_outcome_results.csv"
 
 """
-import sys
-import glob
 
 arg = str(sys.argv[1])
 pathlist = Path(arg).rglob('*.csv')
 for path in pathlist:
     path_in_str = str(path)
-    print(path_in_str)
+    path_original = os.path.dirname(path_in_str)
+    name_EX = os.path.splitext(os.path.basename(path_in_str))[0]
     Data = pd.read_csv(path_in_str, sep=',')
     for (columnName, columnData) in Data.iteritems():
         if (Data[columnName] == 0).all():
@@ -49,6 +50,7 @@ for path in pathlist:
     snps = [i.split('_', 1)[0] for i in snps_full]
     effect_alleles = [i.split('_', 1)[1] for i in snps_full]
     if len(snps) != 1:
+        pandas2ri.deactivate()
         cov_data = r("TwoSampleMR::ld_matrix")(snps)
         pandas2ri.activate()
         pd_from_r_df = ro.conversion.rpy2py(cov_data)
@@ -69,6 +71,13 @@ for path in pathlist:
         to_drop = [column for column in upper_tri.columns if any(upper_tri[column] == 1.0)]
         cov_data = cov_data.drop(labels=to_drop, axis=1)
         cov_data = cov_data.drop(labels=to_drop, axis=0)
+
+        # upper_tri = cov_data.where(np.triu(np.ones(cov_data.shape), k=1).astype(bool))
+        # to_drop = [column for column in upper_tri.columns if
+        #            any(upper_tri[column] >= float(0.97))]
+        # cov_data = cov_data.drop(labels=to_drop, axis=1)
+        # cov_data = cov_data.drop(labels=to_drop, axis=0)
+
         cov_EE = cov_data.values
         snps_new = [i.split('_', 1)[0] for i in r('colnames')(cov_data)]
         cov_data_pruned = pd.DataFrame(cov_EE, columns=snps_new, index=snps_new, dtype='float')
@@ -101,15 +110,16 @@ for path in pathlist:
             if no_snps > no_genes:
                 b_est2, res, rnk, sy = lstsq(covEX, covEY)
                 b_est1 = np.linalg.inv(covEX.T @ np.linalg.inv(cov_EE) @ covEX) @ (
-                            covEX.T @ np.linalg.inv(cov_EE) @ covEY)
+                        covEX.T @ np.linalg.inv(cov_EE) @ covEY)
                 d1 = {'gene': gene_names,
                       'Causal Estimate Least Squares': b_est2, 'Causal Estimate GMM': b_est1}
                 df1 = pd.DataFrame(data=d1)
                 df1 = df1.set_index('gene')
             else:
-                sys.exit('Error Message : You require at least as many instruments as exposures to run this analysis.')
-
-
+                print(
+                    'Error Message : You require at least as many instruments as exposures to run this analysis of ' + name_EX +
+                    ' Moving on to next file.')
+                continue
     else:
         no_genes = len(Data.columns) - 2
         if len(snps) >= no_genes:
@@ -123,9 +133,16 @@ for path in pathlist:
             df1 = pd.DataFrame(data=d1)
             df1 = df1.set_index('gene')
         else:
-            sys.exit('Error Message : You require at least as many instruments as exposures to run this analysis.')
+            print(
+                'Error Message : You require at least as many instruments as exposures to run this analysis of ' + name_EX +
+                ' Moving '
+                'on to next file.')
+            continue
 
     print("##########################################################################")
-    print(path_in_str)
-    print("df", df1)
-    # df1.to_csv(file_EXEY + "_results.csv", sep=",", float_format='%g')
+    print("analysis for file ", name_EX)
+    print("Results", df1)
+    path_new = os.path.join(path_original, "Results")
+    df1.to_csv(path_new + "/" + name_EX + "_results.csv", sep=",", float_format='%g')
+print('Out of loop')
+
