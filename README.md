@@ -448,6 +448,4 @@ As for MVMR, we supplied data as mentioned in their vignette and then ran the an
 
 1. Why are the estimates for the causal parameter different using Least-squares and GMM?
  - This can be the case if the determinant of the covaraince matrix of the instruments is very small. In these cases,, from our simulations, Least-squares 
-   tend to be more relaible. If you want, you can also prune for *Snps*  which are in very high LD. You can set a threshold for the maximum LD *Snps* are 
-   allowed to be in. In this case, out of the *Snps* in LD higher than a certain value (example 0.95), only the *Snp* with the lowest GWAS significance        will be kept and others will be removed from the analysis. By doing this, the determinant of LD-matrix will not be as small (ideally not smaller than 
-   0.01) and the GMM estimator will inch closer to the Least-squares estimate.
+   estimates tend to be more relaible. If you want, you can also prune for *Snps*  which are in very high LD. You can set a threshold for the maximum LD      theshold such that, out of the *Snps* in LD higher than a certain value (example 0.95), only the *Snp* with the lowest GWAS significance will be kept      and others will be removed from the analysis. By doing this, the determinant of LD-matrix will not be as small (ideally not smaller than 0.01) and the      GMM estimator will inch closer to the Least-squares estimate.
