@@ -141,7 +141,7 @@ Since the data you downloaded is not in format to extract GWAS summary data usin
 
 Here, *Exposure.csv* is the exposure/gene expression data for a specific tissue from GTEx and *annotation.csv* is the rs-ID annotation file on GTEx. You will be returned *.csv* file with the annotated rs-ID’s in the same directory as your *Exposure.csv* file.
 
-You can now structure this data in format of TwSampleMR as given in **Section 4.3**. To save the effort of going from GTEx exposure data to data usable in the MRBase package, we have GTEx exposure data aligned with corresponding rs-ID’s and structured in the MRBase format, available at https://drive.google.com/drive/folders/14u2dN8k3OwnZZkSkAQFN0ndboTFJFH-J?usp=share_link.
+You can now structure this data in format of TwoSampleMR as given in **Section 4.3**. To save the effort of going from GTEx exposure data to data usable in the MRBase package, we have GTEx exposure data aligned with corresponding rs-ID’s and structured in the MRBase format, available at https://drive.google.com/drive/folders/14u2dN8k3OwnZZkSkAQFN0ndboTFJFH-J?usp=share_link.
 
 ## 4.3 Make sure the GTEx data is in the format required by the MR-Base package
 
@@ -288,7 +288,7 @@ Notice, you can give, position of the chosen *snp* (if you do not give this, by 
 
 ### 4.5.3  For entire exposure/outcome data, get datasets of each chromosome and SNPs within *chosen* distance and *chosen* LD-range.
 
-If there is no specific locus where you wish to perform the analysis but rather the entire exposure and outcome data, we have a code `Segregate_datsets.py` which can output the exposure and outcome data segregated per chromosome and "hotspots" per chromosome.
+If there is no specific locus where you wish to perform the analysis but rather the entire exposure and outcome data, we have a code `Segregate_datasets.py` which can output the exposure and outcome data segregated per chromosome and "hotspots" per chromosome.
 
 A *hotspot* is characterized by the lead SNP (the SNP which is the most GWAS significant) and SNPs around it which are either a. certain *distance* around the lead SNP (example 0.5 Mb) or b. are in a minimum amount of LD with the lead SNP *(lower LD threshold)* and  are in a maximum amount of LD with the lead SNP *(upper LD threshold)*
 
