@@ -433,6 +433,20 @@ In this case you should remove the mentioned SNPs (rs28789513) from the dataset.
 an LD-matrix and it is generated using the R-package TwoSampleMR.
 
 
+        rpy2.rinterface_lib.embedded.RRuntimeError: Error in matrix(as.numeric(res), nrow(res), ncol(res)) : 
+        non-numeric matrix extent
+
+This is a random error with the ld matrix function and re-running ususally resolves it.
+
+
+Packages errors: In a situation where some packages are not compatible, you can make sure to have exactly these versions installed:
+
+        pandas 1.5.3
+        rpy2 3.5.13
+        numpy 1.21
+        R  version: 4.3.1
+
+
 # 7. Comparison to other methods
 
 
