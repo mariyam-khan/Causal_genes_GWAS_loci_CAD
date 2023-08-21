@@ -41,6 +41,16 @@ and
         library(devtools)
         library(TwoSampleMR)
         library(MRInstruments)
+
+
+
+In a situation where some packages are not compatible, you can make sure to have exactly these versions installed:
+
+        pandas 1.5.3
+        rpy2 3.5.13
+        numpy 1.21
+        R  version: 4.3.1
+
         
 # 2. Guide to data requirements.
 
