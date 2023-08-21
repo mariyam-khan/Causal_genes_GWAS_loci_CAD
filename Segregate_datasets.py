@@ -230,8 +230,6 @@ def create_directory_if_not_exists(directory_path):
 
 
 def SNPs_LDrange(Data_exp, Data_out_pos, LD_threshold_lower):
-    print("LD_threshold_lower", LD_threshold_lower)
-    print("LD_threshold_upper", LD_threshold_upper)
     snps = list(Data_out_pos.loc[:, 'SNP'].values)
     if len(snps) != 1:
         cov_data = r("TwoSampleMR::ld_matrix")(snps, with_alleles=False, pop="EUR")
