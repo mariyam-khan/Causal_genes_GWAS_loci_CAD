@@ -21,6 +21,12 @@ where exposure/outcome data are given as:
 "/home/user/exposure_file_name.csv"
 "/home/user/output_file_name.csv"
 
+
+
+(This function takes files which have exposure and outcome data across Chromosomes and divides the dataset into sub-datasets
+with each sub-dataset having locus-specific data)
+
+
 Additionally you can give as input:
 
 3. 3rd argument position, where we will remove SNPs which are at distance(radius) greater than position from the 
@@ -33,7 +39,7 @@ Additionally you can give as input:
    
 If you do not give the 3rd, 4th and 5th arguments then default values are:
 
-position =  5000000
+position =  500000
 LD_threshold_lower = 0.0
 pvalue = 5E-8
 
@@ -74,7 +80,7 @@ def check_valid(user_input, check):
     elif check == "pvalue":
         out = user_input
     else:
-        print("Np parameter given")
+        print("No parameter given")
     return out
 
 
@@ -159,7 +165,6 @@ def get_datasets(file_EX, file_EY, distance, LD_threshold_lower, pvalue):
 
                         # choose SNPs within 'distance' around the lead SNP ######################
                         position = Dataframe.loc[0, 'pos']
-                        print(distance)
                         lower = int(position) - int(distance)
                         upper = int(position) + int(distance)
                         Data_out_pos = Dataframe[(Dataframe['pos'] >= lower) & (Dataframe['pos'] <= upper)]
@@ -176,21 +181,14 @@ def get_datasets(file_EX, file_EY, distance, LD_threshold_lower, pvalue):
                         ##########################################################################
 
                         # prune SNPs according to LD ############################################
-                        if LD_threshold_lower:
-                            Data_exp_ld, Data_out_ld = SNPs_LDrange(Data_exp_pos, Data_out_pos, LD_threshold_lower)
-                        else:
-                            Data_exp_ld = Data_exp_pos.loc[
-                                Data_exp_pos['SNP'].isin(np.intersect1d(Data_exp_pos.SNP, Data_out_pos.SNP))]
-                            Data_out_ld = Data_out_pos.loc[
-                                Data_out_pos['SNP'].isin(np.intersect1d(Data_out_pos.SNP, Data_exp_pos.SNP))]
-                            Data_exp_pos.reset_index(drop=True, inplace=True)
-                            Data_out_pos.reset_index(drop=True, inplace=True)
+                        Data_exp_ld, Data_out_ld = SNPs_LDrange(Data_exp_pos, Data_out_pos, LD_threshold_lower)
+
                         ##########################################################################
+
                         if isinstance(Data_out_ld, pd.DataFrame):
                             if not Data_out_ld.empty:
-                                # Path("/Datasets").mkdir(parents=True, exist_ok=True)
                                 path_new = os.path.join(path_original, "Datasets")
-
+                                create_directory_if_not_exists(path_new)
                                 Data_exp_ld.to_csv(
                                     path_new + "/" + name_EX + "_" + str(chromosome) + "_" + str(position) + ".csv",
                                     sep=",",
@@ -223,7 +221,17 @@ def get_datasets(file_EX, file_EY, distance, LD_threshold_lower, pvalue):
         sys.exit('Error Message : Dataset is empty. There were no SNPs that passed the p-value threshold.')
 
 
+def create_directory_if_not_exists(directory_path):
+    if not os.path.exists(directory_path):
+        os.makedirs(directory_path)
+        print(f"Directory '{directory_path}' created.")
+    else:
+        print(f" ")
+
+
 def SNPs_LDrange(Data_exp, Data_out_pos, LD_threshold_lower):
+    print("LD_threshold_lower", LD_threshold_lower)
+    print("LD_threshold_upper", LD_threshold_upper)
     snps = list(Data_out_pos.loc[:, 'SNP'].values)
     if len(snps) != 1:
         cov_data = r("TwoSampleMR::ld_matrix")(snps, with_alleles=False, pop="EUR")
@@ -235,22 +243,15 @@ def SNPs_LDrange(Data_exp, Data_out_pos, LD_threshold_lower):
 
         cov_data = pd.DataFrame.abs(cov_data)
         upper_tri = cov_data.where(np.triu(np.ones(cov_data.shape), k=1).astype(bool))
-        # to_drop = [column for column in upper_tri.columns if
-        #            any(upper_tri[column] >= int(LD_threshold_upper)) or any(upper_tri[column]
-        #                                                                     <= int(
-        #                LD_threshold_lower))]
-
         to_drop = [column for column in upper_tri.columns if
                    any(upper_tri[column] >= float(LD_threshold_upper))]
         cov_data = cov_data.drop(labels=to_drop, axis=1)
         cov_data = cov_data.drop(labels=to_drop, axis=0)
-
         upper_tri = cov_data.where(np.triu(np.ones(cov_data.shape), k=1).astype(bool))
         to_drop = [column for column in upper_tri.columns if
-                   upper_tri[column][0] <= float(LD_threshold_lower)]
+                   upper_tri[column] <= float(LD_threshold_lower)]
         cov_data = cov_data.drop(labels=to_drop, axis=1)
         cov_data = cov_data.drop(labels=to_drop, axis=0)
-
         Data_out_pos = Data_out_pos[Data_out_pos['SNP'].isin(cov_data.index.values)]
 
         Data_exp1 = Data_exp.loc[
@@ -329,6 +330,7 @@ def Data_preparation(Data_exp, Data_out, pathRS, chromosome, position):
     RandS = pd.concat([df_R, df_s], axis=1)
     RandS.index.name = 'SNPs'
     pathRS_new = os.path.join(pathRS, "Data_prepared")
+    create_directory_if_not_exists(pathRS_new)
     RandS.to_csv(pathRS_new + "/" + name_EX + "_" + str(chromosome) + "_" + str(position) + "_prepared.csv",
                  sep=",")
     print("Prepared Datasets have been saved in the directory " + pathRS_new)
