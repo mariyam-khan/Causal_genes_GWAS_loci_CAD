@@ -249,7 +249,7 @@ def SNPs_LDrange(Data_exp, Data_out_pos, LD_threshold_lower):
         cov_data = cov_data.drop(labels=to_drop, axis=0)
         upper_tri = cov_data.where(np.triu(np.ones(cov_data.shape), k=1).astype(bool))
         to_drop = [column for column in upper_tri.columns if
-                   upper_tri[column] <= float(LD_threshold_lower)]
+                   upper_tri[column][0] <= float(LD_threshold_lower)]
         cov_data = cov_data.drop(labels=to_drop, axis=1)
         cov_data = cov_data.drop(labels=to_drop, axis=0)
         Data_out_pos = Data_out_pos[Data_out_pos['SNP'].isin(cov_data.index.values)]
