@@ -254,7 +254,6 @@ def SNPs_LDrange(Data_exp, Data_out_pos, LD_threshold_lower):
 
         cov_data = cov_data.drop(labels=to_drop, axis=1)
         cov_data = cov_data.drop(labels=to_drop, axis=0)
-        # print("cov 1", cov_data)
         Data_out_pos = Data_out_pos[Data_out_pos['SNP'].isin(cov_data.index.values)]
 
         Data_exp1 = Data_exp.loc[
@@ -301,7 +300,6 @@ def Data_preparation(Data_exp, Data_out, pathRS, chromosome, position):
             Data_out.loc[m, 'SNP'] = value + "_" + b + "_" + a
         else:
             Data_out.loc[m, 'SNP'] = value + "_" + a + "_" + b
-    print("Data_out", Data_out)
     genes = []
     for j in range(no_genes):
         genes.append(most_common[j][0])
@@ -320,15 +318,11 @@ def Data_preparation(Data_exp, Data_out, pathRS, chromosome, position):
         Data.reset_index(drop=True, inplace=True)
         o = Data['SNP'].values
         for j1 in range(int(most_common[n][1])):
-
             value = o[j1] + "_" + Data.loc[j1, 'effect_allele.exposure'] + "_" + Data.loc[j1, 'other_allele.exposure']
-            print("value", value)
             R_data.at[value, name] = Data.loc[j1, 'beta.exposure']
             idx = Data_out[Data_out['SNP'] == value].index.values
-            print("idx", idx)
             s_data.loc[value, 'outcome'] = new_df2[idx[0]]
-            print("new_df2[idx[0]]", new_df2[idx[0]])
-    print("s data ", s_data)
+
     R_data.replace(np.nan, 0)
     s_data.replace(np.nan, 0)
     df_R = pd.DataFrame(data=R_data)
