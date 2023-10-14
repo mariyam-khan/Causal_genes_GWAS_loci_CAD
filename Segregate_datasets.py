@@ -182,13 +182,13 @@ def get_datasets(file_EX, file_EY, distance, LD_threshold_lower, pvalue):
 
                         # prune SNPs according to LD ############################################
                         Data_exp_ld, Data_out_ld = SNPs_LDrange(Data_exp_pos, Data_out_pos, LD_threshold_lower)
-
                         ##########################################################################
 
                         if isinstance(Data_out_ld, pd.DataFrame):
                             if not Data_out_ld.empty:
                                 path_new = os.path.join(path_original, "Datasets")
                                 create_directory_if_not_exists(path_new)
+                                print(name_EX)
                                 Data_exp_ld.to_csv(
                                     path_new + "/" + name_EX + "_" + str(chromosome) + "_" + str(position) + ".csv",
                                     sep=",",
@@ -230,6 +230,8 @@ def create_directory_if_not_exists(directory_path):
 
 
 def SNPs_LDrange(Data_exp, Data_out_pos, LD_threshold_lower):
+    print("LD_threshold_lower", LD_threshold_lower)
+    print("LD_threshold_upper", LD_threshold_upper)
     snps = list(Data_out_pos.loc[:, 'SNP'].values)
     if len(snps) != 1:
         cov_data = r("TwoSampleMR::ld_matrix")(snps, with_alleles=False, pop="EUR")
@@ -245,11 +247,14 @@ def SNPs_LDrange(Data_exp, Data_out_pos, LD_threshold_lower):
                    any(upper_tri[column] >= float(LD_threshold_upper))]
         cov_data = cov_data.drop(labels=to_drop, axis=1)
         cov_data = cov_data.drop(labels=to_drop, axis=0)
+
         upper_tri = cov_data.where(np.triu(np.ones(cov_data.shape), k=1).astype(bool))
         to_drop = [column for column in upper_tri.columns if
                    upper_tri[column][0] <= float(LD_threshold_lower)]
+
         cov_data = cov_data.drop(labels=to_drop, axis=1)
         cov_data = cov_data.drop(labels=to_drop, axis=0)
+        # print("cov 1", cov_data)
         Data_out_pos = Data_out_pos[Data_out_pos['SNP'].isin(cov_data.index.values)]
 
         Data_exp1 = Data_exp.loc[
@@ -274,7 +279,8 @@ def Data_preparation(Data_exp, Data_out, pathRS, chromosome, position):
     Data_out = Data_out.loc[Data_out['SNP'].isin(np.intersect1d(Data_out.SNP, Data_exp.SNP))]
     Data_exp.reset_index(drop=True, inplace=True)
     Data_out.reset_index(drop=True, inplace=True)
-
+    Data_out = Data_out.sort_values(by='pval.outcome', ascending=True)
+    Data_out.reset_index(drop=True, inplace=True)
     unique_genes = Counter(Data_exp['exposure']).keys()
     no_genes = len(unique_genes)
     most_common = Counter(Data_exp['exposure']).most_common(no_genes)
@@ -292,18 +298,16 @@ def Data_preparation(Data_exp, Data_out, pathRS, chromosome, position):
             Data_out.loc[m, 'beta.outcome'] = - Data_out.loc[m, 'beta.outcome']
             Data_out.loc[m, 'effect_allele.outcome'] = b
             Data_out.loc[m, 'other_allele.outcome'] = a
-
             Data_out.loc[m, 'SNP'] = value + "_" + b + "_" + a
         else:
             Data_out.loc[m, 'SNP'] = value + "_" + a + "_" + b
+    print("Data_out", Data_out)
     genes = []
     for j in range(no_genes):
         genes.append(most_common[j][0])
     selected_columns2 = Data_out['beta.outcome']
     new_df2 = selected_columns2.copy()
     column_names = genes
-    Data_out = Data_out.sort_values(by='pval.outcome', ascending=True)
-    Data_out.reset_index(drop=True, inplace=True)
     row_names = list(Data_out.SNP)
     matrix = np.zeros((len(row_names), len(column_names)))
     R_data = pd.DataFrame(matrix, columns=column_names, index=row_names, dtype='object')
@@ -316,11 +320,15 @@ def Data_preparation(Data_exp, Data_out, pathRS, chromosome, position):
         Data.reset_index(drop=True, inplace=True)
         o = Data['SNP'].values
         for j1 in range(int(most_common[n][1])):
+
             value = o[j1] + "_" + Data.loc[j1, 'effect_allele.exposure'] + "_" + Data.loc[j1, 'other_allele.exposure']
+            print("value", value)
             R_data.at[value, name] = Data.loc[j1, 'beta.exposure']
             idx = Data_out[Data_out['SNP'] == value].index.values
+            print("idx", idx)
             s_data.loc[value, 'outcome'] = new_df2[idx[0]]
-
+            print("new_df2[idx[0]]", new_df2[idx[0]])
+    print("s data ", s_data)
     R_data.replace(np.nan, 0)
     s_data.replace(np.nan, 0)
     df_R = pd.DataFrame(data=R_data)
@@ -329,7 +337,8 @@ def Data_preparation(Data_exp, Data_out, pathRS, chromosome, position):
     RandS.index.name = 'SNPs'
     pathRS_new = os.path.join(pathRS, "Data_prepared")
     create_directory_if_not_exists(pathRS_new)
-    RandS.to_csv(pathRS_new + "/" + name_EX + "_" + str(chromosome) + "_" + str(position) + "_prepared.csv",
+    name_EX_new = name_EX.replace("exp_", "")
+    RandS.to_csv(pathRS_new + "/" + name_EX_new + "_" + str(chromosome) + "_" + str(position) + "_prepared.csv",
                  sep=",")
     print("Prepared Datasets have been saved in the directory " + pathRS_new)
 
