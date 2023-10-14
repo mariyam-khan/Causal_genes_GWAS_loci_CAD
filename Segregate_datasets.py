@@ -274,12 +274,13 @@ def SNPs_LDrange(Data_exp, Data_out_pos, LD_threshold_lower):
 
 
 def Data_preparation(Data_exp, Data_out, pathRS, chromosome, position):
+    Data_out = Data_out.sort_values(by='pval.outcome', ascending=True)
+    Data_out.reset_index(drop=True, inplace=True)
     Data_exp = Data_exp.loc[Data_exp['SNP'].isin(np.intersect1d(Data_exp.SNP, Data_out.SNP))]
     Data_out = Data_out.loc[Data_out['SNP'].isin(np.intersect1d(Data_out.SNP, Data_exp.SNP))]
     Data_exp.reset_index(drop=True, inplace=True)
     Data_out.reset_index(drop=True, inplace=True)
-    Data_out = Data_out.sort_values(by='pval.outcome', ascending=True)
-    Data_out.reset_index(drop=True, inplace=True)
+
     unique_genes = Counter(Data_exp['exposure']).keys()
     no_genes = len(unique_genes)
     most_common = Counter(Data_exp['exposure']).most_common(no_genes)
