@@ -11,8 +11,9 @@ from pathlib import Path
 You can give as input 
  
 1. 1st argument, exposure data which you used to extract the GWAS summary data from 
-the MR-Base package 
-2. 2nd argument GWAS summary data 
+the MR-Base package.
+
+2. 2nd argument GWAS summary data/outcome data.
 
 These two files should be the output of either Prune_Snps_LD.py or Prune_Snps_pos.py, 
 with comma as a separator and the output would be a file with the format required for the
@@ -52,12 +53,12 @@ name_EY = os.path.splitext(os.path.basename(file_EY))[0]
 
 Data_out = pd.read_csv(file_EY, sep=',')
 Data_exp = pd.read_csv(file_EX, sep=',')
-
+Data_out = Data_out.sort_values(by='pval.outcome', ascending=True)
+Data_out.reset_index(drop=True, inplace=True)
 Data_exp = Data_exp.loc[Data_exp['SNP'].isin(np.intersect1d(Data_exp.SNP, Data_out.SNP))]
 Data_out = Data_out.loc[Data_out['SNP'].isin(np.intersect1d(Data_out.SNP, Data_exp.SNP))]
 Data_exp.reset_index(drop=True, inplace=True)
 Data_out.reset_index(drop=True, inplace=True)
-
 unique_genes = Counter(Data_exp['exposure']).keys()
 no_genes = len(unique_genes)
 most_common = Counter(Data_exp['exposure']).most_common(no_genes)
@@ -85,8 +86,6 @@ for j in range(no_genes):
 selected_columns2 = Data_out['beta.outcome']
 new_df2 = selected_columns2.copy()
 column_names = genes
-Data_out = Data_out.sort_values(by='pval.outcome', ascending=True)
-Data_out.reset_index(drop=True, inplace=True)
 row_names = list(Data_out.SNP)
 matrix = np.zeros((len(row_names), len(column_names)))
 R_data = pd.DataFrame(matrix, columns=column_names, index=row_names, dtype='object')
