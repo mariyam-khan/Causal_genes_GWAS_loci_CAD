@@ -70,7 +70,7 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
 
 # 3. Steps to running the code.
 
-  ![short pipeline](pipeline_short2.png)
+  ![short pipeline](Pipeline2.png)
 
   ![Pipeline to run the Causal Analysis.](Pipeline.png)
 
