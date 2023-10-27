@@ -351,8 +351,10 @@ the last two functions and use the file `Data preparation.py` to get the dataset
 exposure and outcome files you get after you run Seperate chr.py, with comma as a separator and the output would be a file with the format required for the
 causal analysis saved in the same input directory with suffix prepared.csv.
 
-          python3 Data_preperation.py "/home/user/Exposure.csv" "/home/user/Outcome.csv"
+          python3 Data_Prep.py "/home/user/Exposure.csv" "/home/user/Outcome.csv"
 
+          
+![Output dataset after using Data_Prep.py.](output_DataPrep.png)
 
 # 5. Scripts for causal analysis
 
