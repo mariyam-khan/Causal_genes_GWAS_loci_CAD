@@ -322,7 +322,7 @@ causal analysis saved in the same input directory with suffix prepared.csv.
 
 ### 4.5.4  For entire exposure/outcome data, get datasets of each chromosome and SNPs within *chosen* distance and *chosen* LD-range.
 
-  ![short pipeline 2](Pipelin3.png)
+  ![short pipeline 2](Pipeline3.png)
 
 If there is no specific locus where you wish to perform the analysis but rather the entire exposure and outcome data, we have a code `Segregate_datasets.py` which can output the exposure and outcome data segregated per chromosome and "hotspots" per chromosome.
 
