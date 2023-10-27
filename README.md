@@ -266,6 +266,7 @@ chromosome 2. Please make sure you give the p-value in the format ()E-(), distan
 
 Notice, you can give, position of the chosen *snp* (if you do not give this, by default, the position of the lead *snp* is chosen. Hence this function can also be used if you do not have a specific *snp* in mind and just need to prune your data on a chromosome and *hotspot* by distance), distance (radius) and pvalue threshold as the last three arguments.
 
+
 ### 4.5.2  Choose your *Snp* and get exposure and outcome data within *chosen* LD-range.
 
 To make sure that you have data from the same locus and have *snps* abouve *chosen* LD-threshold (ex. 0.01) excluded, you can choose a *snp* and run the function `Prune_Snps_LD.py`. Once you run this, you will get *snps* (that pass a certain p-value threshold, ex. 5E-8) on the chromosome (integer given as argument for chromosome number) within *chosen* distance around the position of the *snp* (specified by the argument for position of this *snp*), saved in exposure and outcome data *.csv* files.  These files will be saved in the same directory as the original files with the suffix of the chromosome and position appended to them.
@@ -293,7 +294,7 @@ Additionally,
 As an example, if you run
 
 
-        python3 Choose_SNPs.py "/home/user/Exposure.csv" "/home/user/Outcome.csv" 2 203893999 0.01 5E-8
+        python3 CPrune_Snps_LD.py "/home/user/Exposure.csv" "/home/user/Outcome.csv" 2 203893999 0.01 5E-8
         
         
 Here the  *snp* has position 203893999 on Chromosome 2 and you wish to have *snps* around this *snp* within LD greather than or equal 0.01. You will then getthe same Exposure\_2\_203893999.csv and Outcome\_2\_203893999.csv files with SNPs which are significant (p − value ≤ 5E-08) and within LD >= 0.01 around 203893999 on chromosome 2. Please make sure you give the p-value in the format ()E-(), LD as sloat (1.0, not 1) abd position as int (203893999, not 203893999.0).
@@ -305,7 +306,19 @@ Here the  *snp* has position 203893999 on Chromosome 2 and you wish to have *snp
 
 Notice, you can give, position of the chosen *snp* (if you do not give this, by default, the position of the lead *snp* is chosen. Hence this function can also be used if you do not have a specific *snp* in mind and just need to prune your data on a chromosome and *hotspot* by LD), LD threshold and pvalue threshold as the last three arguments.
 
-### 4.5.3  For entire exposure/outcome data, get datasets of each chromosome and SNPs within *chosen* distance and *chosen* LD-range.
+### 4.5.3 Harmonize the data and save it in the format required for causal analysis. 
+
+Lastly to harmonize the exposure and outocme data files as well as having them in format ready for causal analysis. you can give the outputs of either of
+the last two functions and use the file `Data preparation.py` to get the datasets in the format needed for running the causal analysis. The input would be
+exposure and outcome files you get after you run Seperate chr.py, with comma as a separator and the output would be a file with the format required for the
+causal analysis saved in the same input directory with suffix prepared.csv.
+
+          python3 Data_Prep.py "/home/user/Exposure.csv" "/home/user/Outcome.csv"
+
+          
+![Output dataset after using Data_Prep.py.](output_DataPrep.png)
+
+### 4.5.4  For entire exposure/outcome data, get datasets of each chromosome and SNPs within *chosen* distance and *chosen* LD-range.
 
 If there is no specific locus where you wish to perform the analysis but rather the entire exposure and outcome data, we have a code `Segregate_datasets.py` which can output the exposure and outcome data segregated per chromosome and "hotspots" per chromosome.
 
@@ -343,18 +356,6 @@ In the following images, you see the data saved in directories Datasets and Data
 ![Seperate Exposure and outcome datasets saved for each chromosome and hotpot, in the directory Datasets.](gitpic1.png)
 ![Data prepared in format required for causal analysis, saved for each chromosome and hotpot, in the directory Data prepared.](gitpic2.png)
 
-
-## 4.5 Harmonize the data and save it in the format required for causal analysis. 
-
-Lastly to harmonize the exposure and outocme data files as well as having them in format ready for causal analysis. you can give the outputs of either of
-the last two functions and use the file `Data preparation.py` to get the datasets in the format needed for running the causal analysis. The input would be
-exposure and outcome files you get after you run Seperate chr.py, with comma as a separator and the output would be a file with the format required for the
-causal analysis saved in the same input directory with suffix prepared.csv.
-
-          python3 Data_Prep.py "/home/user/Exposure.csv" "/home/user/Outcome.csv"
-
-          
-![Output dataset after using Data_Prep.py.](output_DataPrep.png)
 
 # 5. Scripts for causal analysis
 
