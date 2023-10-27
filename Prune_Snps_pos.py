@@ -25,7 +25,7 @@ Additionally you can give as input:
 
 4. 4th argument position. (position of the SNP around which you want to get the data for analysis)
 
-5. 5th argument LD_threshold_lower , where we will remove SNPs which are in LD lower than LD_threshold_lower with the 
+5. 5th argument distance_threshold, where we will remove SNPs which are in LD lower than LD_threshold_lower with the 
    lead SNP
 
 6. 6th argument pvalue threshold, where we will remove SNPs whose pvalue is higher in the GWAS outcome data
@@ -35,7 +35,7 @@ If you do not give the  4th argument, the lead SNP (SNP with the lowest p-value 
 
 If you do not give the 5th and 6th arguments then default values are:
 
-LD_threshold_lower = 0.0
+distance_threshold = 500000
 pvalue = 5E-8
 
 
@@ -54,10 +54,10 @@ def check_valid(user_input, check):
             sys.exit(1)
         else:
             out = user_input
-    elif check == "LD":
-        if not (0.5 >= user_input >= 0.0):
+    elif check == "distance":
+        if not (1000000 > user_input > 25000):
             print(
-                "Provide threshold in the range, 0.0 >= LD_threshold_lower <= 0.5. Please "
+                "Provide distance in the range, 25000 > distance < 1000000. Please "
                 " read the documentation for more details.")
             sys.exit(1)
         else:
@@ -98,15 +98,16 @@ try:
         position1 = None
 
     try:
-        LD_threshold_lower1 = float(sys.argv[5])
-        LD_threshold_lower1 = check_valid(LD_threshold_lower1, "LD")
+        distance1 = int(sys.argv[5])
+        distance1 = check_valid(distance1, "distance")
     except ValueError:
         print(
-            "Provide a valid value for the lower LD threshold. Please "
+            "Provide a non-zero integer value for distance. Please "
             " read the documentation for more details.")
         sys.exit(1)
     except IndexError:
-        LD_threshold_lower1 = 0.0
+        distance1 = 500000
+
     try:
         pvalue1 = float(sys.argv[6])
         pvalue1 = check_valid(pvalue1, "pvalue")
@@ -135,9 +136,10 @@ name_EY = os.path.splitext(os.path.basename(file_EY1))[0]
 LD_threshold_upper = 1.0
 
 
-def SNPs_LDrange(file_EX, file_EY, chromosome, position, LD_threshold_lower, pvalue):
+def SNPs_posrange(file_EX, file_EY, chromosome, position, distance, pvalue):
     Data_out = pd.read_csv(file_EY, sep=',', low_memory=False)
     Data_exp = pd.read_csv(file_EX, sep=',', low_memory=False)
+
     Data_out = (Data_out.loc[Data_out['chr'] == chromosome])
     Data_out.reset_index(drop=True, inplace=True)
     Data_out = Data_out[Data_out['pval.outcome'] <= pvalue]
@@ -146,71 +148,33 @@ def SNPs_LDrange(file_EX, file_EY, chromosome, position, LD_threshold_lower, pva
     Data_out = Data_out.sort_values(by='pval.outcome', ascending=True)
     Data_out.reset_index(drop=True, inplace=True)
     if position is None:
-        Data_out_new = Data_out
-    else:
+        position = Data_out.at[0, 'pos']
+    index = Data_out[Data_out['pos'] == position].index
+    if index.empty:
+        error_message = (f"Value {position} not found in the 'pos' column. "
+                         "Please provide a valid position.")
+        sys.exit(error_message)
+    if not Data_out.empty:
 
-        # Find the index of the value in the 'pos' column
-        index = Data_out[Data_out['pos'] == position].index
-        if index.empty:
-            error_message = (f"Value {position} not found in the 'pos' column. "
-                             "Please provide a valid position.")
-            sys.exit(error_message)
-        # Extract the row with the found index
-        row_to_move = Data_out.loc[index[0]]
+        # choose SNPs within 'distance' around the lead SNP ######################
 
-        # Drop the row from the DataFrame
-        Data_out = Data_out.drop(index)
+        lower = int(position) - int(distance)
+        upper = int(position) + int(distance)
+        Data_out_pos = Data_out[(Data_out['pos'] >= lower) & (Data_out['pos'] <= upper)]
+        Data_out_pos.reset_index(drop=True, inplace=True)
+        Data_out_pos = Data_out_pos.loc[
+            Data_out_pos['SNP'].isin(np.intersect1d(Data_out_pos.SNP, Data_exp.SNP))]
+        Data_out_pos.reset_index(drop=True, inplace=True)
+        Data_exp_pos = Data_exp.loc[
+            Data_exp['SNP'].isin(np.intersect1d(Data_exp.SNP, Data_out_pos.SNP))]
+        Data_exp_pos.reset_index(drop=True, inplace=True)
+        ##########################################################################
 
-        # Reorder the DataFrame with the extracted row as the first row
-        df = pd.concat([row_to_move.to_frame().T, Data_out])
-
-        # Reset the index of the DataFrame
-        Data_out_new = df.reset_index(drop=True)
-
-    if not Data_out_new.empty:
-        snps = list(Data_out_new.loc[:, 'SNP'].values)
-        if len(snps) != 1:
-            cov_data = r("TwoSampleMR::ld_matrix")(snps, with_alleles=False, pop="EUR")
-
-            pandas2ri.activate()
-            pd_from_r_df = ro.conversion.rpy2py(cov_data)
-            cov_data = pd.DataFrame(pd_from_r_df, columns=r('colnames')(cov_data),
-                                    index=r('colnames')(cov_data), dtype='float')
-
-            cov_data = pd.DataFrame.abs(cov_data)
-            upper_tri = cov_data.where(np.triu(np.ones(cov_data.shape), k=1).astype(bool))
-            to_drop = [column for column in upper_tri.columns if
-                       any(upper_tri[column] >= float(LD_threshold_upper))]
-            cov_data = cov_data.drop(labels=to_drop, axis=1)
-            cov_data = cov_data.drop(labels=to_drop, axis=0)
-
-            upper_tri = cov_data.where(np.triu(np.ones(cov_data.shape), k=1).astype(bool))
-            to_drop = [column for column in upper_tri.columns if
-                       upper_tri[column][0] <= float(LD_threshold_lower)]
-            cov_data = cov_data.drop(labels=to_drop, axis=1)
-            cov_data = cov_data.drop(labels=to_drop, axis=0)
-
-            Data_out_new = Data_out_new[Data_out_new['SNP'].isin(cov_data.index.values)]
-
-            Data_exp1 = Data_exp.loc[
-                Data_exp['SNP'].isin(np.intersect1d(Data_exp.SNP, Data_out_new.SNP))]
-            Data_out1 = Data_out_new.loc[
-                Data_out_new['SNP'].isin(np.intersect1d(Data_out_new.SNP, Data_exp.SNP))]
-            Data_exp1.reset_index(drop=True, inplace=True)
-            Data_out1.reset_index(drop=True, inplace=True)
-            pandas2ri.deactivate()
-        else:
-            Data_exp1 = Data_exp.loc[
-                Data_exp['SNP'].isin(np.intersect1d(Data_exp.SNP, Data_out_new.SNP))]
-            Data_out1 = Data_out_new.loc[
-                Data_out_new['SNP'].isin(np.intersect1d(Data_out_new.SNP, Data_exp.SNP))]
-            Data_exp1.reset_index(drop=True, inplace=True)
-            Data_out1.reset_index(drop=True, inplace=True)
-        Data_exp1.to_csv(
+        Data_exp_pos.to_csv(
             path_original + "/" + name_EX + "_" + "pruned.csv",
             sep=",",
             index=False)
-        Data_out1.to_csv(
+        Data_out_pos.to_csv(
             path_original + "/" + name_EY + "_pruned.csv",
             sep=",",
             index=False)
@@ -219,4 +183,4 @@ def SNPs_LDrange(file_EX, file_EY, chromosome, position, LD_threshold_lower, pva
         sys.exit('Error Message : Dataset is empty. There were no SNPs that passed the p-value threshold.')
 
 
-SNPs_LDrange(file_EX1, file_EY1, chromosome1, position1, LD_threshold_lower1, pvalue1)
+SNPs_posrange(file_EX1, file_EY1, chromosome1, position1, distance1, pvalue1)
