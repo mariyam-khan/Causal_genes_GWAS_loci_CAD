@@ -70,8 +70,6 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
 
 # 3. Steps to running the code.
 
-  ![short pipeline](Pipeline2.png)
-
   ![Pipeline to run the Causal Analysis.](Pipeline.png)
 
 **Case 1:** If you already have the data in the format containing the *Snps* to exposure effects and *Snps* to outcome effects **(Section 5)**. 
@@ -224,7 +222,8 @@ Now that you have the outcome and exposure data, you can choose a chromosome and
 
 We will come to data harmonization shortly in **Section 4.6** but before make sure that for the causal analysis you follow one or more of the following sub-sections.
 
-
+  ![short pipeline](Pipeline2.png) 
+  
 ### 4.5.1  Choose your *Snp* and get exposure and outcome data within *chosen* distance.
 
 To make sure that you have data from the same locus and of *snps* within *chosen* distance (ex. 1Mb) of each other, you can choose a *snp* and run the function `Prune_Snps_pos.py`. Once you run this, you will get SNPs (that pass a certain p-value threshold, ex. 5E-8) on the chromosome (integer given as argument for chromosome number) within *chosen* distance around the position of the *snp* (specified by the argument for position of this *snp*), saved in exposure and outcome data *.csv* files.  These files will be saved in the same directory as the original files with the suffix of the chromosome and position appended to them.
@@ -320,7 +319,10 @@ causal analysis saved in the same input directory with suffix prepared.csv.
           
 ![Output dataset after using Data_Prep.py.](output_DataPrep.png)
 
+
 ### 4.5.4  For entire exposure/outcome data, get datasets of each chromosome and SNPs within *chosen* distance and *chosen* LD-range.
+
+  ![short pipeline 2](Pipelin3.png)
 
 If there is no specific locus where you wish to perform the analysis but rather the entire exposure and outcome data, we have a code `Segregate_datasets.py` which can output the exposure and outcome data segregated per chromosome and "hotspots" per chromosome.
 
