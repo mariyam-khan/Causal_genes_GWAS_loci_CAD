@@ -31,8 +31,7 @@ rs602633_G_T,-0.247463,0.0,0.096018
 rs4970834_T_C,0.263743,-0.208615,-0.09655
 
 Make sure this directory only contains such datasets, you donot need to provide LD matrices
-
-Output :  for this example "/home/user/exposure_outcome_results.csv"
+Output :  for this example "/home/Data_prepared/Results/exposure_outcome_results.csv"
 where exposure_outcome_results.csv contains results of the causal analysis
 
 
