@@ -72,12 +72,6 @@ for path in pathlist:
         cov_data = cov_data.drop(labels=to_drop, axis=1)
         cov_data = cov_data.drop(labels=to_drop, axis=0)
 
-        # upper_tri = cov_data.where(np.triu(np.ones(cov_data.shape), k=1).astype(bool))
-        # to_drop = [column for column in upper_tri.columns if
-        #            any(upper_tri[column] >= float(0.97))]
-        # cov_data = cov_data.drop(labels=to_drop, axis=1)
-        # cov_data = cov_data.drop(labels=to_drop, axis=0)
-
         cov_EE = cov_data.values
         snps_new = [i.split('_', 1)[0] for i in r('colnames')(cov_data)]
         cov_data_pruned = pd.DataFrame(cov_EE, columns=snps_new, index=snps_new, dtype='float')
@@ -93,6 +87,7 @@ for path in pathlist:
         gene_names = column_names = list(df.columns.values)
         covEY = Data.loc[:, 'outcome'].values
         covEX = df.values
+     
         if no_snps == no_genes:
             if no_snps == 1:
                 b_est = covEY / covEX
