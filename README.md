@@ -110,7 +110,7 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
 
     Alternate 
     
-    - **Step 4  (Section 4.5.4) :**   For entire exposure/outcome data, get datasets of each chromosome and *Snps* within *chosen* distance and SNPs                                              within        *chosen* LD-range using `Segregate_datasets.py`.
+- **Step 4  (Section 4.5.4) :**   For entire exposure/outcome data, get datasets of each chromosome and *Snps* within *chosen* distance and SNPs                                              within        *chosen* LD-range using `Segregate_datasets.py`.
 
   - **Step 5 (Section 5) :** Run the causal analysis, as in Case 1.
     
