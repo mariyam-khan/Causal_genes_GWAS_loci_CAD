@@ -15,24 +15,26 @@ base = importr('base')
 base.warnings()
 """
 
-getting the causal genes for cases the user cannot supply the LD-matrix.
 
+To run the file, type in the command line:
 
-To run the file, type in the command line python3 run_MVMR.py "/home/user/exposure_outcome.csv"
+python3 MVMR_directory.py "/home/Data_prepared/"
 
-
-where: 
-
-"/home/user/exposure_outcome.csv"
-
-sys.argv[1] is the first argument when you run the file and should be the exposure_outcome.csv file 
+Here Data_prepared is the directory containing multiple datasets 
 containing the SNPs to exposure effects and SNPs to outcome effects.
 
-The output after running this file would be a .csv with results from the methods (depending
- on the dimensions, least-squares, generalized method of moments and ratio method)
-saved as .csv file in the same directory as the one given for the exposure_outcome.csv file. 
 
-i.e. for this example "/home/user/exposure_outcome_results.csv"
+format of these datasets:
+ 
+SNPs,ENSG00000143028.8,ENSG00000134222.16,outcome
+rs602633_G_T,-0.247463,0.0,0.096018
+rs4970834_T_C,0.263743,-0.208615,-0.09655
+
+Make sure this directory only contains such datasets, you donot need to provide LD matrices
+
+Output :  for this example "/home/user/exposure_outcome_results.csv"
+where exposure_outcome_results.csv contains results of the causal analysis
+
 
 """
 
@@ -87,27 +89,45 @@ for path in pathlist:
         gene_names = column_names = list(df.columns.values)
         covEY = Data.loc[:, 'outcome'].values
         covEX = df.values
-     
+
+        err = np.linalg.inv(covEX.T @ np.linalg.inv(cov_EE) @ covEX)
+        standard_err1 = np.sqrt(np.diagonal(err))
+
+        standard_err1 = standard_err1.tolist()
+        standard_err = []
+        N_gwas = 141217
+
         if no_snps == no_genes:
             if no_snps == 1:
                 b_est = covEY / covEX
                 d1 = {'gene': gene_names,
-                      'Causal Estimate Ratio method': b_est}
+                      'Causal Estimate Least Squares': b_est[0], 'Causal Estimate GMM': b_est[0],
+                      'No_snps': no_snps, 'se': standard_err}
                 df1 = pd.DataFrame(data=d1)
                 df1 = df1.set_index('gene')
             else:
                 b_est = np.linalg.solve(covEX, covEY)
+                no_snps1 = [no_snps]
+                p = len(gene_names)
+                for i in range(p - 1):
+                    no_snps1.append("")
                 d1 = {'gene': gene_names,
-                      'Causal Estimate': b_est}
+                      'Causal Estimate Least Squares': b_est, 'Causal Estimate GMM': b_est,
+                      'No_snps': no_snps1, 'se': standard_err}
                 df1 = pd.DataFrame(data=d1)
                 df1 = df1.set_index('gene')
         else:
             if no_snps > no_genes:
                 b_est2, res, rnk, sy = lstsq(covEX, covEY)
                 b_est1 = np.linalg.inv(covEX.T @ np.linalg.inv(cov_EE) @ covEX) @ (
-                        covEX.T @ np.linalg.inv(cov_EE) @ covEY)
+                            covEX.T @ np.linalg.inv(cov_EE) @ covEY)
+                no_snps1 = [no_snps]
+                p = len(gene_names)
+                for i in range(p - 1):
+                    no_snps1.append("")
                 d1 = {'gene': gene_names,
-                      'Causal Estimate Least Squares': b_est2, 'Causal Estimate GMM': b_est1}
+                      'Causal Estimate Least Squares': b_est2, 'Causal Estimate GMM': b_est1,
+                      'No_snps': no_snps1, 'se': standard_err, }
                 df1 = pd.DataFrame(data=d1)
                 df1 = df1.set_index('gene')
             else:
@@ -123,8 +143,10 @@ for path in pathlist:
             covEY = Data.loc[:, 'outcome'].values
             covEX = df.values
             b_est = covEY / covEX
+            standard_err = np.linalg.inv(covEX.T @ covEX)
             d1 = {'gene': gene_names,
-                  'Causal Estimate Ratio method': b_est[0]}
+                  'Causal Estimate Least Squares': b_est[0], 'Causal Estimate GMM': b_est[0],
+                  'No_snps': 1, 'se': standard_err[0]}
             df1 = pd.DataFrame(data=d1)
             df1 = df1.set_index('gene')
         else:
@@ -140,4 +162,3 @@ for path in pathlist:
     path_new = os.path.join(path_original, "Results")
     df1.to_csv(path_new + "/" + name_EX + "_results.csv", sep=",", float_format='%g')
 print('Out of loop')
-
