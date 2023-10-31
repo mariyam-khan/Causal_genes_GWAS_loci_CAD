@@ -76,12 +76,12 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
 
    - **Case 1.1 :** If you do not provide an LD-matrix.
    
-     - **Step 1 (Section 5.1) :** `MVMR_withoutLD.py` 
+     - **Step 1 (Section 5.1) :** `run_MVMR.py` 
    
    
    - **Case 1.2 :** If you wish to provide your own LD-matrix.
    
-     - **Step 1 (Section 5.2)** : `run_MVMR.py`, LD-matrix can be generated in R as described in **Section 5.2.1**
+     - **Step 1 (Section 5.2)** : `run_MVMR_LD.py`, LD-matrix can be generated in R as described in **Section 5.2.1**
      
    
  
@@ -295,7 +295,7 @@ Additionally,
 As an example, if you run
 
 
-        python3 CPrune_Snps_LD.py "/home/user/Exposure.csv" "/home/user/Outcome.csv" 2 203893999 0.01 5E-8
+        python3 Prune_Snps_LD.py "/home/user/Exposure.csv" "/home/user/Outcome.csv" 2 203893999 0.01 5E-8
         
         
 Here the  *snp* has position 203893999 on Chromosome 2 and you wish to have *snps* around this *snp* within LD greather than or equal 0.01. You will then getthe same Exposure\_2\_203893999.csv and Outcome\_2\_203893999.csv files with SNPs which are significant (p − value ≤ 5E-08) and within LD >= 0.01 around 203893999 on chromosome 2. Please make sure you give the p-value in the format ()E-(), LD as sloat (1.0, not 1) abd position as int (203893999, not 203893999.0).
@@ -368,7 +368,7 @@ There are two major files for running the causal analysis.
 
 ## 5.1  If you do not provide an LD-matrix.
 
-          python3 MVMR_withoutLD.py "/home/user/file.csv"
+          python3 run_MVMR.py "/home/user/file.csv"
           
 After python3, the argument should be the file.csv file containing the SNPs to exposure effects and SNPs to outcome effects. The first column is
 always the SNP ID’s, the last column is always the SNPs to outcome effect. Every other column in between is treated as an exposure variable. The separator to be used is comma. As an example:
@@ -381,7 +381,7 @@ always the SNP ID’s, the last column is always the SNPs to outcome effect. Eve
 
 ## 5.2  If you provide an LD-matrix.
 
-        python3 run_MVMR.py "/home/user/file.csv" "/home/user/ld.csv"
+        python3 run_MVMR_LD.py "/home/user/file.csv" "/home/user/ld.csv"
 
 
 After python3, the first argument should be the file.csv file containing the SNPs to exposure effects and SNPs to outcome effects. The first column is
