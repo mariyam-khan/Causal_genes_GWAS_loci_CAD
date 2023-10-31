@@ -19,11 +19,20 @@ where:
 sys.argv[1] is the first argument when you run the file and should be the exposure_outcome.csv file 
 containing the SNPs to exposure effects and SNPs to outcome effects.
 
+Format:
+
+SNPs,ENSG00000143028.8,ENSG00000134222.16,outcome
+rs602633_G_T,-0.247463,0.0,0.096018
+rs4970834_T_C,0.263743,-0.208615,-0.09655
 
 "/home/user/ld.csv"
 
 sys.argv[2] is the second argument i.e. ld.csv file for the LD matrix.
 Please make sure the ordering of the SNPs is same as in the exposure_outcome file
+
+Format of ld.csv:
+  1.0,0.9
+  0.9,1.0
 
 
 The output after running this file would be a .csv with results from the methods (depending
