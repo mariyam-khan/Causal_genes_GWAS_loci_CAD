@@ -59,55 +59,63 @@ if len(snps) != 1:
     cov_data = cov_data.drop(labels=to_drop, axis=0)
     Data = Data[Data.SNPs.isin(cov_data.index.values)]
     Data.reset_index(drop=True, inplace=True)
-    cov_EE = cov_data.values
-    snps_new = Data.loc[:, 'SNPs'].values
-    no_snps = len(snps_new)
-    no_genes = len(Data.columns) - 2
-    df = Data.loc[:, ~Data.columns.isin(['SNPs', 'outcome'])]
-    gene_names = column_names = list(df.columns.values)
-    covEY = Data.loc[:, 'outcome'].values
-    covEX = df.values
+    all_zeros = (Data == 0).all()
+    if all_zeros.any():
+        sys.exit('Error Message : Some columns have all zero rows in the new pruned dataset ad the matrix is singular.')
 
-    err = np.linalg.inv(covEX.T @ np.linalg.inv(cov_EE) @ covEX)
-    standard_err1 = np.sqrt(np.diagonal(err))
-
-    # Convert the diagonal elements to a list
-    standard_err1 = standard_err1.tolist()
-    standard_err = []
-    N_gwas = 141217
-
-    if no_snps == no_genes:
-        if no_snps == 1:
-            b_est = covEY / covEX
-            d1 = {'gene': gene_names,
-                  'Causal Estimate Least Squares': b_est[0], 'Causal Estimate GMM': b_est[0],
-                  'No_snps': no_snps, 'se': standard_err}
-            df1 = pd.DataFrame(data=d1)
-            df1 = df1.set_index('gene')
-        else:
-            b_est = np.linalg.solve(covEX, covEY)
-            no_snps1 = [no_snps]
-            p = len(gene_names)
-            for i in range(p - 1):
-                no_snps1.append("")
-            d1 = {'gene': gene_names,
-                  'Causal Estimate Least Squares': b_est, 'Causal Estimate GMM': b_est,
-                  'No_snps': no_snps1, 'se': standard_err}
-            df1 = pd.DataFrame(data=d1)
-            df1 = df1.set_index('gene')
     else:
+        cov_EE = cov_data.values
+        snps_new = Data.loc[:, 'SNPs'].values
+        no_snps = len(snps_new)
+        no_genes = len(Data.columns) - 2
+        df = Data.loc[:, ~Data.columns.isin(['SNPs', 'outcome'])]
+        gene_names = column_names = list(df.columns.values)
+        covEY = Data.loc[:, 'outcome'].values
+        covEX = df.values
         if no_snps > no_genes:
-            b_est2, res, rnk, sy = lstsq(covEX, covEY)
-            b_est1 = np.linalg.inv(covEX.T @ np.linalg.inv(cov_EE) @ covEX) @ (covEX.T @ np.linalg.inv(cov_EE) @ covEY)
-            no_snps1 = [no_snps]
-            p = len(gene_names)
-            for i in range(p - 1):
-                no_snps1.append("")
-            d1 = {'gene': gene_names,
-                  'Causal Estimate Least Squares': b_est2, 'Causal Estimate GMM': b_est1,
-                  'No_snps': no_snps1, 'se': standard_err, }
-            df1 = pd.DataFrame(data=d1)
-            df1 = df1.set_index('gene')
+            err = np.linalg.inv(covEX.T @ np.linalg.inv(cov_EE) @ covEX)
+            standard_err1 = np.sqrt(np.diagonal(err))
+    
+            # Convert the diagonal elements to a list
+            standard_err1 = standard_err1.tolist()
+            standard_err = []
+            N_gwas = 141217
+    
+            if no_snps == no_genes:
+                if no_snps == 1:
+                    b_est = covEY / covEX
+                    d1 = {'gene': gene_names,
+                          'Causal Estimate Least Squares': b_est[0], 'Causal Estimate GMM': b_est[0],
+                          'No_snps': no_snps, 'se': standard_err}
+                    df1 = pd.DataFrame(data=d1)
+                    df1 = df1.set_index('gene')
+                else:
+                    b_est = np.linalg.solve(covEX, covEY)
+                    no_snps1 = [no_snps]
+                    p = len(gene_names)
+                    for i in range(p - 1):
+                        no_snps1.append("")
+                    d1 = {'gene': gene_names,
+                          'Causal Estimate Least Squares': b_est, 'Causal Estimate GMM': b_est,
+                          'No_snps': no_snps1, 'se': standard_err}
+                    df1 = pd.DataFrame(data=d1)
+                    df1 = df1.set_index('gene')
+            else:
+                if no_snps > no_genes:
+                    b_est2, res, rnk, sy = lstsq(covEX, covEY)
+                    b_est1 = np.linalg.inv(covEX.T @ np.linalg.inv(cov_EE) @ covEX) @ (covEX.T @ np.linalg.inv(cov_EE) @ covEY)
+                    no_snps1 = [no_snps]
+                    p = len(gene_names)
+                    for i in range(p - 1):
+                        no_snps1.append("")
+                    d1 = {'gene': gene_names,
+                          'Causal Estimate Least Squares': b_est2, 'Causal Estimate GMM': b_est1,
+                          'No_snps': no_snps1, 'se': standard_err, }
+                    df1 = pd.DataFrame(data=d1)
+                    df1 = df1.set_index('gene')
+                else:
+                    sys.exit('Error Message : You require at least as many instruments as exposures to run this '
+                             'analysis.')
         else:
             sys.exit('Error Message : You require at least as many instruments as exposures to run this analysis.')
 
@@ -120,12 +128,12 @@ else:
         covEX = df.values
         b_est = covEY / covEX
         standard_err = np.linalg.inv(covEX.T @ covEX)
+        N_gwas = 141217
         d1 = {'gene': gene_names,
               'Causal Estimate Least Squares': b_est[0], 'Causal Estimate GMM': b_est[0],
-              'No_snps': 1, 'se': standard_err[0]}
+              'No_snps': 1, 'se': np.sqrt(standard_err[0])/np.sqrt(N_gwas)}
         df1 = pd.DataFrame(data=d1)
         df1 = df1.set_index('gene')
     else:
         sys.exit('Error Message : You require at least as many instruments as exposures to run this analysis.')
 df1.to_csv(file_EXEY + "_results.csv", sep=",", float_format='%g')
-
