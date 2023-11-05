@@ -140,7 +140,7 @@ else:
     if len(snps) >= no_genes:
         df = Data.loc[:, ~Data.columns.isin(['SNPs', 'outcome'])]
         gene_names = column_names = list(df.columns.values)
-        covEY = Data.loc[:, 'CAD'].values
+        covEY = Data.loc[:, 'outcome'].values
         covEX = df.values
         b_est = covEY / covEX
         standard_err = np.linalg.inv(covEX.T @ covEX)
