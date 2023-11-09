@@ -92,7 +92,7 @@ for path in pathlist:
             gene_names = column_names = list(df.columns.values)
             covEY = Data.loc[:, 'outcome'].values
             covEX = df.values
-            if no_snps > no_genes:
+            if no_snps >= no_genes:
                 err = np.linalg.inv(covEX.T @ np.linalg.inv(cov_EE) @ covEX)
                 standard_err1 = np.sqrt(np.diagonal(err))
 
