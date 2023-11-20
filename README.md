@@ -142,7 +142,7 @@ such as:
  ![Format of exposure data from GTEx](gtex_exp_data.png) 
 
 
- You also need to download the *Snps* annotation file from GTEx, which would have format
+ You also need to download the *Snps* annotation file from GTEx, since the TwoSampleMR package will be used to extract outcome dataset and this package requires you to have the *Snps: in the rs-ID format of the GRCh37 version. This file can be found in the *Reference* section and has the description : *Lookup table for all variants genotyped in GTEx, with chromosome positions, REF and ALT alleles, RS IDs from dbSNP 151, GTEx variant IDs (constructed as chr_pos_ref_alt_build), and hg19 liftover variant ID, for all variants in release V8*. This should look like this:
 
  ![Format of annotation data from GTEx](gtex_annotation_file.png) 
         
