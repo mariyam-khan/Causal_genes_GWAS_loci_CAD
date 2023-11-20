@@ -143,7 +143,7 @@ such as:
 
 ## 4.2 Align the *Snp*-ID in the GTEx data with corresponding rs-ID.
 
-Since the data you downloaded is not in format to extract GWAS summary data using TwoSampleMR package, you need to get it in their format and you need to align the variant_id with rs-ID using the GRCh37 build. For this, you need to download the *Snps* annotation file from GTEx, since the TwoSampleMR package will be used to extract outcome dataset and this package requires you to have the *Snps* in the rs-ID format of the GRCh37 version. This file can be found in the *Reference* section and has the description : *Lookup table for all variants genotyped in GTEx, with chromosome positions, REF and ALT alleles, RS IDs from dbSNP 151, GTEx variant IDs (constructed as chr_pos_ref_alt_build), and hg19 liftover variant ID, for all variants in release V8*. This should look like this:
+Since the data you downloaded is not in format to extract GWAS summary data using **TwoSampleMR Package**, you need to get it in their format and you need to align the variant_id with rs-ID using the GRCh37 build. For this, you need to download the *Snps* annotation file from GTEx. This file can be found in the *Reference* section and has the description : *Lookup table for all variants genotyped in GTEx, with chromosome positions, REF and ALT alleles, RS IDs from dbSNP 151, GTEx variant IDs (constructed as chr_pos_ref_alt_build), and hg19 liftover variant ID, for all variants in release V8*. This should look like this:
 
  ![Format of annotation data from GTEx](gtex_annotation_file.png) 
  
@@ -154,7 +154,9 @@ Since the data you downloaded is not in format to extract GWAS summary data usin
 
 Here, *Exposure.csv* is the exposure/gene expression data for a specific tissue from GTEx and *annotation.csv* is the rs-ID annotation file on GTEx. You will be returned *.csv* file with the annotated rs-ID’s in the same directory as your *Exposure.csv* file.
 
-In summary you need to make sure that the GTEx data is in the format required by the TwoSampleMR package.
+ ![Format of annotated file returned from `Match_rs_id.py`](gtex_annotated.png) 
+
+In summary you need to ensure that the GTEx data is in the format required by the **TwoSampleMR Package**.
 
 To extract outcome data for the study of interest, we used the **TwoSampleMR Package** (package for performing Mendelian randomization using GWAS
 summary data, https://mrcieu.github.io/TwoSampleMR/). Note that if you are using GTEx for exposure datasets, you have to make sure that this minimum information is provided for the extraction of the GWAS summary data from the MRBase package:
