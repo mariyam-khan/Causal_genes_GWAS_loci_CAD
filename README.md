@@ -122,7 +122,7 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
 # 4. Data and Preparation
 
 
-We have used this method to estimate the causal effect of *genes* which are shared on a locus on outcome *Coronary Artery Disease* using summary statistics from *genome wide association studies (GWAS)*. We used for GWAS summary data, *ebi-a-GCST003116* with trait as coronary artery disease, from the year 2015. The summary statistics were downlaided from the TwoSampleMR package for a European population.
+We have used this method to estimate the causal effect of *genes* which are shared on a locus on outcome *Coronary Artery Disease* using summary statistics from *genome wide association studies (GWAS)*. We used for GWAS summary data, *ebi-a-GCST003116* with trait as coronary artery disease, from the year 2015. The summary statistics were downloaded from the **TwoSampleMR Package**  for a European population.
 
 ## 4.1 Download exposure data from GTEx
 
@@ -136,14 +136,11 @@ from https://www.gtexportal.org/home/faq#interpretEffectSize.
 When you download exposure data from Gtex, you would have data in the format
 such as:
 
-        variant_id            gene_id         maf   slope slope_se pval_beta
-        chr1_64764_C_T_b38 ENSG00000227232.5 0.06    0.5    0.1     1.3e-05
-
  ![Format of exposure data from GTEx](gtex_exp_data.png) 
 
 ## 4.2 Align the *Snp*-ID in the GTEx data with corresponding rs-ID.
 
-Since the data you downloaded is not in format to extract GWAS summary data using **TwoSampleMR Package**, you need to get it in their format and you need to align the variant_id with rs-ID using the GRCh37 build. For this, you need to download the *Snps* annotation file from GTEx. This file can be found in the *Reference* section and has the description : *Lookup table for all variants genotyped in GTEx, with chromosome positions, REF and ALT alleles, RS IDs from dbSNP 151, GTEx variant IDs (constructed as chr_pos_ref_alt_build), and hg19 liftover variant ID, for all variants in release V8*. This should look like this:
+Since the data you downloaded is not in format for extraction of GWAS summary data using the **TwoSampleMR Package**, you will need to get the GTEx exposure data in **TwoSampleMR Package** format. You would need to align the variant_id with rs-ID of the *Snps* using the GRCh37 build. For this, you would need to download the *Snps* annotation file from GTEx. This file can be found in the *Reference* section and has the description : *Lookup table for all variants genotyped in GTEx, with chromosome positions, REF and ALT alleles, RS IDs from dbSNP 151, GTEx variant IDs (constructed as chr_pos_ref_alt_build), and hg19 liftover variant ID, for all variants in release V8*. This should look like this:
 
  ![Format of annotation data from GTEx](gtex_annotation_file.png) 
  
