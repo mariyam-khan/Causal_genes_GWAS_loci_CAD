@@ -2,7 +2,7 @@
   Identification of causal genes at GWAS loci with pleiotropic gene regulatory effects using instrumental variable sets.
 
   
-# 1. Guide to software requirements.
+# 1. Guide to software requirements
 
 
 To use this code, download the code files and ensure that you have the dependencies explained below. To run the code files, you have to type:
@@ -52,7 +52,7 @@ In a situation where some packages are not compatible, you can make sure to have
         R  version: 4.3.1
 
         
-# 2. Guide to data requirements.
+# 2. Guide to data requirements
 
 To estimate the causal effect, the minimum information required is as follows:
 
@@ -68,7 +68,7 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
 - C. Lastly, optional is LD-matrix of the *Snps* (*Snps* in the *Snps*-exposure/outcome data). This is optional because, *run\_MVMR.py* has in-built functionality to run the analysis *without the user providing this LD-matrix* **(Section 5.1)**. This is not optional, in the case you want to use *run\_MVMR\_LD.py* as this function allows the user to *specify their own LD-matrix* for their data **(Section 5.2)**.
 
 
-# 3. Steps to running the code.
+# 3. Steps to running the code
 
 **Case 1:** If you already have the data in the format containing the *Snps* to exposure effects and *Snps* to outcome effects **(Section 5)**. 
 
@@ -203,7 +203,7 @@ After this you can extract the outcome data for any study using this code that s
         write.csv(exposure_data, "Exposure.csv" ,row.names = FALSE)
         
 
-## 4.3.2 Harmonize the outcome and exposure data using  **TwoSampleMR Package** package.
+## 4.3.2 Harmonize the outcome and exposure data using  **TwoSampleMR Package** package
 
 You can now harmonize the exposure and outcome datasets using the following command in the  **TwoSampleMR Package**. Make sure that you use the option to remove palindromes. The harmonize function will not 
 remove the paliindromic *Snps* but it will flag them as TRUE which we will then use to remove them in our MVMR analysis.
@@ -212,7 +212,7 @@ remove the paliindromic *Snps* but it will flag them as TRUE which we will then 
 		
 		
 
-## 4.4 From the GTEx data, get the data on a specific chromosome and within *chosen* distance and *chosen* LD-range.
+## 4.4 From the GTEx data, get the data on a specific chromosome and within *chosen* distance and *chosen* LD-range
 
 
 
@@ -221,7 +221,7 @@ Now that you have the harmonized data, you can choose a chromosome and genetic v
 
   ![short pipeline](Pipeline2.png) 
   
-### 4.4.1  Choose your *Snp* and get exposure and outcome data within *chosen* distance.
+### 4.4.1  Choose your *Snp* and get exposure and outcome data within *chosen* distance
 
 To make sure that you have data from the same locus and of *Snps* within *chosen* distance (ex. 1Mb) of each other for the MVMR analysis, you can choose a *Snp* and run the function `Prune_Snps_pos.py`. Once you run this, you will get *Snps* (that pass a certain p-value threshold, ex. 5E-8) on the chromosome (integer given as argument for chromosome number) within *chosen* distance around the position of the *Snp* (specified by the argument for position of this *Snp*), saved in *.csv* file.  In the following image, you see a harmonized file *Aor_no_palindromes.csv* as returned using the harmonisation fuction in the  **TwoSampleMR Package** and the new dataset for the causal analysis is saved in the same directory in the new folder *Datasets*.
 
@@ -263,7 +263,7 @@ The following image gives as example of the output file of the `Prune_Snps_pos.p
 
 
 
-### 4.4.2  Choose your *Snp* and get exposure and outcome data within *chosen* LD-range.
+### 4.4.2  Choose your *Snp* and get exposure and outcome data within *chosen* LD-range
 
 To make sure that you have data from the same locus and have *Snps* above *chosen* LD-threshold (ex. 0.01) excluded from the MVMR analysis, you can choose a *Snp* and run the function `Prune_Snps_LD.py`. Once you run this, you will get *Snps* (that pass a certain p-value threshold, ex. 5E-8) on the chromosome (integer given as argument for chromosome number) within *chosen* distance around the position of the *Snp* (specified by the argument for position of this *snp*), saved in  *.csv* files. These files will be saved in the new folder (datasets) within the same directory as the original files with the suffix of the chromosome and position appended to them.
 
@@ -301,7 +301,7 @@ The following image gives as example of the output file of the `Prune_Snps_LD.py
 
 
 
-### 4.4.3  For entire exposure/outcome data, get datasets of each chromosome and *Snps* within *chosen* distance and *chosen* LD-range.
+### 4.4.3  For entire exposure/outcome data, get datasets of each chromosome and *Snps* within *chosen* distance and *chosen* LD-range
 
   ![short pipeline 2](Pipeline3.png)
 
@@ -362,7 +362,7 @@ always the SNP ID’s, the last column is always the SNPs to outcome effect. Eve
         rs7098825,0.34,0.0,0.078
         rs17115100,0.4,0.54,0.05
 
-## 5.2  If you provide an LD-matrix.
+## 5.2  If you provide an LD-matrix
 
         python3 run_MVMR_LD.py "/home/user/file.csv" "/home/user/ld.csv"
 
@@ -391,7 +391,7 @@ prunes for *Snps* in perfect-LD and keeps only the first occurring *Snps*. If yo
 please order the *Snps* in decreasing order of significance in both .csv files.
 
 
-### 5.2.1  If you provide an LD-matrix. 
+### 5.2.1  If you provide an LD-matrix
 
 The LD-matrix can be generated using the **TwoSampleMR function** `ld_matrix`. Please make sure all *Snps* belong
 to the LD panel. To get the LD-matrix, run the following commands in R
