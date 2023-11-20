@@ -14,33 +14,34 @@ ro.r['options'](warn=-1)
 base = importr('base')
 base.warnings()
 
-"""This function takes as input the 1.exposure data file and 2.outcome data file. 
+"""This function takes files which have harmonized exposure and outcome data across Chromosomes and divides the dataset 
+into sub-datasets with each sub-dataset having locus-specific data
 
-where exposure/outcome data are given as: 
+To run this file, type in the terminal
 
-"/home/user/exposure_file_name.csv"
-"/home/user/output_file_name.csv"
+python3 Segregate_datasets.py "/home/user/Exposure.csv" 500000 0.01 1.0
 
+Here,
 
+Compulsory argument
 
-(This function takes files which have exposure and outcome data across Chromosomes and divides the dataset into sub-datasets
-with each sub-dataset having locus-specific data)
+1. 1st argument "/home/user/data.csv" , path to the harmonized data file
 
+Additionally (optional),
 
-Additionally you can give as input:
-
-3. 3rd argument position, where we will remove SNPs which are at distance(radius) greater than position from the 
-   lead SNP.
-4. 4th argument LD_threshold_lower, where we will remove SNPs which are in LD lower than LD_threshold_lower with the 
-   lead SNP
- 
-5. 5th argument pvalue threshold, where we will remove SNPs whose pvalue is higher in the GWAS outcome data
-   than the mentioned pvalue threshold.
+2. 2nd argument distance_threshold, (int, example 250000 for 0.25 Mb radius), 
+   Snps within this distance around the lead Snp will be chosen for a given dataset. default: 500000
    
-If you do not give the 3rd, 4th and 5th arguments then default values are:
+3. 3rd argument Lower LD threshold (float, example 0.01), Snps with LD less than or equal to 0.01 
+   with lead Snp will not be included. default: 0.00
+
+4. 4th argument pvalue threshold, where we will remove SNPs whose pvalue is higher in the GWAS outcome data
+   than the mentioned pvalue threshold.
+
+If you do not give the 2nd, 3rd and 4th arguments then default values are:
 
 position =  500000
-LD_threshold_lower = 0.0
+LD_threshold_lower = 0.01
 pvalue = 5E-8
 
 
@@ -86,11 +87,9 @@ def check_valid(user_input, check):
 
 try:
     file_EX1 = sys.argv[1]
-    file_EY1 = sys.argv[2]
     file_EX1 = check_valid(file_EX1, "path")
-    file_EY1 = check_valid(file_EY1, "path")
     try:
-        distance1 = int(sys.argv[3])
+        distance1 = int(sys.argv[2])
         distance1 = check_valid(distance1, "distance")
     except ValueError:
         print(
@@ -100,7 +99,7 @@ try:
     except IndexError:
         distance1 = 500000
     try:
-        LD_threshold_lower1 = float(sys.argv[4])
+        LD_threshold_lower1 = float(sys.argv[3])
         LD_threshold_lower1 = check_valid(LD_threshold_lower1, "LD")
     except ValueError:
         print(
@@ -108,9 +107,9 @@ try:
             " read the documentation for more details.")
         sys.exit(1)
     except IndexError:
-        LD_threshold_lower1 = 0.0
+        LD_threshold_lower1 = 0.00
     try:
-        pvalue1 = float(sys.argv[5])
+        pvalue1 = float(sys.argv[4])
         pvalue1 = check_valid(pvalue1, "pvalue")
     except ValueError:
         print(
@@ -126,15 +125,32 @@ except IndexError:
 
 path_original = os.path.dirname(file_EX1)
 name_EX = os.path.splitext(os.path.basename(file_EX1))[0]
-name_EY = os.path.splitext(os.path.basename(file_EY1))[0]
 LD_threshold_upper = 1.0
 
 
-def get_datasets(file_EX, file_EY, distance, LD_threshold_lower, pvalue):
+def get_datasets(file_EX, distance, LD_threshold_lower, pvalue):
     prepare = True
-    Data_outcome = pd.read_csv(file_EY, sep=',', low_memory=False)
-    Data_exposure = pd.read_csv(file_EX, sep=',', low_memory=False)
+    # read the harmonized dataset into a pandas dataframe
+    Data = pd.read_csv(file_EX, sep=',', low_memory=False)
+    # choose only non-palindromic data
+    subset = Data[~Data['palindromic']]
+    subset.reset_index(drop=True, inplace=True)
 
+    # Extract outcome columns
+    outcome_columns = [col for col in subset.columns if '.outcome' in col]
+
+    # Extract exposure columns
+    exposure_columns = [col for col in subset.columns if '.exposure' in col]
+
+    # Create Data_outcome DataFrame
+    Data_outcome = subset[['SNP', 'chr', 'pos'] + outcome_columns]
+
+    # Create Data_outcome DataFrame
+    Data_outcome = Data_outcome.drop_duplicates(subset='SNP', keep='first').reset_index(drop=True)
+    Data_outcome.reset_index(drop=True, inplace=True)
+    # Create Data_exposure DataFrame
+    Data_exposure = subset[['SNP', 'chr', 'pos'] + exposure_columns + ['exposure']]
+    Data_exposure.reset_index(drop=True, inplace=True)
     Data_outcome = Data_outcome[
         ["SNP", "effect_allele.outcome", "other_allele.outcome", "beta.outcome", "pval.outcome", "chr", "pos"]]
     Data_outcome = Data_outcome[Data_outcome['pval.outcome'] <= pvalue]
@@ -187,17 +203,6 @@ def get_datasets(file_EX, file_EY, distance, LD_threshold_lower, pvalue):
                         if isinstance(Data_out_ld, pd.DataFrame):
                             if not Data_out_ld.empty:
                                 path_new = os.path.join(path_original, "Datasets")
-                                # create_directory_if_not_exists(path_new)
-                                # print(name_EX)
-                                # Data_exp_ld.to_csv(
-                                #     path_new + "/" + name_EX + "_" + str(chromosome) + "_" + str(position) + ".csv",
-                                #     sep=",",
-                                #     index=False)
-                                # Data_out_ld.to_csv(
-                                #     path_new + "/" + name_EY + "_" + str(chromosome) + "_" + str(position) + ".csv",
-                                #     sep=",",
-                                #     index=False)
-                                # print("New Datasets have been saved in the directory " + path_new)
                                 path_RandS = path_new
                                 if prepare:
                                     Data_preparation(Data_exp_ld, Data_out_ld, path_RandS, chromosome, position)
@@ -317,7 +322,8 @@ def Data_preparation(Data_exp, Data_out, pathRS, chromosome, position):
                 Data.at[j1, 'beta.exposure'] = - Data.at[j1, 'beta.exposure']
                 Data.at[j1, 'effect_allele.exposure'] = b
                 Data.at[j1, 'other_allele.exposure'] = a
-            value_alleles = o[j1] + "_" + Data_out.at[idx[0], 'effect_allele.outcome'] + "_" + Data_out.at[idx[0], 'other_allele.outcome']
+            value_alleles = o[j1] + "_" + Data_out.at[idx[0], 'effect_allele.outcome'] + "_" + Data_out.at[
+                idx[0], 'other_allele.outcome']
             R_data.at[value_alleles, name] = Data.at[j1, 'beta.exposure']
             s_data.at[value_alleles, 'outcome'] = Data_out.at[idx[0], 'beta.outcome']
 
@@ -327,14 +333,11 @@ def Data_preparation(Data_exp, Data_out, pathRS, chromosome, position):
     df_s = pd.DataFrame(data=s_data)
     RandS = pd.concat([df_R, df_s], axis=1)
     RandS.index.name = 'SNPs'
-    pathRS_new = os.path.join(pathRS, "Data_prepared")
-    create_directory_if_not_exists(pathRS_new)
-    name_EX_new = name_EX.replace("exp_", "")
-    # RandS.to_csv(pathRS_new + "/" + name_EX_new + "_" + str(chromosome) + "_" + str(position) + "_prepared.csv",
-    #              sep=",")
-    RandS.to_csv(pathRS + "/" + name_EX_new + "_" + str(chromosome) + "_" + str(position) + "_prepared.csv",
+    create_directory_if_not_exists(pathRS)
+    RandS.to_csv(pathRS + "/" + name_EX + "_" + str(chromosome) + "_" + str(position) + ".csv",
                  sep=",")
-    print("Prepared Datasets have been saved in the directory " + pathRS_new)
+    print("Prepared Datasets have been saved in the directory " + pathRS)
 
 
+get_datasets(file_EX1, distance1, LD_threshold_lower1, pvalue1)
 get_datasets(file_EX1, file_EY1, distance1, LD_threshold_lower1, pvalue1)
