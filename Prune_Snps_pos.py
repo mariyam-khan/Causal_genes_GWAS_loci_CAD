@@ -11,20 +11,27 @@ ro.r['options'](warn=-1)
 base = importr('base')
 base.warnings()
 
-"""This function takes as input the 1.harmonized data file which is in format from MRBase package.
+"""This function takes as input the 1.harmonized data file which is in format from TwoSampleMR Package.
 
-where data are given as: 
+To run this file, type in the terminal
 
-"/home/user/file.csv"
+python3 Prune_Snps_pos.py "/home/user/data.csv"  1 109817192 250000 5E-8
+
+Here,
+
+Compulsory argument
+
+1. 1st argument "/home/user/data.csv" , path to the harmonized data file
 
 2. 2nd argument chromosome (chromosome of the SNP around which you want to get the data for analysis)
 
-Additionally you can give as input:
 
-3. 3rd argument position. (position of the SNP around which you want to get the data for analysis)
+Additionally (optional),
 
-4. 4th argument distance_threshold, where we will remove SNPs which are in LD lower than LD_threshold_lower with the 
-   lead SNP
+3. 3rd argument position (position of the SNP around which you want to get the data for analysis)
+
+4. 4th argument distance_threshold, (int, example 250000 for 0.25 Mb radius), 
+   Snps within this distance around the lead Snp will be chosen for a given dataset. default: 500000
 
 5. 5th argument pvalue threshold, where we will remove SNPs whose pvalue is higher in the GWAS outcome data
    than the mentioned pvalue threshold.
@@ -233,6 +240,9 @@ def Data_preparation(Data_exp, Data_out, pathRS, chromosome, position):
 
     selected_columns = Data_out['effect_allele.outcome']
     new_df = selected_columns.copy()
+
+    # Harmonisation of the alleles in exposure and outcome dataset, this is done already in the  TwoSampleMR Package
+    # but here we check if the harmonisation is correct
 
     for n in range(no_genes):
         name = genes[n]
