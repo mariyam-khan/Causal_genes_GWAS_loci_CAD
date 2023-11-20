@@ -140,7 +140,11 @@ such as:
 
 ## 4.2 Align the *Snp*-ID in the GTEx data with corresponding rs-ID.
 
-Since the data you downloaded is not in format for extraction of GWAS summary data using the **TwoSampleMR Package**, you will need to get the GTEx exposure data in **TwoSampleMR Package** format. You would need to align the variant_id with rs-ID of the *Snps* using the GRCh37 build. For this, you would need to download the *Snps* annotation file from GTEx. This file can be found in the *Reference* section and has the description : *Lookup table for all variants genotyped in GTEx, with chromosome positions, REF and ALT alleles, RS IDs from dbSNP 151, GTEx variant IDs (constructed as chr_pos_ref_alt_build), and hg19 liftover variant ID, for all variants in release V8*. This should look like this:
+Since the data you downloaded is not in format for extraction of GWAS summary data using the **TwoSampleMR Package**, you will need to get the GTEx exposure data in **TwoSampleMR Package** format. You would need to align the variant_id with rs-ID of the *Snps* using the GRCh37 build. For this, you would need to download the *Snps* annotation file from GTEx. This file can be found in the *Reference* section:
+
+ ![Location of the GTEx *Snp* annotation file](Gtex_annotation_des.png) 
+
+ The following image gives the format of this annotation file as downloaded from GTEx:
 
  ![Format of annotation data from GTEx](gtex_annotation_file.png) 
  
