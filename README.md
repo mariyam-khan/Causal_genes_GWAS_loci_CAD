@@ -96,21 +96,22 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
   
   - **Step 2 (Section 4.2) :** Align the *Snp* id's in the GTEx data with corresponding rs id's `Match_rs_id.py`.
 
-  - **Step 2 (Section 4.3) :** Make sure the GTEx data is in the format required by the TwoSampleMR package.
+  - **Step 2 (Section 4.3.1) :** Make sure the GTEx data is in the format required by the TwoSampleMR package.
 
-  - **Step 3 (Section 4.4) :** Extract outcome data using TwoSampleMR package. 
+  - **Step 3 (Section 4.3.2) :** Extract outcome data using TwoSampleMR package. 
+  
+  - **Step 4 (Section 4.3.3) :** Harmonize the outcome and exposure data using TwoSampleMR package. 
 
-  - **Step 4 (Section 4.5) :** From the exposure and outcome, get data on a specific chromosome and within *chosen* distance and LD-range. You can                                        either 
+  - **Step 4 (Section 4.4) :** From the exposure and outcome, get data on a specific chromosome and within *chosen* distance and LD-range. You can                                        either 
 
-    - **Step 4.1 (Section 4.5.1) :**   Choose your *Snp* and get exposure and outcome data within *chosen* distance using `Prune_Snps_pos.py`.
-    - **Step 4.2 (Section 4.5.2) :**   Choose your *Snp* and get exposure and outcome data within *chosen* LD-range using `Prune_Snps_LD.py`.
-    - **Step 4.3 (Section 4.5.3) :**   Harmonize the data and save it in the format required for causal analysis `Data_Prep.py`.
+    - **Step 4.1 (Section 4.4.1) :**   Choose your *Snp* and get data within *chosen* distance using `Prune_Snps_pos.py`.
+    - **Step 4.2 (Section 4.4.2) :**   Choose your *Snp* and get data within *chosen* LD-range using `Prune_Snps_LD.py`.
     
     You can run both Step 4.1 and Step 4.2 in any order to get *Snps* within *chosen* distance and *chosen* LD-range.
 
     Alternate
     
-- **Step 4  (Section 4.5.4) :**   For entire exposure/outcome data, get datasets of each chromosome and *Snps* within *chosen* distance and SNPs                                              within        *chosen* LD-range using `Segregate_datasets.py`.
+- **Step 4  (Section 4.4.3) :**   For entire exposure/outcome harmonized data, get datasets of each chromosome and *Snps* within *chosen* distance and SNPs                                              within        *chosen* LD-range using `Segregate_datasets.py`.
 
 - **Step 5 (Section 5) :** Run the causal analysis, as in Case 1.
   
@@ -152,7 +153,7 @@ Here, *Exposure.csv* is the exposure/gene expression data for a specific tissue 
 
 You can now structure this data in format of TwoSampleMR as given in **Section 4.3**. To save the effort of going from GTEx exposure data to data usable in the MRBase package, we have GTEx exposure data aligned with corresponding rs-ID’s and structured in the MRBase format, available at https://drive.google.com/drive/folders/14u2dN8k3OwnZZkSkAQFN0ndboTFJFH-J?usp=share_link.
 
-## 4.3 Make sure the GTEx data is in the format required by the MR-Base package
+## 4.3.1 Make sure the GTEx data is in the format required by the MR-Base package
 
 If you have downloaded the processed GTEx dataset from the linked drive, you need not follow the instructions in this section. If not,
 
@@ -172,13 +173,15 @@ To get the GWAS summary data for this exposure data, you would firstly need to r
 
 - variant id’s to rs ID’s from the gtex annotation file.
 
-- slope to beta.exposure
+- beta to beta.exposure
 
 - slope se to se.exposure
 
 - pval beta to pval.exposure
 
 - gene id to exposure
+
+- maf to eaf.exposure
 
 Apart from this:
 
@@ -187,10 +190,10 @@ Apart from this:
 
 The corresponding GTEx file for extraction of GWAS summary data from the MRBase package, should look like 
 
-        SNP          exposure          maf   beta.exposure se.exposure pval.exposure effect_allele.exposure other_allele.exposure
-        rs769952832 ENSG00000227232.5  0.06  0.5            0.1          1.3e-05          C                     T
+        SNP          exposure          eaf.exposure   beta.exposure se.exposure pval.exposure effect_allele.exposure other_allele.exposure
+        rs769952832 ENSG00000227232.5       0.06         0.5            0.1       1.3e-05          C                     T
 
-## 4.4 Extract outcome data using MR-Base package 
+## 4.3.2 Extract outcome data using MR-Base package 
 
 Now if you have the exposure data in the correct format, you can get the GWAS summary data as follows:
 
@@ -210,39 +213,43 @@ After this you can extract the outcome data for any study using this code that s
         write.csv(exposure_data, "Exposure.csv" ,row.names = FALSE)
         
 
+## 4.3.3 Harmonize the outcome and exposure data using MR-Base package.
 
+You can now harmonize the exposure and outcome datasets using the following command in the MR-Base package. Make sure that you use the option to remove palindromes. The harmonize function will not 
+remove the paliindromic Snps but it will flag them as TRUE which we will then use to remove them in our MVMR analysis.
 
-## 4.5 From the GTEx data, get the data on a specific chromosome and within *chosen* distance and *chosen* LD-range.
+		dat <- harmonise_data(exposure_dat = exposure_dat, outcome_dat = outcome_dat, action = 3)
+		
+		
+
+## 4.4 From the GTEx data, get the data on a specific chromosome and within *chosen* distance and *chosen* LD-range.
 
 
 
 Now that you have the outcome and exposure data, you can choose a chromosome and genetic variants within *chosen* distance of each other and within *chosen* Ld-range, to run the causal analysis. Please note that this outcome data is not harmonized with the effect allele of the exposure data.
 
 
-We will come to data harmonization shortly in **Section 4.5.3** but before make sure that for the causal analysis you follow one or more of the following sub-sections.
-
   ![short pipeline](Pipeline2.png) 
   
-### 4.5.1  Choose your *Snp* and get exposure and outcome data within *chosen* distance.
+### 4.4.1  Choose your *Snp* and get exposure and outcome data within *chosen* distance.
 
-To make sure that you have data from the same locus and of *snps* within *chosen* distance (ex. 1Mb) of each other, you can choose a *snp* and run the function `Prune_Snps_pos.py`. Once you run this, you will get SNPs (that pass a certain p-value threshold, ex. 5E-8) on the chromosome (integer given as argument for chromosome number) within *chosen* distance around the position of the *snp* (specified by the argument for position of this *snp*), saved in exposure and outcome data *.csv* files.  These files will be saved in the same directory as the original files with the suffix of the chromosome and position appended to them.
+To make sure that you have data from the same locus and of *snps* within *chosen* distance (ex. 1Mb) of each other, you can choose a *snp* and run the function `Prune_Snps_pos.py`. Once you run this, you will get SNPs (that pass a certain p-value threshold, ex. 5E-8) on the chromosome (integer given as argument for chromosome number) within *chosen* distance around the position of the *snp* (specified by the argument for position of this *snp*), saved in *.csv* file.  These files will be saved in the new folder (datasets) within the same directory as the original files with the suffix of the chromosome and position appended to them.
 
+![Directory craeted for new dataset in Prune_Snps_pos.py](git_pic3.png)
 
 Please give as input:
 
 Compulsory:
 
-- Exposure Dataset/Path to exposure dataset.
+- Harmonized Dataset/Path to harmonized dataset.
 
-- Outcome Dataset/Path to outcome dataset.
-
-- chromosome on which your chosen *snp* lies.
+- Chromosome on which your chosen *snp* lies.
 
 Additionally,
 
-- Position (int, ex 137997742) on which your chosen *snp* lies. (Default: Position of lead *snp*)
+- Position (int, ex 109817192) on which your chosen *snp* lies. (Default: Position of lead *snp*)
 
-- Distance (int, example 500000 for 0.5 Mb radius), SNPs within this distance around the chosen/lead SNP will be included for a given dataset. 
+- Distance (int, example 250000 for 0.25 Mb radius), SNPs within this distance around the chosen/lead SNP will be included for a given dataset. 
   default: 500000
 
 - P-value threshold (float, example 5E-8), SNPs with p-value lower than this (in the GWAS data), will not be included.
@@ -253,37 +260,35 @@ Additionally,
 As an example, if you run
 
 
-        python3 Prune_Snps_pos.py "/home/user/Exposure.csv" "/home/user/Outcome.csv"  2 203893999 500000 5E-8
+        python3 Prune_Snps_pos.py "/home/user/data.csv"  1 109817192 250000 5E-8
         
         
-Here the  *snp* has position 203893999 on Chromosome 2 and you wish to have *snps* around this *snp* within 0.5Mb of distance. You will then get
-the same Exposure\_2\_203893999.csv and Outcome\_3\_203893999.csv files with SNPs which are significant (p − value ≤ 5E-08) and 0.5Mb around 203893999 on
-chromosome 2. Please make sure you give the p-value in the format ()E-(), distance as int (500000, not 500000.0) abd position as int (203893999, not 203893999.0).
+Here the  *snp* has position 109817192 on Chromosome 1 and you wish to have *snps* around this *snp* within 0.25Mb of distance. You will then get
+the same data\_1\_109817192.csv files with SNPs which are significant (p − value ≤ 5E-08) and 0.25Mb around 109817192 on
+chromosome 1. Please make sure you give the p-value in the format ()E-(), distance as int (250000, not 250000.0) and position as int (109817192, not 109817192.0).
 
-![Output exposure dataset of Prune_Snps_pos.py](Prune_snps_pos_output_exp.png)
+![Output exposure dataset of Prune_Snps_pos.py](pos_prep_tog_outcome.png)
 
-![Output outcome dataset of Prune_Snps_pos.py](Prune_snps_pos_output_out.png)
 
 Notice, you can give, position of the chosen *snp* (if you do not give this, by default, the position of the lead *snp* is chosen. Hence this function can also be used if you do not have a specific *snp* in mind and just need to prune your data on a chromosome and *hotspot* by distance), distance (radius) and pvalue threshold as the last three arguments.
 
 
-### 4.5.2  Choose your *Snp* and get exposure and outcome data within *chosen* LD-range.
+### 4.4.2  Choose your *Snp* and get exposure and outcome data within *chosen* LD-range.
 
-To make sure that you have data from the same locus and have *snps* abouve *chosen* LD-threshold (ex. 0.01) excluded, you can choose a *snp* and run the function `Prune_Snps_LD.py`. Once you run this, you will get *snps* (that pass a certain p-value threshold, ex. 5E-8) on the chromosome (integer given as argument for chromosome number) within *chosen* distance around the position of the *snp* (specified by the argument for position of this *snp*), saved in exposure and outcome data *.csv* files.  These files will be saved in the same directory as the original files with the suffix of the chromosome and position appended to them.
+To make sure that you have data from the same locus and have *snps* abouve *chosen* LD-threshold (ex. 0.01) excluded, you can choose a *snp* and run the function `Prune_Snps_LD.py`. Once you run this, you will get *snps* (that pass a certain p-value threshold, ex. 5E-8) on the chromosome (integer given as argument for chromosome number) within *chosen* distance around the position of the *snp* (specified by the argument for position of this *snp*), saved in  *.csv* files. These files will be saved in the new folder (datasets) within the same directory as the original files with the suffix of the chromosome and position appended to them.
+
 
 Please give as input:
 
 Compulsory:
 
-- Exposure Dataset/Path to exposure dataset.
+- Harmonized Dataset/Path to harmonized dataset.
 
-- Outcome Dataset/Path to outcome dataset.
-
-- chromosome on which your chosen *snp* lies.
+- Chromosome on which your chosen *snp* lies.
 
 Additionally,
 
-- Position (int, ex 137997742) on which your chosen *snp* lies. (Default: Position of lead *snp*)
+- Position (int, ex 109817192) on which your chosen *snp* lies. (Default: Position of lead *snp*)
 
 - Lower LD threshold (float, example 0.01), SNPs with LD less than or equal to 0.01 with lead SNP will not be included. 
   default: 0.01
@@ -294,32 +299,19 @@ Additionally,
 As an example, if you run
 
 
-        python3 Prune_Snps_LD.py "/home/user/Exposure.csv" "/home/user/Outcome.csv" 2 203893999 0.01 5E-8
+        python3 Prune_Snps_LD.py "/home/user/data.csv" 1 109817192 0.01 5E-8
         
         
-Here the  *snp* has position 203893999 on Chromosome 2 and you wish to have *snps* around this *snp* within LD greather than or equal 0.01. You will then getthe same Exposure\_2\_203893999.csv and Outcome\_2\_203893999.csv files with SNPs which are significant (p − value ≤ 5E-08) and within LD >= 0.01 around 203893999 on chromosome 2. Please make sure you give the p-value in the format ()E-(), LD as sloat (1.0, not 1) abd position as int (203893999, not 203893999.0).
+Here the  *snp* has position 109817192 on Chromosome 1 and you wish to have *snps* around this *snp* within LD greather than or equal 0.01. You will then get the same data\_1\_109817192.csv file with SNPs which are significant (p − value ≤ 5E-08) and within LD >= 0.01 around 109817192 on chromosome 1. Please make sure you give the p-value in the format ()E-(), LD as sloat (1.0, not 1) abd position as int (109817192, not 109817192.0).
 
-![Output exposure dataset of Prune_Snps_LD.py](Prune_snps_LD_output_exp.png)
-
-![Output outcome dataset of Prune_Snps_LD.py](Prune_snps_LD_output_out.png)
+![Output exposure dataset of Prune_Snps_LD.py](LD_prep_tog_output.png)
 
 
 Notice, you can give, position of the chosen *snp* (if you do not give this, by default, the position of the lead *snp* is chosen. Hence this function can also be used if you do not have a specific *snp* in mind and just need to prune your data on a chromosome and *hotspot* by LD), LD threshold and pvalue threshold as the last three arguments.
 
-### 4.5.3 Harmonize the data and save it in the format required for causal analysis. 
-
-Lastly to harmonize the exposure and outcome data files as well as having them in format ready for causal analysis. you can give the outputs of either of
-the last two functions and use the file `Data Prep.py` to get the datasets in the format needed for running the causal analysis. The input would be
-exposure and outcome files you get after you run Seperate chr.py, with comma as a separator and the output would be a file with the format required for the
-causal analysis saved in the same input directory with suffix prepared.csv.
-
-          python3 Data_Prep.py "/home/user/Exposure.csv" "/home/user/Outcome.csv"
-
-          
-![Output dataset after using Data_Prep.py.](output_DataPrep.png)
 
 
-### 4.5.4  For entire exposure/outcome data, get datasets of each chromosome and SNPs within *chosen* distance and *chosen* LD-range.
+### 4.4.3  For entire exposure/outcome data, get datasets of each chromosome and SNPs within *chosen* distance and *chosen* LD-range.
 
   ![short pipeline 2](Pipeline3.png)
 
@@ -330,11 +322,9 @@ A *hotspot* is characterized by the lead SNP (the SNP which is the most GWAS sig
 
 Please give as input:
 
-- Exposure Dataset/Path to exposure dataset.
+- Harmonized Dataset/Path to harmonized dataset.
 
-- Outcome Dataset/Path to outcome dataset
-
-- Distance (int, example 500000 for 0.5 Mb radius), SNPs within this distance around the lead SNP will be chosen for a given dataset. 
+- Distance (int, example 250000 for 0.25 Mb radius), SNPs within this distance around the lead SNP will be chosen for a given dataset. 
   default: 500000
 
 - Lower LD threshold (float, example 0.01), SNPs with LD less than or equal to 0.01 with lead SNP will not be included. 
@@ -348,16 +338,16 @@ Please give as input:
 For the following code
 
 
-        python3 Segregate_datsets.py "/home/user/Exposure.csv" "/home/user/Outcome.csv" 500000 0.01 1.0
+        python3 Segregate_datsets.py "/home/user/Exposure.csv" 500000 0.01 1.0
 
 
 You will have multiple files saved in your initial directory, for each chromosome and for different *hotspots*. To use this function, make sure your output and exposure data are in the format you need for the MRBase package. If you do not provide any distance, the default distance is taken to be 500000, while the default lower LD threshold is 0.0 and upper LD threshold is 1.0.
 
 
-In the following images, you see the data saved in directories Datasets and Data\_prepared, for the exposure data from GTEx, tissue Aor short for Aorta, GWAS summary study 3116, sort for *ebi-a-GCST003116*, on Chromosome 1 and and *hotspot* around the lead GWAS *Snp* at position 109821511.
+In the following images, you see the data saved in directories Datasets,  and in the second image, an example output dataset on on Chromosome 1 and and *hotspot* around the lead GWAS *Snp* at position 109817192.
 
-![Seperate Exposure and outcome datasets saved for each chromosome and hotpot, in the directory Datasets.](gitpic1.png)
-![Data prepared in format required for causal analysis, saved for each chromosome and hotpot, in the directory Data prepared.](gitpic2.png)
+![Seperate Exposure and outcome datasets saved for each chromosome and hotpot, in the directory Datasets.](git_pic2.png)
+![Data prepared in format required for causal analysis, saved for each chromosome and hotpot, in the directory Data prepared.](out_segdata.png)
 
 
 # 5. Scripts for causal analysis
