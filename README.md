@@ -92,7 +92,7 @@ For the causal analysis, A. and B.  need to be in one file as described in **Sec
 
   - **Step 1 (Section 4.1) :** Download exposure data from GTEx https://gtexportal.org/home/datasets
   
-  - **Step 2 (Section 4.2) :** Align the *Snp* id's in the GTEx data with corresponding rs id's.
+  - **Step 2 (Section 4.2) :** Align the *Snp* id's in the GTEx data with corresponding rs id's `Match_rs_id.py`.
 
   - **Step 2 (Section 4.3.1) :** Make sure the GTEx data is in the format required by the TwoSampleMR package.
 
@@ -133,11 +133,18 @@ from https://www.gtexportal.org/home/faq#interpretEffectSize.
 
 
 
-When you download data from Gtex, you would have data in the format
+When you download exposure data from Gtex, you would have data in the format
 such as:
 
         variant_id            gene_id         maf   slope slope_se pval_beta
         chr1_64764_C_T_b38 ENSG00000227232.5 0.06    0.5    0.1     1.3e-05
+
+ ![Format of exposure data from GTEx](gtex_exp_data.png) 
+
+
+ You also need to download the *Snps* annotation file from GTEx, which would have format
+
+ ![Format of annotation data from GTEx](gtex_annotation_file.png) 
         
 ## 4.2 Align the *Snp*-ID in the GTEx data with corresponding rs-ID.
 
