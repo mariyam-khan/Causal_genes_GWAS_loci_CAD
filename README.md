@@ -208,7 +208,7 @@ After this you can extract the outcome data for any study using this code that s
 You can now harmonize the exposure and outcome datasets using the following command in the  **TwoSampleMR Package**. Make sure that you use the option to remove palindromes. The harmonize function will not 
 remove the paliindromic *Snps* but it will flag them as TRUE which we will then use to remove them in our MVMR analysis.
 
-		dat <- harmonise_data(exposure_dat = exposure_data, outcome_dat = outcome_data, action = 3)
+	dat <- harmonise_data(exposure_dat = exposure_data, outcome_dat = outcome_data, action = 3)
 		
 		
 
