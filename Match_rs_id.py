@@ -3,6 +3,23 @@ from pathlib import Path
 import sys
 import os
 
+"""
+
+To run this file, type in the terminal
+
+python3 Match_rs_id.py "/home/user/Exposure.csv" "/home/user/annotation.csv" 
+
+Here,
+
+Compulsory argument
+
+1. 1st argument "/home/user/Exposure.csv", path to the exposure data file as downloaded from GTEx
+
+2. 2nd argument "/home/user/annotation.csv", path to the SNPs annotation file as downloaded from GTEx
+
+
+"""
+
 
 def check_valid(user_input, check):
     out = None
@@ -63,7 +80,7 @@ def match(expression_file, annotation_file):
     mapped_data = mapped_data.rename(columns=column_mapping)
     # Copy 'phenotype_id' to a new column 'id_exposure'
     mapped_data['id.exposure'] = mapped_data['exposure']
-    mapped_data.to_csv(path_original + "/" + name_exp + "_annotated.csv", sep=",")
+    mapped_data.to_csv(path_original + "/" + name_exp + "_annotated.csv", sep=",", index=False)
     print("Annotated Data has been saved in the directory " + path_original)
 
 
