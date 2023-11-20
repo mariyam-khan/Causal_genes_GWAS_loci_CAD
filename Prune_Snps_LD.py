@@ -14,20 +14,26 @@ ro.r['options'](warn=-1)
 base = importr('base')
 base.warnings()
 
-"""This function takes as input the 1.harmonized data file which is in format from MRBase package.
+"""This function takes as input the 1.harmonized data file which is in format from TwoSampleMR Package.
 
-where  data are given as: 
+To run this file, type in the terminal
 
-"/home/user/file.csv"
+python3 Prune_Snps_LD.py "/home/user/data.csv" 1 109817192 0.01 5E-8
+
+Here,
+
+Compulsory argument
+
+1. 1st argument "/home/user/data.csv" , path to the harmonized data file
 
 2. 2nd argument chromosome (chromosome of the SNP around which you want to get the data for analysis)
 
-Additionally you can give as input:
+Additionally (optional),
 
 3. 3rd argument position. (position of the SNP around which you want to get the data for analysis)
 
-4. 4th argument LD_threshold_lower , where we will remove SNPs which are in LD lower than LD_threshold_lower with the 
-   lead SNP
+4. 4th argument Lower LD threshold (float, example 0.01), 
+   Snps with LD less than or equal to 0.01 with lead Snp will not be included. default: 0.0
 
 5. 5th argument pvalue threshold, where we will remove SNPs whose pvalue is higher in the GWAS outcome data
    than the mentioned pvalue threshold.
@@ -211,7 +217,6 @@ def SNPs_LDrange(file_EX, chromosome, position, LD_threshold_lower, pvalue):
             cov_data = cov_data.drop(labels=to_drop, axis=1)
             cov_data = cov_data.drop(labels=to_drop, axis=0)
 
-            print("cov", cov_data)
             Data_out_new = Data_out_new[Data_out_new['SNP'].isin(cov_data.index.values)]
 
             Data_exp1 = Data_exp.loc[
@@ -275,6 +280,9 @@ def Data_preparation(Data_exp, Data_out, pathRS, chromosome, position):
     selected_columns = Data_out['effect_allele.outcome']
     new_df = selected_columns.copy()
 
+    # Harmonisation of the alleles in exposure and outcome dataset, this is done already in the  TwoSampleMR Package
+    # but here we check if the harmonisation is correct
+
     for n in range(no_genes):
         name = genes[n]
         exp = (most_common[n][0])
@@ -310,3 +318,4 @@ def Data_preparation(Data_exp, Data_out, pathRS, chromosome, position):
 
 
 SNPs_LDrange(file_EX1, chromosome1, position1, LD_threshold_lower1, pvalue1)
+
