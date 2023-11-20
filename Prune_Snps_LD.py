@@ -8,32 +8,33 @@ from rpy2.robjects import r
 from rpy2.robjects import pandas2ri
 from rpy2.robjects.packages import importr
 from pathlib import Path
+from collections import Counter
 
 ro.r['options'](warn=-1)
 base = importr('base')
 base.warnings()
 
-"""This function takes as input the 1.exposure data file and 2.outcome data file. 
+"""This function takes as input the 1.harmonized data file which is in format from MRBase package.
 
-where exposure/outcome data are given as: 
+where  data are given as: 
 
 "/home/user/file.csv"
 
-3. 3rd argument chromosome (chromosome of the SNP around which you want to get the data for analysis)
+2. 2nd argument chromosome (chromosome of the SNP around which you want to get the data for analysis)
 
 Additionally you can give as input:
 
-4. 4th argument position. (position of the SNP around which you want to get the data for analysis)
+3. 3rd argument position. (position of the SNP around which you want to get the data for analysis)
 
-5. 5th argument LD_threshold_lower , where we will remove SNPs which are in LD lower than LD_threshold_lower with the 
+4. 4th argument LD_threshold_lower , where we will remove SNPs which are in LD lower than LD_threshold_lower with the 
    lead SNP
 
-6. 6th argument pvalue threshold, where we will remove SNPs whose pvalue is higher in the GWAS outcome data
+5. 5th argument pvalue threshold, where we will remove SNPs whose pvalue is higher in the GWAS outcome data
    than the mentioned pvalue threshold.
 
-If you do not give the  4th argument, the lead SNP (SNP with the lowest p-value in the GWAS data is chosen)
+If you do not give the  3rd argument, the lead SNP (SNP with the lowest p-value in the GWAS data is chosen)
 
-If you do not give the 5th and 6th arguments then default values are:
+If you do not give the 4th and 5th arguments then default values are:
 
 LD_threshold_lower = 0.0
 pvalue = 5E-8
@@ -81,13 +82,11 @@ def check_valid(user_input, check):
 
 try:
     file_EX1 = sys.argv[1]
-    file_EY1 = sys.argv[2]
     file_EX1 = check_valid(file_EX1, "path")
-    file_EY1 = check_valid(file_EY1, "path")
-    chromosome1 = int(sys.argv[3])
+    chromosome1 = int(sys.argv[2])
     chromosome1 = check_valid(chromosome1, "chromosome")
     try:
-        position1 = float(sys.argv[4])
+        position1 = float(sys.argv[3])
         position1 = check_valid(position1, "position")
     except ValueError:
         print(
@@ -98,7 +97,7 @@ try:
         position1 = None
 
     try:
-        LD_threshold_lower1 = float(sys.argv[5])
+        LD_threshold_lower1 = float(sys.argv[4])
         LD_threshold_lower1 = check_valid(LD_threshold_lower1, "LD")
     except ValueError:
         print(
@@ -108,7 +107,7 @@ try:
     except IndexError:
         LD_threshold_lower1 = 0.0
     try:
-        pvalue1 = float(sys.argv[6])
+        pvalue1 = float(sys.argv[5])
         pvalue1 = check_valid(pvalue1, "pvalue")
     except ValueError:
         print(
@@ -131,18 +130,40 @@ except IndexError:
 
 path_original = os.path.dirname(file_EX1)
 name_EX = os.path.splitext(os.path.basename(file_EX1))[0]
-name_EY = os.path.splitext(os.path.basename(file_EY1))[0]
 LD_threshold_upper = 1.0
 
 
-def SNPs_LDrange(file_EX, file_EY, chromosome, position, LD_threshold_lower, pvalue):
-    Data_out = pd.read_csv(file_EY, sep=',', low_memory=False)
-    Data_exp = pd.read_csv(file_EX, sep=',', low_memory=False)
-    Data_out = (Data_out.loc[Data_out['chr'] == chromosome])
+def SNPs_LDrange(file_EX, chromosome, position, LD_threshold_lower, pvalue):
+    # read the harmonized dataset into a pandas dataframe
+    Data = pd.read_csv(file_EX, sep=',', low_memory=False)
+    # choose only non-palindromic data
+    subset = Data[~Data['palindromic']]
+    subset.reset_index(drop=True, inplace=True)
+
+    # Extract outcome columns
+    outcome_columns = [col for col in subset.columns if '.outcome' in col]
+
+    # Extract exposure columns
+    exposure_columns = [col for col in subset.columns if '.exposure' in col]
+
+    # Create Data_outcome DataFrame
+    Data_outcome = subset[['SNP', 'chr', 'pos'] + outcome_columns]
+
+    # Create Data_outcome DataFrame
+    Data_outcome = Data_outcome.drop_duplicates(subset='SNP', keep='first').reset_index(drop=True)
+    Data_outcome.reset_index(drop=True, inplace=True)
+    # Create Data_exposure DataFrame
+    Data_exp = subset[['SNP', 'chr', 'pos'] + exposure_columns + ['exposure']]
+    Data_exp.reset_index(drop=True, inplace=True)
+    Data_outcome = Data_outcome[
+        ["SNP", "effect_allele.outcome", "other_allele.outcome", "beta.outcome", "pval.outcome", "chr", "pos"]]
+    Data_out = (Data_outcome.loc[Data_outcome['chr'] == chromosome])
     Data_out.reset_index(drop=True, inplace=True)
+    # choose significant SNPs
     Data_out = Data_out[Data_out['pval.outcome'] <= pvalue]
     Data_out.reset_index(drop=True, inplace=True)
 
+    # sort by significant SNPs
     Data_out = Data_out.sort_values(by='pval.outcome', ascending=True)
     Data_out.reset_index(drop=True, inplace=True)
     if position is None:
@@ -190,6 +211,7 @@ def SNPs_LDrange(file_EX, file_EY, chromosome, position, LD_threshold_lower, pva
             cov_data = cov_data.drop(labels=to_drop, axis=1)
             cov_data = cov_data.drop(labels=to_drop, axis=0)
 
+            print("cov", cov_data)
             Data_out_new = Data_out_new[Data_out_new['SNP'].isin(cov_data.index.values)]
 
             Data_exp1 = Data_exp.loc[
@@ -206,17 +228,85 @@ def SNPs_LDrange(file_EX, file_EY, chromosome, position, LD_threshold_lower, pva
                 Data_out_new['SNP'].isin(np.intersect1d(Data_out_new.SNP, Data_exp.SNP))]
             Data_exp1.reset_index(drop=True, inplace=True)
             Data_out1.reset_index(drop=True, inplace=True)
-        Data_exp1.to_csv(
-            path_original + "/" + name_EX + "_" + "pruned.csv",
-            sep=",",
-            index=False)
-        Data_out1.to_csv(
-            path_original + "/" + name_EY + "_pruned.csv",
-            sep=",",
-            index=False)
-        print("New Dataset has been saved in the directory " + path_original)
+        if not Data_out1.empty:
+            path_new = os.path.join(path_original, "Datasets")
+            path_RandS = path_new
+            Data_preparation(Data_exp1, Data_out1, path_RandS, chromosome, position)
+        else:
+            sys.exit('Error Message : Dataset is empty after pruning for LD.')
     else:
         sys.exit('Error Message : Dataset is empty. There were no SNPs that passed the p-value threshold.')
 
 
-SNPs_LDrange(file_EX1, file_EY1, chromosome1, position1, LD_threshold_lower1, pvalue1)
+def create_directory_if_not_exists(directory_path):
+    if not os.path.exists(directory_path):
+        os.makedirs(directory_path)
+        print(f"Directory '{directory_path}' created.")
+    else:
+        print(f" ")
+
+
+def Data_preparation(Data_exp, Data_out, pathRS, chromosome, position):
+    Data_out = Data_out.sort_values(by='pval.outcome', ascending=True)
+    Data_out.reset_index(drop=True, inplace=True)
+    Data_exp = Data_exp.loc[Data_exp['SNP'].isin(np.intersect1d(Data_exp.SNP, Data_out.SNP))]
+    Data_out = Data_out.loc[Data_out['SNP'].isin(np.intersect1d(Data_out.SNP, Data_exp.SNP))]
+    Data_exp.reset_index(drop=True, inplace=True)
+    Data_out.reset_index(drop=True, inplace=True)
+    unique_genes = Counter(Data_exp['exposure']).keys()
+    no_genes = len(unique_genes)
+    most_common = Counter(Data_exp['exposure']).most_common(no_genes)
+    genes = []
+    for j in range(no_genes):
+        genes.append(most_common[j][0])
+    column_names = genes
+    row_names = []
+    snp_values = list(Data_out.SNP)
+    eff_values = Data_out['effect_allele.outcome'].tolist()
+    other_values = Data_out['other_allele.outcome'].tolist()
+    # Loop through the lists and append elements together with underscores
+    for i in range(len(snp_values)):
+        combined_element = f'{snp_values[i]}_{eff_values[i]}_{other_values[i]}'  # Using an f-string to concatenate the elements
+        row_names.append(combined_element)
+    matrix = np.zeros((len(row_names), len(column_names)))
+    R_data = pd.DataFrame(matrix, columns=column_names, index=row_names, dtype='object')
+    s_data = pd.DataFrame(np.zeros(len(row_names)), columns=['outcome'], index=row_names, dtype='object')
+
+    selected_columns = Data_out['effect_allele.outcome']
+    new_df = selected_columns.copy()
+
+    for n in range(no_genes):
+        name = genes[n]
+        exp = (most_common[n][0])
+        Data = Data_exp[Data_exp['exposure'] == exp]
+        Data.reset_index(drop=True, inplace=True)
+        o = Data['SNP'].values
+        for j1 in range(int(most_common[n][1])):
+            value = o[j1]
+            idx = Data_out[Data_out['SNP'] == value].index.values
+            string_allele = new_df[idx[0]]
+            string_allele = string_allele.replace("'", "")
+            a = Data.at[j1, 'effect_allele.exposure']
+            b = Data.at[j1, 'other_allele.exposure']
+            if string_allele != Data.at[j1, 'effect_allele.exposure']:
+                Data.at[j1, 'beta.exposure'] = - Data.at[j1, 'beta.exposure']
+                Data.at[j1, 'effect_allele.exposure'] = b
+                Data.at[j1, 'other_allele.exposure'] = a
+            value_alleles = o[j1] + "_" + Data_out.at[idx[0], 'effect_allele.outcome'] + "_" + Data_out.at[
+                idx[0], 'other_allele.outcome']
+            R_data.at[value_alleles, name] = Data.at[j1, 'beta.exposure']
+            s_data.at[value_alleles, 'outcome'] = Data_out.at[idx[0], 'beta.outcome']
+
+    R_data = R_data.replace(np.nan, 0)
+    s_data = s_data.replace(np.nan, 0)
+    df_R = pd.DataFrame(data=R_data)
+    df_s = pd.DataFrame(data=s_data)
+    RandS = pd.concat([df_R, df_s], axis=1)
+    RandS.index.name = 'SNPs'
+    create_directory_if_not_exists(pathRS)
+    RandS.to_csv(pathRS + "/" + name_EX + "_" + str(chromosome) + "_" + str(int(position)) + ".csv",
+                 sep=",")
+    print("Prepared Datasets have been saved in the directory " + pathRS)
+
+
+SNPs_LDrange(file_EX1, chromosome1, position1, LD_threshold_lower1, pvalue1)
