@@ -141,26 +141,20 @@ such as:
 
  ![Format of exposure data from GTEx](gtex_exp_data.png) 
 
-
- You also need to download the *Snps* annotation file from GTEx, since the TwoSampleMR package will be used to extract outcome dataset and this package requires you to have the *Snps: in the rs-ID format of the GRCh37 version. This file can be found in the *Reference* section and has the description : *Lookup table for all variants genotyped in GTEx, with chromosome positions, REF and ALT alleles, RS IDs from dbSNP 151, GTEx variant IDs (constructed as chr_pos_ref_alt_build), and hg19 liftover variant ID, for all variants in release V8*. This should look like this:
-
- ![Format of annotation data from GTEx](gtex_annotation_file.png) 
-        
 ## 4.2 Align the *Snp*-ID in the GTEx data with corresponding rs-ID.
 
-Since the data you downloaded is not in format to extract GWAS summary data using TwoSampleMR package, you need to get it in their format (**Section 4.3**) and you need to align the variant_id with rs-ID using the GRCh37 build. You can either do this using the function below
+Since the data you downloaded is not in format to extract GWAS summary data using TwoSampleMR package, you need to get it in their format and you need to align the variant_id with rs-ID using the GRCh37 build. For this, you need to download the *Snps* annotation file from GTEx, since the TwoSampleMR package will be used to extract outcome dataset and this package requires you to have the *Snps* in the rs-ID format of the GRCh37 version. This file can be found in the *Reference* section and has the description : *Lookup table for all variants genotyped in GTEx, with chromosome positions, REF and ALT alleles, RS IDs from dbSNP 151, GTEx variant IDs (constructed as chr_pos_ref_alt_build), and hg19 liftover variant ID, for all variants in release V8*. This should look like this:
+
+ ![Format of annotation data from GTEx](gtex_annotation_file.png) 
+ 
+ You can then run the function below
 
 
         python3 Match_rs_id.py "/home/user/Exposure.csv" "/home/user/annotation.csv" 
 
 Here, *Exposure.csv* is the exposure/gene expression data for a specific tissue from GTEx and *annotation.csv* is the rs-ID annotation file on GTEx. You will be returned *.csv* file with the annotated rs-ID’s in the same directory as your *Exposure.csv* file.
 
-You can now structure this data in format of TwoSampleMR as given in **Section 4.3**. To save the effort of going from GTEx exposure data to data usable in the MRBase package, we have GTEx exposure data aligned with corresponding rs-ID’s and structured in the MRBase format, available at https://drive.google.com/drive/folders/14u2dN8k3OwnZZkSkAQFN0ndboTFJFH-J?usp=share_link.
-
-## 4.3.1 Make sure the GTEx data is in the format required by the TwoSampleMR package
-
-If you have downloaded the processed GTEx dataset from the linked drive, you need not follow the instructions in this section. If not,
-
+In summary you need to make sure that the GTEx data is in the format required by the TwoSampleMR package.
 
 To extract outcome data for the study of interest, we used the **TwoSampleMR Package** (package for performing Mendelian randomization using GWAS
 summary data, https://mrcieu.github.io/TwoSampleMR/). Note that if you are using GTEx for exposure datasets, you have to make sure that this minimum information is provided for the extraction of the GWAS summary data from the MRBase package:
@@ -170,27 +164,21 @@ summary data, https://mrcieu.github.io/TwoSampleMR/). Note that if you are using
         beta - The effect size (binary traits log(OR)).
         se - The standard error of the effect size.
         effect_allele - allele of SNP which has the effect marked in beta.
+	
+If you have used the function `Match_rs_id.py`, you would automatically have the data is format for **TwoSampleMR Package**, if not you need to ensure that the following mapping is done from GTEx:
 
 
-To get the GWAS summary data for this exposure data, you would firstly need to replace the following from the GTEx dataset to the format required by MRBase:
-
-
-- variant id’s to rs ID’s from the gtex annotation file.
-
-- beta to beta.exposure
-
-- slope se to se.exposure
-
-- pval beta to pval.exposure
-
-- gene id to exposure
-
-- maf to eaf.exposure
-
-Apart from this:
-
-- Create a seperate column for effect allele.exposure using the allele in the GTEx dataset (the effect allele.exposure for the variant chr1\_64764\_C\_T\_b38 is C). 
-
+ 	    'phenotype_id': 'exposure',
+	    'variant_id': 'variant_id',
+	    'rs_id_dbSNP151_GRCh38p7': 'SNP',
+	    'maf': 'eaf.exposure',
+	    'ref': 'other_allele.exposure',
+	    'alt': 'effect_allele.exposure',
+	    'slope': 'beta.exposure',
+	    'slope_se': 'se.exposure',
+	    'pval_beta': 'pval.exposure',
+	    'chr': 'chr',
+	    'variant_pos': 'pos'
 
 The corresponding GTEx file for extraction of GWAS summary data from the MRBase package, should look like 
 
