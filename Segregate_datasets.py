@@ -344,6 +344,3 @@ def Data_preparation(Data_exp, Data_out, pathRS, chromosome, position):
 
 
 get_datasets(file_EX1, distance1, LD_threshold_lower1, pvalue1)
-
-get_datasets(file_EX1, distance1, LD_threshold_lower1, pvalue1)
-get_datasets(file_EX1, file_EY1, distance1, LD_threshold_lower1, pvalue1)
