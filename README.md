@@ -222,7 +222,7 @@ You can now harmonize the exposure and outcome datasets using the following comm
 Now that you have the harmonised data, you can choose a chromosome and genetic variants within *chosen* distance of each other and within *chosen* Ld-range, to run the causal analysis. 
 
 
-For all the following functions, please ensure the use of the output of the harmonisation function in **TwoSampleMR** package as harmonized dataset. Please make sure you have these columns in your harmonised dataset:
+For all the following functions, we use *harmonised dataset* to mean the output of the harmonisation function in **TwoSampleMR** package. Please make sure you have these columns in your harmonised dataset:
 
 
 		     gene name or ID : 'exposure',
