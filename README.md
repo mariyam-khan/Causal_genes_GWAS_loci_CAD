@@ -223,7 +223,7 @@ remove the paliindromic *Snps* but it will flag them as TRUE which we will then 
 Now that you have the harmonised data, you can choose a chromosome and genetic variants within *chosen* distance of each other and within *chosen* Ld-range, to run the causal analysis. 
 
 
-For all the following functions, please ensure the use of the output of the harmonisation function in **TwoSampleMR** package as harmonized dataset. You should have these columns named as follows:
+For all the following functions, please ensure the use of the output of the harmonisation function in **TwoSampleMR** package as harmonized dataset. During the harmonisation, the column names for chromosome and position of the *Snp* get renamed to *chr.x* and *pos.x*, please make sure that all columns are named as follows:
 
 
 		     gene name or ID : 'exposure',
