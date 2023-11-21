@@ -90,7 +90,7 @@ try:
     chromosome1 = int(sys.argv[2])
     chromosome1 = check_valid(chromosome1, "chromosome")
     try:
-        position1 = float(sys.argv[3])
+        position1 = str(int((sys.argv[3])))
         position1 = check_valid(position1, "position")
     except ValueError:
         print(
@@ -141,6 +141,8 @@ LD_threshold_upper = 1.0
 def SNPs_posrange(file_EX, chromosome, position, distance, pvalue):
     # read the harmonized dataset into a pandas dataframe
     Data = pd.read_csv(file_EX, sep=',', low_memory=False)
+    if 'chr.x' in Data.columns and 'pos.x' in Data.columns:
+        Data = Data.rename(columns={'chr.x': 'chr', 'pos.x': 'pos'})
     # choose only non-palindromic data
     subset = Data[~Data['palindromic']]
     subset.reset_index(drop=True, inplace=True)
@@ -162,8 +164,8 @@ def SNPs_posrange(file_EX, chromosome, position, distance, pvalue):
     Data_exp.reset_index(drop=True, inplace=True)
     Data_outcome = Data_outcome[
         ["SNP", "effect_allele.outcome", "other_allele.outcome", "beta.outcome", "pval.outcome", "chr", "pos"]]
-
-    Data_out = (Data_outcome.loc[Data_outcome['chr'] == chromosome])
+    Data_out = Data_outcome[
+        Data_outcome['chr'].astype(str) == str(chromosome)]  # Convert 'chr' to string for comparison
     Data_out.reset_index(drop=True, inplace=True)
     Data_out = Data_out[Data_out['pval.outcome'] <= pvalue]
     Data_out.reset_index(drop=True, inplace=True)
@@ -172,7 +174,7 @@ def SNPs_posrange(file_EX, chromosome, position, distance, pvalue):
     Data_out.reset_index(drop=True, inplace=True)
     if position is None:
         position = Data_out.at[0, 'pos']
-    index = Data_out[Data_out['pos'] == position].index
+    index = Data_out[Data_out['pos'].astype(str) == str(position)].index
     if index.empty:
         error_message = (f"Value {position} not found in the 'pos' column. "
                          "Please provide a valid position.")
@@ -279,3 +281,4 @@ def Data_preparation(Data_exp, Data_out, pathRS, chromosome, position):
 
 
 SNPs_posrange(file_EX1, chromosome1, position1, distance1, pvalue1)
+
