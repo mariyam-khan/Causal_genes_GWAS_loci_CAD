@@ -286,6 +286,23 @@ Additionally (optional),
 - P-value threshold (float, example 5E-8), *Snps* with p-value lower than this (in the GWAS data), will not be included.
   default: 5E-8
 
+For the harmonized dataset, please use the output of the harmonisation function in **TwoSampleMR** package. You should have these columns named as follows:
+
+	
+ 	     gene name or ID : 'exposure',
+	     rs_id of SNP GRCh37 : 'SNP',
+	     Marker if the SNP is plaindromic or not : 'palindromic',
+	     other allele in exposure data : 'other_allele.exposure',
+             other allele in outcome data : 'other_allele.outcome',
+	     effect allele in exposure data: 'effect_allele.exposure',
+      	     effect allele in outcome data: 'effect_allele.outcome',
+	     effect size for exposure : 'beta.exposure',
+      	     effect size for outcome : 'beta.outcome',
+	     pvalue of the effect in exposure : 'pval.exposure',
+             pvalue of the effect in outcome : 'pval.outcome',
+	     chromosome of the SNP : 'chr',
+	     position of the SNP : 'pos'
+
 As an example, if you run
 
 
