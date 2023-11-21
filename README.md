@@ -205,8 +205,7 @@ After this you can extract the outcome data for any study using this code that s
 
 ## 4.3.2 Harmonize the outcome and exposure data using  **TwoSampleMR Package** package
 
-You can now harmonize the exposure and outcome datasets using the following command in the  **TwoSampleMR Package**. Make sure that you use the option to remove palindromes. The harmonize function will not 
-remove the paliindromic *Snps* but it will flag them as TRUE which we will then use to remove them in our MVMR analysis.
+You can now harmonize the exposure and outcome datasets using the following command in the  **TwoSampleMR Package**. Make sure that you use the option to remove palindromes. The harmonize function will not remove the paliindromic *Snps* but it will flag them as TRUE which we will then use to remove them in our MVMR analysis.
 
 	dat <- harmonise_data(exposure_dat = exposure_data, outcome_dat = outcome_data, action = 3)
 
@@ -223,7 +222,7 @@ remove the paliindromic *Snps* but it will flag them as TRUE which we will then 
 Now that you have the harmonised data, you can choose a chromosome and genetic variants within *chosen* distance of each other and within *chosen* Ld-range, to run the causal analysis. 
 
 
-For all the following functions, please ensure the use of the output of the harmonisation function in **TwoSampleMR** package as harmonized dataset. During the harmonisation, the column names for chromosome and position of the *Snp* get renamed to *chr.x* and *pos.x*, please make sure that all columns are named as follows:
+For all the following functions, please ensure the use of the output of the harmonisation function in **TwoSampleMR** package as harmonized dataset. Please make sure you have these columns in your harmonised dataset:
 
 
 		     gene name or ID : 'exposure',
@@ -237,8 +236,8 @@ For all the following functions, please ensure the use of the output of the harm
 		     effect size for outcome : 'beta.outcome',
 		     pvalue of the effect in exposure : 'pval.exposure',
 		     pvalue of the effect in outcome : 'pval.outcome',
-		     chromosome of the SNP : 'chr',
-		     position of the SNP : 'pos'
+		     chromosome of the SNP : 'chr' or 'chr.x',
+		     position of the SNP : 'pos' or 'pos.x'
 
        
 
