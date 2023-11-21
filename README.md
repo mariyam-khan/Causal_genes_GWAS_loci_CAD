@@ -209,6 +209,10 @@ You can now harmonize the exposure and outcome datasets using the following comm
 remove the paliindromic *Snps* but it will flag them as TRUE which we will then use to remove them in our MVMR analysis.
 
 	dat <- harmonise_data(exposure_dat = exposure_data, outcome_dat = outcome_data, action = 3)
+
+ The following image shows you what the dataset recieved after using the harmonise_data outcome for the exposure data of the Aorta tissue from GTEx.
+
+ ![Format of harmonised file returned from `harmonise_data`](gtex_harmonised.png) 
 		
 		
 
@@ -216,9 +220,10 @@ remove the paliindromic *Snps* but it will flag them as TRUE which we will then 
 
 
 
-Now that you have the harmonized data, you can choose a chromosome and genetic variants within *chosen* distance of each other and within *chosen* Ld-range, to run the causal analysis. 
+Now that you have the harmonised data, you can choose a chromosome and genetic variants within *chosen* distance of each other and within *chosen* Ld-range, to run the causal analysis. 
 
-For the harmonized dataset, please use the output of the harmonisation function in **TwoSampleMR** package. You should have these columns named as follows:
+
+For all the following functions, please ensure the use of the output of the harmonisation function in **TwoSampleMR** package as harmonized dataset. You should have these columns named as follows:
 
 
 		     gene name or ID : 'exposure',
@@ -235,6 +240,9 @@ For the harmonized dataset, please use the output of the harmonisation function 
 		     chromosome of the SNP : 'chr',
 		     position of the SNP : 'pos'
 
+       
+
+The following image shows a short pipeline of functions in Section 4.4.1, 4.4.2 and 4.4.3 and their usage for different purposes
 
   ![short pipeline](Pipeline2.png) 
   
