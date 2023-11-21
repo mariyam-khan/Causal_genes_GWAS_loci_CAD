@@ -151,7 +151,7 @@ Since the data you downloaded is not in format for extraction of GWAS summary da
 
         python3 Match_rs_id.py "/home/user/Exposure.csv" "/home/user/annotation.csv" 
 
-Here, *Exposure.csv* is the exposure/gene expression data for a specific tissue from GTEx and *annotation.csv* is the rs-ID annotation file on GTEx. You will be returned *.csv* file with the annotated rs-ID’s in the same directory as your *Exposure.csv* file. The following image shows you how the annotated output of  `Match_rs_id.py` looks like:
+Here, *Exposure.csv* is the gene expression data for a specific tissue you downloaded from GTEx and *annotation.csv* is the annotation file used to align the *Snp*-ID in the GTEx data with corresponding rs-ID. You will be returned *.csv* file with the annotated rs-ID’s in the same directory as your *Exposure.csv* file. The following image shows you how the annotated output of  `Match_rs_id.py` looks like:
 
  ![Format of annotated file returned from `Match_rs_id.py`](gtex_annotated.png) 
 
