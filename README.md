@@ -242,7 +242,7 @@ For all the following functions, please ensure the use of the output of the harm
 
        
 
-The following image shows a short pipeline of functions in Section 4.4.1 (`Prune_Snps_pos.py`) , 4.4.2 (`Prune_Snps_LD.py`) and 4.4.3 (`Segregate_datasets.py`) and their usage for MVMR analysis in Section 5.1 (`run_MVMR.py`) , when you do not provide the LD-matrix for the analysis and Section 5.2 (`run_MVMR_LD.py`) , when you provide an LD-matrix for the analysis.
+The following image shows a short pipeline of functions in Section 4.4.1 (`Prune_Snps_pos.py`) , 4.4.2 (`Prune_Snps_LD.py`) and their usage for MVMR analysis in Section 5.1 (`run_MVMR.py`) , when you do not provide the LD-matrix for the analysis and Section 5.2 (`run_MVMR_LD.py`) , when you provide an LD-matrix for the analysis.
 
   ![short pipeline](Pipeline2.png) 
   
@@ -328,6 +328,8 @@ The following image gives as example of the output file of the `Prune_Snps_LD.py
 
 
 ### 4.4.3  For entire exposure/outcome data, get datasets of each chromosome and *Snps* within *chosen* distance and *chosen* LD-range
+
+The following image shows a short pipeline of functions in 4.4.3 (`Segregate_datasets.py`) and their usage for MVMR analysis in Section 5.3 (`MVMR_directory.py`) for causal analysis.
 
   ![short pipeline 2](Pipeline3.png)
 
