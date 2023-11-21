@@ -132,6 +132,8 @@ def get_datasets(file_EX, distance, LD_threshold_lower, pvalue):
     prepare = True
     # read the harmonized dataset into a pandas dataframe
     Data = pd.read_csv(file_EX, sep=',', low_memory=False)
+    if 'chr.x' in Data.columns and 'pos.x' in Data.columns:
+        Data = Data.rename(columns={'chr.x': 'chr', 'pos.x': 'pos'})
     # choose only non-palindromic data
     subset = Data[~Data['palindromic']]
     subset.reset_index(drop=True, inplace=True)
@@ -334,10 +336,14 @@ def Data_preparation(Data_exp, Data_out, pathRS, chromosome, position):
     RandS = pd.concat([df_R, df_s], axis=1)
     RandS.index.name = 'SNPs'
     create_directory_if_not_exists(pathRS)
+    # name_EX_new = name_EX.replace("exp", "")
+
     RandS.to_csv(pathRS + "/" + name_EX + "_" + str(chromosome) + "_" + str(position) + ".csv",
                  sep=",")
     print("Prepared Datasets have been saved in the directory " + pathRS)
 
+
+get_datasets(file_EX1, distance1, LD_threshold_lower1, pvalue1)
 
 get_datasets(file_EX1, distance1, LD_threshold_lower1, pvalue1)
 get_datasets(file_EX1, file_EY1, distance1, LD_threshold_lower1, pvalue1)
